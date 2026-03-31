@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>导购 Agent Demo</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, 'PingFang SC', sans-serif;
+    background: #f5f5f5;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 20px;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  /* ===== 手机外壳 ===== */
+  .phone {
+    width: 375px;
+    min-height: 760px;
+    background: #fff;
+    border-radius: 44px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.18);
+    overflow: hidden;
+    position: relative;
+    border: 8px solid #1a1a1a;
+    flex-shrink: 0;
+  }
+  .phone-label {
+    text-align: center;
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+  .phone-notch {
+    height: 36px;
+    background: #1a1a1a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .phone-notch-inner {
+    width: 120px;
+    height: 20px;
+    background: #000;
+    border-radius: 0 0 16px 16px;
+  }
+  .status-bar {
+    height: 28px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 18px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .status-icons { display: flex; gap: 4px; align-items: center; font-size: 11px; }
+
+  /* ===== 页面内容区 ===== */
+  .screen { background: #fff; min-height: 660px; overflow-y: auto; }
+
+  /* ===== Tab 切换 ===== */
+  .tabs {
+    display: flex;
+    border-bottom: 1px solid #eee;
+    background: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .tab {
+    flex: 1;
+    text-align: center;
+    padding: 12px 0 10px;
+    font-size: 14px;
+    color: #999;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.2s;
+  }
+  .tab.active { color: #ff2442; font-weight: 600; }
+  .tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 24px; height: 2px;
+    background: #ff2442;
+    border-radius: 2px;
+  }
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ===== 搜索页 ===== */
+  .search-bar-wrap {
+    padding: 10px 16px;
+    background: #fff;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .search-bar {
+    display: flex;
+    align-items: center;
+    background: #f5f5f5;
+    border-radius: 20px;
+    padding: 8px 14px;
+    gap: 8px;
+  }
+  .search-bar input {
+    border: none;
+    background: transparent;
+    font-size: 15px;
+    flex: 1;
+    outline: none;
+    color: #333;
+  }
+  .search-btn {
+    background: #ff2442;
+    color: #fff;
+    border: none;
+    border-radius: 16px;
+    padding: 6px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  /* AI 结果卡片 */
+  .ai-card {
+    margin: 12px 16px;
+    background: linear-gradient(135deg, #fff5f6 0%, #fff 100%);
+    border: 1px solid #ffd6db;
+    border-radius: 16px;
+    padding: 14px;
+    display: none;
+  }
+  .ai-card.show { display: block; }
+  .ai-card-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 10px;
+    font-size: 13px;
+    color: #ff2442;
+    font-weight: 600;
+  }
+  .ai-icon {
+    width: 22px; height: 22px;
+    background: #ff2442;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 11px;
+  }
+  .ai-intro {
+    font-size: 13px;
+    color: #444;
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+  .ai-product-list { display: flex; flex-direction: column; gap: 8px; }
+  .ai-product-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid #f0f0f0;
+    cursor: pointer;
+    transition: box-shadow 0.15s;
+  }
+  .ai-product-item:hover { box-shadow: 0 2px 8px rgba(255,36,66,0.1); }
+  .product-rank {
+    width: 22px; height: 22px;
+    background: #ff2442;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .product-rank.silver { background: #aaa; }
+  .product-rank.bronze { background: #cd7f32; }
+  .product-img {
+    width: 40px; height: 40px;
+    border-radius: 8px;
+    object-fit: cover;
+    background: #f0f0f0;
+    font-size: 20px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .product-info { flex: 1; }
+  .product-name { font-size: 14px; font-weight: 500; color: #222; }
+  .product-tag { font-size: 11px; color: #ff2442; margin-top: 2px; }
+  .product-pct { font-size: 13px; color: #999; font-weight: 500; white-space: nowrap; }
+  .ai-footer {
+    margin-top: 10px;
+    font-size: 11px;
+    color: #bbb;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  /* 搜索结果流 */
+  .note-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    padding: 8px 12px 20px;
+  }
+  .note-card {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .note-img {
+    width: 100%;
+    aspect-ratio: 3/4;
+    background: linear-gradient(135deg, #f8e8ea, #fce4d6);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px;
+  }
+  .note-body { padding: 8px; }
+  .note-title { font-size: 12px; color: #333; line-height: 1.4; }
+  .note-meta { display: flex; align-items: center; justify-content: space-between; margin-top: 6px; }
+  .note-author { font-size: 11px; color: #999; }
+  .note-likes { font-size: 11px; color: #999; }
+
+  /* ===== 评论页 ===== */
+  .note-banner {
+    width: 100%;
+    height: 200px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    display: flex;
+    align-items: flex-end;
+    padding: 16px;
+    position: relative;
+  }
+  .note-banner-content { color: #fff; }
+  .note-banner-title { font-size: 16px; font-weight: 700; line-height: 1.4; }
+  .note-banner-sub { font-size: 12px; opacity: 0.8; margin-top: 4px; }
+  .comment-section { padding: 0 0 80px; }
+  .comment-header {
+    padding: 14px 16px 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #222;
+    border-bottom: 1px solid #f5f5f5;
+  }
+  .comment-item {
+    padding: 12px 16px;
+    border-bottom: 1px solid #f8f8f8;
+    display: flex;
+    gap: 10px;
+  }
+  .avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    background: #f0f0f0;
+  }
+  .comment-body { flex: 1; }
+  .comment-user { font-size: 13px; font-weight: 500; color: #333; }
+  .comment-text { font-size: 14px; color: #444; margin-top: 4px; line-height: 1.5; }
+  .comment-time { font-size: 11px; color: #bbb; margin-top: 4px; }
+
+  /* AI 回复气泡 */
+  .ai-reply {
+    background: linear-gradient(135deg, #fff0f2, #fff5f5);
+    border: 1px solid #ffd6db;
+    border-radius: 12px;
+    padding: 10px 12px;
+    margin-top: 8px;
+    font-size: 13px;
+    color: #333;
+    line-height: 1.6;
+    display: none;
+    position: relative;
+  }
+  .ai-reply.show { display: block; }
+  .ai-reply-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #ff2442;
+    color: #fff;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 10px;
+    margin-bottom: 6px;
+  }
+  .comment-input-bar {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: #fff;
+    border-top: 1px solid #eee;
+    padding: 10px 16px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .comment-input {
+    flex: 1;
+    background: #f5f5f5;
+    border: none;
+    border-radius: 18px;
+    padding: 8px 14px;
+    font-size: 13px;
+    outline: none;
+    color: #333;
+  }
+  .send-btn {
+    background: #ff2442;
+    color: #fff;
+    border: none;
+    border-radius: 18px;
+    padding: 8px 14px;
+    font-size: 13px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  /* ===== 私信页 ===== */
+  .dm-header {
+    padding: 14px 16px;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #fff;
+  }
+  .dm-avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ff2442, #ff6b6b);
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 18px;
+  }
+  .dm-name { font-size: 15px; font-weight: 600; color: #222; }
+  .dm-status { font-size: 12px; color: #4caf50; }
+  .dm-messages {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-bottom: 80px;
+    min-height: 500px;
+    background: #f8f8f8;
+  }
+
+  /* 转发卡片 */
+  .forwarded-note {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #eee;
+    max-width: 260px;
+    align-self: flex-end;
+  }
+  .forwarded-note-img {
+    height: 120px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+  }
+  .forwarded-note-body { padding: 10px 12px; }
+  .forwarded-note-title { font-size: 13px; font-weight: 500; color: #222; line-height: 1.4; }
+  .forwarded-note-meta { font-size: 11px; color: #999; margin-top: 4px; }
+  .forwarded-label {
+    font-size: 11px;
+    color: #bbb;
+    text-align: right;
+    margin-bottom: 4px;
+  }
+
+  /* 聊天气泡 */
+  .bubble-wrap { display: flex; gap: 8px; align-items: flex-end; }
+  .bubble-wrap.right { flex-direction: row-reverse; }
+  .bubble {
+    max-width: 240px;
+    padding: 10px 14px;
+    border-radius: 18px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #333;
+  }
+  .bubble.user { background: #ff2442; color: #fff; border-bottom-right-radius: 4px; }
+  .bubble.agent {
+    background: #fff;
+    border: 1px solid #eee;
+    border-bottom-left-radius: 4px;
+  }
+
+  /* 商品详情卡 */
+  .product-detail-card {
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid #eee;
+    max-width: 280px;
+  }
+  .pdc-img {
+    height: 140px;
+    background: linear-gradient(135deg, #f8e8ea, #fce4d6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 50px;
+  }
+  .pdc-body { padding: 12px; }
+  .pdc-name { font-size: 15px; font-weight: 600; color: #222; }
+  .pdc-price { font-size: 20px; font-weight: 700; color: #ff2442; margin: 6px 0; }
+  .pdc-price span { font-size: 13px; }
+  .pdc-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 8px; }
+  .pdc-tag {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: #fff0f2;
+    color: #ff2442;
+    border: 1px solid #ffd6db;
+  }
+  .pdc-desc { font-size: 12px; color: #888; line-height: 1.6; margin-bottom: 10px; }
+  .pdc-btn {
+    width: 100%;
+    background: #ff2442;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    padding: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .dm-input-bar {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: #fff;
+    border-top: 1px solid #eee;
+    padding: 10px 16px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .dm-input {
+    flex: 1;
+    background: #f5f5f5;
+    border: none;
+    border-radius: 18px;
+    padding: 8px 14px;
+    font-size: 13px;
+    outline: none;
+    color: #333;
+  }
+
+  /* 打字动画 */
+  .typing {
+    display: flex; gap: 4px; align-items: center;
+    padding: 10px 14px;
+    background: #fff;
+    border-radius: 18px;
+    border: 1px solid #eee;
+    width: fit-content;
+  }
+  .typing span {
+    width: 6px; height: 6px;
+    background: #bbb;
+    border-radius: 50%;
+    animation: bounce 1.2s infinite;
+  }
+  .typing span:nth-child(2) { animation-delay: 0.2s; }
+  .typing span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes bounce {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-6px); }
+  }
+
+  .hidden { display: none !important; }
+
+  /* 筛选标签 */
+  .filter-tags {
+    display: flex; gap: 6px; padding: 8px 12px;
+    overflow-x: auto; scrollbar-width: none;
+  }
+  .filter-tags::-webkit-scrollbar { display: none; }
+  .filter-tag {
+    padding: 5px 12px;
+    border-radius: 14px;
+    font-size: 12px;
+    background: #f5f5f5;
+    color: #555;
+    white-space: nowrap;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.15s;
+  }
+  .filter-tag.active {
+    background: #fff0f2;
+    color: #ff2442;
+    border-color: #ffd6db;
+  }
+
+  /* 搜索页顶部 */
+  .page-header {
+    display: flex;
+    align-items: center;
+    padding: 10px 16px;
+    gap: 10px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .back-btn { font-size: 18px; color: #333; cursor: pointer; }
+  .header-title { font-size: 16px; font-weight: 600; color: #222; flex: 1; }
+</style>
+</head>
+<body>
+
+<!-- ============ 搜索页 ============ -->
+<div>
+  <div class="phone-label">① 搜一搜 — AI 结果卡片</div>
+  <div class="phone">
+    <div class="phone-notch"><div class="phone-notch-inner"></div></div>
+    <div class="status-bar">
+      <span>18:44</span>
+      <div class="status-icons">📶 5G 🔋</div>
+    </div>
+    <div class="screen" id="screen-search">
+      <!-- 搜索栏 -->
+      <div class="search-bar-wrap">
+        <div class="search-bar">
+          <span style="color:#bbb;font-size:16px">🔍</span>
+          <input type="text" id="search-input" placeholder="搜索商品、笔记、好物…" value="">
+          <button class="search-btn" onclick="doSearch()">搜索</button>
+        </div>
+      </div>
+
+      <!-- AI 结果卡片（初始隐藏） -->
+      <div class="ai-card" id="ai-search-card">
+        <div class="ai-card-header">
+          <div class="ai-icon">AI</div>
+          导购助手为你找到以下好物
+        </div>
+        <div class="ai-intro" id="ai-intro-text"></div>
+        <div class="ai-product-list" id="ai-product-list"></div>
+        <div class="ai-footer">
+          <span>✨</span>
+          <span id="ai-footer-text">ai 综合真实用户评价生成</span>
+        </div>
+      </div>
+
+      <!-- 筛选标签 -->
+      <div class="filter-tags" id="filter-tags" style="display:none">
+        <div class="filter-tag active">综合</div>
+        <div class="filter-tag">最新</div>
+        <div class="filter-tag">高口碑</div>
+        <div class="filter-tag">性价比</div>
+        <div class="filter-tag">学生党</div>
+      </div>
+
+      <!-- 笔记流 -->
+      <div class="note-grid" id="note-grid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 评论页 ============ -->
+<div>
+  <div class="phone-label">② 评论区 — @薯薯 触发回复</div>
+  <div class="phone">
+    <div class="phone-notch"><div class="phone-notch-inner"></div></div>
+    <div class="status-bar">
+      <span>18:44</span>
+      <div class="status-icons">📶 5G 🔋</div>
+    </div>
+    <div class="screen" id="screen-comment" style="position:relative; overflow:hidden; height:700px;">
+      <!-- 笔记封面 -->
+      <div class="note-banner">
+        <div class="note-banner-content">
+          <div class="note-banner-title">👜 学生党平价包包合集<br>100-300元超能背！</div>
+          <div class="note-banner-sub">by 包包研究所 · 2.3万点赞</div>
+        </div>
+      </div>
+
+      <!-- 评论列表 -->
+      <div class="comment-section" style="overflow-y:auto; height:460px; padding-bottom:60px;">
+        <div class="comment-header">评论 · 386条</div>
+
+        <!-- 普通评论 -->
+        <div class="comment-item">
+          <div class="avatar">🙋</div>
+          <div class="comment-body">
+            <div class="comment-user">小鹿爱买买</div>
+            <div class="comment-text">这几款好看！求问哪个最耐用啊</div>
+            <div class="comment-time">2小时前</div>
+          </div>
+        </div>
+
+        <div class="comment-item">
+          <div class="avatar">✨</div>
+          <div class="comment-body">
+            <div class="comment-user">穿搭日记本</div>
+            <div class="comment-text">第三款颜色真的好看，有没有其他颜色推荐</div>
+            <div class="comment-time">1小时前</div>
+          </div>
+        </div>
+
+        <!-- 触发评论 -->
+        <div class="comment-item" id="trigger-comment">
+          <div class="avatar">🧑</div>
+          <div class="comment-body">
+            <div class="comment-user">小仙女努力变富</div>
+            <div class="comment-text" id="trigger-text">@薯薯 我预算200以内，求推荐一款上班+上学都能用的包</div>
+            <div class="comment-time">刚刚</div>
+            <!-- AI 回复 -->
+            <div class="ai-reply" id="ai-comment-reply">
+              <div class="ai-reply-tag">🤖 薯薯</div>
+              <span id="ai-comment-text"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="comment-item">
+          <div class="avatar">🌸</div>
+          <div class="comment-body">
+            <div class="comment-user">芋圆小姐姐</div>
+            <div class="comment-text">博主有没有链接🙏</div>
+            <div class="comment-time">30分钟前</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 输入栏 -->
+      <div class="comment-input-bar">
+        <div class="avatar" style="width:28px;height:28px;font-size:13px;background:#f0f0f0;">👤</div>
+        <input class="comment-input" id="comment-input" placeholder="@薯薯 试试让AI帮你推荐…" />
+        <button class="send-btn" onclick="sendComment()">发送</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 私信页 ============ -->
+<div>
+  <div class="phone-label">③ 私信 — 笔记转发触发详细推荐</div>
+  <div class="phone">
+    <div class="phone-notch"><div class="phone-notch-inner"></div></div>
+    <div class="status-bar">
+      <span>18:44</span>
+      <div class="status-icons">📶 5G 🔋</div>
+    </div>
+    <div class="screen" id="screen-dm" style="position:relative; overflow:hidden; height:700px;">
+      <!-- 对话头部 -->
+      <div class="dm-header">
+        <div class="dm-avatar">🤖</div>
+        <div>
+          <div class="dm-name">薯薯导购助手</div>
+          <div class="dm-status">● 在线</div>
+        </div>
+      </div>
+
+      <!-- 消息列表 -->
+      <div class="dm-messages" id="dm-messages">
+
+        <!-- 系统提示 -->
+        <div style="text-align:center;font-size:11px;color:#bbb;">今天 18:42</div>
+
+        <!-- 用户转发笔记 -->
+        <div style="align-self:flex-end;">
+          <div class="forwarded-label">转发了笔记</div>
+          <div class="forwarded-note">
+            <div class="forwarded-note-img">👜</div>
+            <div class="forwarded-note-body">
+              <div class="forwarded-note-title">学生党平价包包合集 100-300元超能背！</div>
+              <div class="forwarded-note-meta">包包研究所 · 2.3万点赞</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 用户消息 -->
+        <div class="bubble-wrap right">
+          <div class="avatar" style="width:32px;height:32px;font-size:14px;">🧑</div>
+          <div class="bubble user">我想买这种风格的包，预算200以内，有没有具体推荐？</div>
+        </div>
+
+        <!-- 打字动画（初始显示） -->
+        <div class="bubble-wrap" id="dm-typing">
+          <div class="dm-avatar" style="width:32px;height:32px;font-size:14px;">🤖</div>
+          <div class="typing"><span></span><span></span><span></span></div>
+        </div>
+
+        <!-- AI 回复（初始隐藏） -->
+        <div class="bubble-wrap hidden" id="dm-reply-1">
+          <div class="dm-avatar" style="width:32px;height:32px;font-size:14px;">🤖</div>
+          <div class="bubble agent">根据你的预算和这篇笔记的风格，我帮你精选了 3 款～ 都是真实用户高口碑的，直接看卡片👇</div>
+        </div>
+
+        <!-- 商品卡1 -->
+        <div class="hidden" id="dm-card-1">
+          <div class="product-detail-card">
+            <div class="pdc-img">👜</div>
+            <div class="pdc-body">
+              <div class="pdc-name">Canvas 托特包 · 奶油白</div>
+              <div class="pdc-price"><span>¥</span>168</div>
+              <div class="pdc-tags">
+                <span class="pdc-tag">大容量</span>
+                <span class="pdc-tag">通勤+上学</span>
+                <span class="pdc-tag">A4可放入</span>
+              </div>
+              <div class="pdc-desc">帆布材质耐脏耐用，内有多隔层，电脑+书本完全放得下。奶油白超百搭，1500+ 用户好评 ⭐4.9</div>
+              <button class="pdc-btn" onclick="alert('🛍️ 跳转购买页面')">立即查看 →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 商品卡2 -->
+        <div class="hidden" id="dm-card-2">
+          <div class="product-detail-card">
+            <div class="pdc-img" style="background:linear-gradient(135deg,#e8f4fd,#d4edff)">🎒</div>
+            <div class="pdc-body">
+              <div class="pdc-name">小方包 · 烟灰色</div>
+              <div class="pdc-price"><span>¥</span>129</div>
+              <div class="pdc-tags">
+                <span class="pdc-tag">轻便</span>
+                <span class="pdc-tag">日常通勤</span>
+                <span class="pdc-tag">防泼水</span>
+              </div>
+              <div class="pdc-desc">轻量尼龙面料，防泼水处理，下雨不怕。背带可调节长度，侧背/斜跨两用，颜色超耐看 ⭐4.8</div>
+              <button class="pdc-btn" onclick="alert('🛍️ 跳转购买页面')">立即查看 →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 追问引导 -->
+        <div class="bubble-wrap hidden" id="dm-reply-2">
+          <div class="dm-avatar" style="width:32px;height:32px;font-size:14px;">🤖</div>
+          <div class="bubble agent">💬 想看更多款式？告诉我你更偏好哪种风格——<br>① 通勤感强一些<br>② 学生感/休闲<br>③ 帮我两个都要！</div>
+        </div>
+
+      </div>
+
+      <!-- 输入栏 -->
+      <div class="dm-input-bar">
+        <input class="dm-input" id="dm-input" placeholder="回复薯薯…" onkeydown="if(event.key==='Enter')sendDm()" />
+        <button class="send-btn" onclick="sendDm()">发送</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ==================== 搜索页逻辑 ====================
+const searchData = {
+  '平价蓝牙耳机': {
+    intro: '为你找到高口碑平价蓝牙耳机，综合 2,341 条真实评价：',
+    products: [
+      { name: 'QCY T13', tag: '续航长 · 28小时', pct: '42% 推荐', emoji: '🎧' },
+      { name: '南卡 OE mix', tag: '不入耳 · 佩戴舒适', pct: '28% 推荐', emoji: '🎵' },
+      { name: '漫步者 LolliPods', tag: '高颜值 · 学生必备', pct: '19% 推荐', emoji: '🎶' },
+      { name: '小米 Redmi Buds 4', tag: '性价比之王', pct: '11% 推荐', emoji: '🎼' },
+    ],
+    notes: ['🎧','🎵','🎶','🎼','🎤','🔊'],
+    noteTitles: ['百元内必买！这4款耳机真的绝了', '学生党蓝牙耳机测评 | 踩坑指南', '通勤必备耳机合集 2025版', '南卡 vs QCY 谁更值？'],
+    noteAuthors: ['耳机评测姬','数码女孩','科技分享喵','爱好者小七'],
+    footerText: 'ai 综合 2,341 条真实评价生成'
+  },
+  '学生包': {
+    intro: '为你找到最受学生欢迎的包款，综合 1,823 条评价：',
+    products: [
+      { name: 'Canvas 托特包', tag: '大容量 · 百搭', pct: '38% 推荐', emoji: '👜' },
+      { name: '小方包 烟灰色', tag: '轻便 · 防泼水', pct: '25% 推荐', emoji: '🎒' },
+      { name: 'JK 风帆布包', tag: '学院风经典', pct: '21% 推荐', emoji: '🛍️' },
+      { name: '迷你斜挎包', tag: '出行必备', pct: '16% 推荐', emoji: '👝' },
+    ],
+    notes: ['👜','🎒','🛍️','👝','💼','🗂️'],
+    noteTitles: ['200以内包包大测评 | 学生党必看', '帆布包怎么选？踩坑经验分享', '通勤+上学两用包合集', '小包包穿搭指南 超级实用'],
+    noteAuthors: ['包包研究所','穿搭日记本','时尚小达人','买买买成精'],
+    footerText: 'ai 综合 1,823 条真实评价生成'
+  }
+};
+
+function doSearch() {
+  const val = document.getElementById('search-input').value.trim();
+  if (!val) return;
+
+  // 模糊匹配
+  let key = Object.keys(searchData).find(k => val.includes(k) || k.includes(val));
+  if (!key) key = '平价蓝牙耳机'; // 默认
+
+  const data = searchData[key];
+  const card = document.getElementById('ai-search-card');
+  const introEl = document.getElementById('ai-intro-text');
+  const listEl = document.getElementById('ai-product-list');
+  const footerEl = document.getElementById('ai-footer-text');
+  const filterTags = document.getElementById('filter-tags');
+  const noteGrid = document.getElementById('note-grid');
+
+  // 填充 AI 卡片
+  introEl.textContent = data.intro;
+  footerEl.textContent = data.footerText;
+  listEl.innerHTML = data.products.map((p, i) => `
+    <div class="ai-product-item">
+      <div class="product-rank ${i===1?'silver':i===2?'bronze':''}">${i+1}</div>
+      <div class="product-img">${p.emoji}</div>
+      <div class="product-info">
+        <div class="product-name">${p.name}</div>
+        <div class="product-tag">${p.tag}</div>
+      </div>
+      <div class="product-pct">${p.pct}</div>
+    </div>
+  `).join('');
+
+  card.classList.add('show');
+  filterTags.style.display = 'flex';
+
+  // 填充笔记流
+  noteGrid.innerHTML = data.notes.map((e, i) => `
+    <div class="note-card">
+      <div class="note-img">${e}</div>
+      <div class="note-body">
+        <div class="note-title">${data.noteTitles[i] || '好物推荐分享'}</div>
+        <div class="note-meta">
+          <span class="note-author">${data.noteAuthors[i] || '用户'}</span>
+          <span class="note-likes">❤️ ${Math.floor(Math.random()*500+50)}</span>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// 回车搜索
+document.getElementById('search-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') doSearch();
+});
+
+// 预填默认内容
+document.getElementById('search-input').value = '平价蓝牙耳机';
+doSearch();
+
+// ==================== 评论页逻辑 ====================
+function sendComment() {
+  const input = document.getElementById('comment-input');
+  const val = input.value.trim();
+  if (!val) return;
+
+  // 更新触发评论内容
+  document.getElementById('trigger-text').textContent = val;
+  input.value = '';
+
+  // 显示 AI 回复（模拟延迟）
+  const replyEl = document.getElementById('ai-comment-reply');
+  const textEl = document.getElementById('ai-comment-text');
+  replyEl.classList.remove('show');
+  textEl.textContent = '';
+
+  setTimeout(() => {
+    let reply = '';
+    if (val.includes('@薯薯') || val.includes('推荐') || val.includes('买') || val.includes('包') || val.includes('耳机')) {
+      if (val.includes('200') || val.includes('包') || val.includes('上班') || val.includes('上学')) {
+        reply = '姐妹！200以内我推荐 Canvas 托特包（¥168），大容量A4都能放，上班上学超能装～ 还有小方包（¥129）轻便防水也很nice 🌸 点我主页有直达链接哦！';
+      } else if (val.includes('耳机') || val.includes('蓝牙')) {
+        reply = '平价耳机推荐 QCY T13（¥79）续航超长28小时，学生党性价比首选！南卡不入耳款也很好，佩戴舒适不累耳 🎧 主页有测评合集～';
+      } else {
+        reply = '根据你的需求，我帮你找到了几款高口碑好物 ✨ 综合真实用户评价推荐第一名是性价比超高的款式，点主页查看详细对比和购买链接哦～🛍️';
+      }
+    } else {
+      reply = '看到你的问题啦！试试 @薯薯 加上你的需求，我来帮你找最适合的好物 ✨';
+    }
+    textEl.textContent = reply;
+    replyEl.classList.add('show');
+  }, 1000);
+}
+
+// 预触发一条评论展示
+setTimeout(() => {
+  const replyEl = document.getElementById('ai-comment-reply');
+  const textEl = document.getElementById('ai-comment-text');
+  textEl.textContent = '姐妹！200以内我强推 Canvas 托特包（¥168）和小方包（¥129）～ 前者大容量A4都放得下，上班上学都能背；后者轻便防水，下雨不怕！两款都是9.2分高口碑 🌸 点主页有直达链接！';
+  replyEl.classList.add('show');
+}, 600);
+
+// ==================== 私信页逻辑 ====================
+let dmStep = 0;
+
+// 自动展示第一波消息
+setTimeout(() => {
+  document.getElementById('dm-typing').classList.add('hidden');
+  document.getElementById('dm-reply-1').classList.remove('hidden');
+  setTimeout(() => {
+    document.getElementById('dm-card-1').classList.remove('hidden');
+    setTimeout(() => {
+      document.getElementById('dm-card-2').classList.remove('hidden');
+      setTimeout(() => {
+        document.getElementById('dm-reply-2').classList.remove('hidden');
+        scrollDm();
+      }, 600);
+    }, 600);
+  }, 500);
+  scrollDm();
+}, 1800);
+
+function scrollDm() {
+  const el = document.getElementById('dm-messages');
+  el.scrollTop = el.scrollHeight;
+}
+
+function sendDm() {
+  const input = document.getElementById('dm-input');
+  const val = input.value.trim();
+  if (!val) return;
+  input.value = '';
+
+  const msgs = document.getElementById('dm-messages');
+
+  // 添加用户气泡
+  const userBubble = document.createElement('div');
+  userBubble.className = 'bubble-wrap right';
+  userBubble.innerHTML = `
+    <div class="avatar" style="width:32px;height:32px;font-size:14px;">🧑</div>
+    <div class="bubble user">${val}</div>
+  `;
+  msgs.appendChild(userBubble);
+
+  // 打字动画
+  const typing = document.createElement('div');
+  typing.className = 'bubble-wrap';
+  typing.innerHTML = `
+    <div class="dm-avatar" style="width:32px;height:32px;font-size:14px;">🤖</div>
+    <div class="typing"><span></span><span></span><span></span></div>
+  `;
+  msgs.appendChild(typing);
+  scrollDm();
+
+  setTimeout(() => {
+    msgs.removeChild(typing);
+    const agentBubble = document.createElement('div');
+    agentBubble.className = 'bubble-wrap';
+
+    let reply = '';
+    if (val.includes('①') || val.includes('通勤') || val.includes('1')) {
+      reply = '通勤感的话，推荐你看 PU皮质手提包（¥198），简约大方，职场感满满 💼 还有竖版托特包，放得下笔记本，上班族最爱！';
+    } else if (val.includes('②') || val.includes('学生') || val.includes('休闲') || val.includes('2')) {
+      reply = '休闲风的话，JK帆布包（¥89）和拼色帆布包（¥109）都超适合！轻盈好背，上课通勤两不误 🎒';
+    } else if (val.includes('③') || val.includes('都') || val.includes('3')) {
+      reply = '哈哈好的！给你来个综合榜单 TOP5，覆盖通勤+休闲双场景，有颜有料有性价比的那种 ✨ 要不要我帮你按价格从低到高排一下？';
+    } else {
+      reply = '明白啦～我来帮你精准匹配！能告诉我更多吗？比如：更偏爱哪种颜色、或者有没有特别喜欢的款式？🎨';
+    }
+
+    agentBubble.innerHTML = `
+      <div class="dm-avatar" style="width:32px;height:32px;font-size:14px;">🤖</div>
+      <div class="bubble agent">${reply}</div>
+    `;
+    msgs.appendChild(agentBubble);
+    scrollDm();
+  }, 1200);
+}
+</script>
+</body>
+</html>
