@@ -263,78 +263,142 @@
   @keyframes pulse { 0%,60%,100%{opacity:1} 30%{opacity:0.3} }
 
   /* ===== 评论页 ===== */
-  .note-banner {
-    width: 100%; height: 200px;
-    display: flex; align-items: flex-end; padding: 14px;
-    position: relative; flex-shrink: 0;
+  /* 笔记页顶部导航 */
+  .note-nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 16px; background: #fff; flex-shrink: 0;
+  }
+  .note-nav-left { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+  .note-nav-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
     background: linear-gradient(135deg, #667eea, #764ba2);
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 15px; flex-shrink: 0;
   }
-  .note-banner-title { font-size: 16px; font-weight: 700; color: #fff; line-height: 1.4; }
-  .note-banner-sub { font-size: 11px; color: rgba(255,255,255,0.75); margin-top: 3px; }
-
-  .comment-section { overflow-y: auto; flex: 1; padding-bottom: 60px; }
-  .comment-section::-webkit-scrollbar { display: none; }
-  .comment-header { padding: 12px 16px 8px; font-size: 13px; font-weight: 600; color: #222; border-bottom: 1px solid #f5f5f5; }
-
-  .comment-item { padding: 11px 16px; border-bottom: 1px solid #f8f8f8; display: flex; gap: 10px; }
-  .avatar { width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 15px; background: #f0f0f0; }
-  .comment-body { flex: 1; min-width: 0; }
-  .comment-user { font-size: 12px; font-weight: 500; color: #333; }
-  .comment-text { font-size: 13px; color: #444; margin-top: 3px; line-height: 1.5; }
-  .comment-time-row { display: flex; align-items: center; justify-content: space-between; margin-top: 4px; }
-  .comment-time { font-size: 10px; color: #bbb; }
-  .comment-location { font-size: 10px; color: #bbb; }
-  .comment-like { font-size: 10px; color: #bbb; display: flex; align-items: center; gap: 2px; }
-
-  /* 找货薯回复 */
-  .huashu-reply {
-    margin-top: 8px;
-    padding: 10px 12px;
-    background: #f8f8f8;
-    border-radius: 8px;
-    font-size: 13px; color: #333; line-height: 1.65;
-    display: none;
-    border-left: 2px solid #ff2442;
+  .note-nav-name { font-size: 15px; font-weight: 600; color: #111; }
+  .note-nav-right { display: flex; align-items: center; gap: 12px; }
+  .note-follow-btn {
+    padding: 5px 16px; border-radius: 16px;
+    border: 1px solid #ff2442; color: #ff2442;
+    font-size: 13px; font-weight: 500; cursor: pointer; background: #fff;
   }
-  .huashu-reply.show { display: block; }
-  .huashu-reply-tag {
-    font-size: 11px; font-weight: 700; color: #ff2442; margin-bottom: 5px;
-    display: flex; align-items: center; gap: 4px;
+  .note-share-icon { font-size: 20px; color: #555; cursor: pointer; }
+
+  /* 笔记主图：5列拼图 */
+  .note-photo-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1px;
+    width: 100%; flex-shrink: 0;
   }
-  /* 文字链商品 */
+  .note-photo-cell {
+    aspect-ratio: 2/3;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+  }
+
+  /* 笔记正文区 */
+  .note-body-section { padding: 12px 16px 8px; }
+  .note-main-title { font-size: 16px; font-weight: 700; color: #111; line-height: 1.4; margin-bottom: 6px; }
+  .note-main-text { font-size: 14px; color: #333; line-height: 1.6; margin-bottom: 6px; }
+  .note-tags { font-size: 13px; color: #4a90d9; line-height: 1.7; margin-bottom: 8px; }
+  .note-edit-time { font-size: 11px; color: #bbb; display: flex; align-items: center; justify-content: space-between; padding-bottom: 10px; border-bottom: 1px solid #f0f0f0; }
+  .note-dislike { font-size: 11px; color: #bbb; cursor: pointer; }
+
+  /* 评论区 */
+  .comment-count-row { display: flex; align-items: center; gap: 6px; padding: 12px 16px 6px; font-size: 14px; font-weight: 600; color: #111; }
+  .comment-sort-icon { font-size: 14px; color: #888; }
+
+  /* 发言输入行（评论区内） */
+  .comment-input-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 6px 16px 10px;
+  }
+  .ci-avatar {
+    width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+    background: linear-gradient(135deg, #b8e4ff, #8ecfff);
+    display: flex; align-items: center; justify-content: center; font-size: 16px;
+  }
+  .ci-input {
+    flex: 1; background: #f5f5f5; border: none; border-radius: 20px;
+    padding: 8px 14px; font-size: 13px; color: #bbb; outline: none;
+    display: flex; align-items: center; justify-content: space-between;
+    cursor: text;
+  }
+  .ci-icons { display: flex; gap: 8px; font-size: 16px; color: #888; }
+
+  /* 评论条目 */
+  .cmt-item { display: flex; gap: 10px; padding: 10px 16px; }
+  .cmt-avatar {
+    width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 18px;
+    background: #f0f0f0; overflow: hidden;
+  }
+  .cmt-right { flex: 1; min-width: 0; }
+  .cmt-user-row { display: flex; align-items: center; gap: 5px; margin-bottom: 2px; }
+  .cmt-username { font-size: 13px; font-weight: 500; color: #333; }
+  .cmt-author-tag {
+    font-size: 10px; font-weight: 600; color: #ff2442;
+    border: 1px solid #ff2442; border-radius: 4px; padding: 0 4px; line-height: 1.6;
+  }
+  .cmt-text { font-size: 14px; color: #111; line-height: 1.55; margin-bottom: 4px; }
+  .cmt-meta-row { display: flex; align-items: center; justify-content: space-between; }
+  .cmt-meta-left { display: flex; align-items: center; gap: 8px; font-size: 11px; color: #bbb; }
+  .cmt-reply-btn { font-size: 11px; color: #bbb; cursor: pointer; }
+  .cmt-meta-right { display: flex; align-items: center; gap: 10px; font-size: 11px; color: #bbb; }
+  .cmt-like { display: flex; align-items: center; gap: 2px; cursor: pointer; }
+  .cmt-dislike-icon { cursor: pointer; font-size: 13px; }
+
+  /* 嵌套回复 */
+  .cmt-nested {
+    margin-top: 8px; margin-left: 0;
+    background: #f8f8f8; border-radius: 8px; padding: 8px 10px;
+  }
+  .cmt-nested-item { display: flex; gap: 7px; margin-bottom: 6px; }
+  .cmt-nested-item:last-child { margin-bottom: 0; }
+  .cmt-nested-avatar {
+    width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 13px;
+    background: #e8e8e8;
+  }
+  .cmt-nested-body { flex: 1; min-width: 0; }
+  .cmt-nested-user { font-size: 12px; font-weight: 500; color: #333; margin-bottom: 2px; display: flex; align-items: center; gap: 4px; }
+  .cmt-nested-text { font-size: 13px; color: #222; line-height: 1.5; margin-bottom: 3px; }
+  .cmt-nested-meta { display: flex; align-items: center; justify-content: space-between; font-size: 10px; color: #bbb; }
+  .cmt-nested-meta-left { display: flex; gap: 8px; }
+  .cmt-nested-meta-right { display: flex; align-items: center; gap: 8px; }
+
+  /* 展开更多回复 */
+  .cmt-expand { font-size: 12px; color: #888; margin-top: 6px; cursor: pointer; display: flex; align-items: center; gap: 3px; }
+  .cmt-expand::before { content: '—'; color: #ddd; margin-right: 2px; }
+
+  /* 找货薯回复（嵌套内）*/
+  .huashu-nested-user { color: #ff2442 !important; }
   .reply-product-link {
     color: #1a6bb5; font-weight: 500; cursor: pointer;
-    text-decoration: none; border-bottom: 1px solid rgba(26,107,181,0.25);
+    border-bottom: 1px solid rgba(26,107,181,0.2);
   }
-  .reply-product-link:hover { color: #ff2442; }
   .reply-more {
     display: inline-flex; align-items: center; gap: 2px;
-    margin-top: 6px; font-size: 11px; color: #ff2442;
-    font-weight: 500; cursor: pointer;
+    margin-top: 4px; font-size: 11px; color: #ff2442; font-weight: 500; cursor: pointer;
   }
 
-  .comment-input-bar {
+  /* 底部固定操作栏 */
+  .note-action-bar {
     position: absolute; bottom: 0; left: 0; right: 0;
-    background: #fff; border-top: 1px solid #eee;
-    padding: 9px 14px; display: flex; gap: 8px; align-items: center;
+    background: #fff; border-top: 1px solid #f0f0f0;
+    padding: 8px 16px 10px;
+    display: flex; align-items: center; gap: 0;
   }
-  .comment-input {
-    flex: 1; background: #f5f5f5; border: none;
-    border-radius: 18px; padding: 7px 12px; font-size: 13px; outline: none; color: #333;
+  .na-input {
+    flex: 1; background: #f5f5f5; border: none; border-radius: 18px;
+    padding: 7px 14px; font-size: 13px; color: #bbb; outline: none; cursor: text;
+    display: flex; align-items: center; gap: 6px;
   }
-  .comment-input::placeholder { color: #bbb; }
-  .send-btn {
-    background: #ff2442; color: #fff; border: none;
-    border-radius: 18px; padding: 7px 14px; font-size: 13px; cursor: pointer;
-  }
-  .comment-action-bar {
-    position: absolute; bottom: 0; left: 0; right: 0;
-    background: #fff; border-top: 1px solid #eee;
-    padding: 8px 20px; display: flex; align-items: center; justify-content: space-between;
-  }
-  .action-item { display: flex; flex-direction: column; align-items: center; gap: 1px; font-size: 10px; color: #666; cursor: pointer; }
-  .action-item .icon { font-size: 22px; }
-  .action-likes { font-size: 13px; font-weight: 600; color: #333; }
+  .na-pencil { font-size: 13px; color: #bbb; }
+  .na-actions { display: flex; align-items: center; gap: 16px; margin-left: 14px; }
+  .na-action { display: flex; align-items: center; gap: 4px; font-size: 13px; color: #333; font-weight: 500; cursor: pointer; }
+  .na-action-icon { font-size: 20px; }
 
   /* ===== 私信页 ===== */
   .dm-header {
@@ -598,99 +662,204 @@
 <!-- ============ ③ 评论区 ============ -->
 <div class="phone-wrap">
   <div class="phone-label">③ 评论区 — @找货薯 · 文字链回复</div>
-  <div class="phone" style="display:flex;flex-direction:column;">
+  <div class="phone" style="display:flex;flex-direction:column;position:relative;">
     <div class="phone-notch"><div class="phone-notch-inner"></div></div>
     <div class="status-bar">
       <span>09:41</span>
       <div style="font-size:11px;">▪▪▪ 5G 🔋</div>
     </div>
 
-    <!-- 笔记封面 -->
-    <div class="note-banner">
-      <div>
-        <div class="note-banner-title">✨ 秋冬穿搭灵感合集<br>多巴胺配色玩法大公开</div>
-        <div class="note-banner-sub">by 时尚辣妈Amy · 4.1万点赞</div>
+    <!-- 可滚动主体 -->
+    <div class="screen" style="padding-bottom:52px;">
+
+      <!-- 顶部导航 -->
+      <div class="note-nav">
+        <div class="note-nav-left">
+          <span style="font-size:20px;color:#333;">‹</span>
+          <div class="note-nav-avatar">🌸</div>
+          <div class="note-nav-name">时尚辣妈Amy</div>
+        </div>
+        <div class="note-nav-right">
+          <button class="note-follow-btn">关注</button>
+          <span class="note-share-icon">↗</span>
+        </div>
       </div>
-    </div>
 
-    <!-- 评论列表 -->
-    <div class="comment-section" id="comment-section" style="position:relative;">
-      <div class="comment-header">评论 · 1,204条</div>
+      <!-- 5列拼图主图 -->
+      <div class="note-photo-grid">
+        <div class="note-photo-cell" style="background:linear-gradient(135deg,#f8c8d4,#f0a0b8);">🧥</div>
+        <div class="note-photo-cell" style="background:linear-gradient(135deg,#fde8c0,#f8d090);">🌸</div>
+        <div class="note-photo-cell" style="background:linear-gradient(135deg,#c8d8f8,#a8c0f0);">👗</div>
+        <div class="note-photo-cell" style="background:linear-gradient(135deg,#d8e8d8,#b8d8b8);">✨</div>
+        <div class="note-photo-cell" style="background:linear-gradient(135deg,#e8d0f0,#d0b0e8);">💃</div>
+        <div class="note-photo-cell" style="background:linear-gradient(135deg,#f8d0c8,#f0b0a0);">🎀</div>
+        <div class="note-photo-cell" style="background:linear-gradient(135deg,#f0f0c8,#e0e0a0);">👚</div>
+        <div class="note-photo-cell" style="background:linear-gradient(135deg,#c8f0f0,#a0e0e0);">🌿</div>
+        <div class="note-photo-cell" style="background:linear-gradient(135deg,#f8c8e8,#f0a0d0);">🩱</div>
+        <div class="note-photo-cell" style="background:linear-gradient(135deg,#d0d8f8,#b0c0f0);">🎨</div>
+        <div class="note-photo-cell" style="background:linear-gradient(135deg,#f0e8c8,#e8d8a0);">🧣</div>
+        <div class="note-photo-cell" style="background:linear-gradient(135deg,#d8f0d8,#b8e8b8);">🌺</div>
+        <div class="note-photo-cell" style="background:linear-gradient(135deg,#f8d8c0,#f0c0a0);">👜</div>
+        <div class="note-photo-cell" style="background:linear-gradient(135deg,#e0c8f8,#c8a8f0);">💜</div>
+        <div class="note-photo-cell" style="background:linear-gradient(135deg,#c8e8f8,#a8d8f0);">🌊</div>
+      </div>
 
-      <div class="comment-item">
-        <div class="avatar">🌸</div>
-        <div class="comment-body">
-          <div class="comment-user">泡泡糖小熊</div>
-          <div class="comment-text">博主身材真的好绝！羡慕</div>
-          <div class="comment-time-row">
-            <span class="comment-time">3小时前 · 上海</span>
-            <span class="comment-like">♡</span>
+      <!-- 笔记正文 -->
+      <div class="note-body-section">
+        <div class="note-main-title">跟着ins博主学穿搭｜花丛穿在身上</div>
+        <div class="note-main-text">做行走的夏日调色盘 🎨</div>
+        <div class="note-tags">#微胖穿搭 #微胖夏日穿搭 #微胖彩色穿搭 #跟着植物学穿搭 #玩转春夏色彩穿搭 #跟着时尚博主学穿搭 #时尚风格图鉴</div>
+        <div class="note-edit-time">
+          <span>编辑于 2025-04-16 · 浙江</span>
+          <span class="note-dislike">😶 不喜欢</span>
+        </div>
+      </div>
+
+      <!-- 评论区 -->
+      <div class="comment-count-row">
+        <span>共 8 条评论</span>
+        <span class="comment-sort-icon">≡</span>
+      </div>
+
+      <!-- 发言输入行 -->
+      <div class="comment-input-row">
+        <div class="ci-avatar">🐱</div>
+        <div style="flex:1;background:#f5f5f5;border-radius:20px;padding:8px 14px;display:flex;align-items:center;justify-content:space-between;">
+          <span style="font-size:13px;color:#bbb;">让大家听到你的声音</span>
+          <div class="ci-icons"><span>🎤</span><span>🖼️</span></div>
+        </div>
+      </div>
+
+      <!-- 评论1 -->
+      <div class="cmt-item">
+        <div class="cmt-avatar" style="background:linear-gradient(135deg,#c8e8ff,#a8d0ff);">🦎</div>
+        <div class="cmt-right">
+          <div class="cmt-user-row"><span class="cmt-username">77</span></div>
+          <div class="cmt-text">可以问一下她的账号叫什么吗🥳</div>
+          <div class="cmt-meta-row">
+            <div class="cmt-meta-left">
+              <span>2025-12-05 · 江苏</span>
+              <span class="cmt-reply-btn">回复</span>
+            </div>
+            <div class="cmt-meta-right">
+              <span class="cmt-like">♡</span>
+              <span class="cmt-dislike-icon">😐</span>
+            </div>
+          </div>
+          <!-- 作者嵌套回复 -->
+          <div class="cmt-nested">
+            <div class="cmt-nested-item">
+              <div class="cmt-nested-avatar" style="background:linear-gradient(135deg,#667eea,#764ba2);">🌸</div>
+              <div class="cmt-nested-body">
+                <div class="cmt-nested-user">时尚辣妈Amy <span class="cmt-author-tag">作者</span></div>
+                <div class="cmt-nested-text">ins搜 k_eels</div>
+                <div class="cmt-nested-meta">
+                  <div class="cmt-nested-meta-left"><span>2025-12-05 · 浙江</span><span>回复</span><span>翻译</span></div>
+                  <div class="cmt-nested-meta-right"><span>♡ 1</span><span>😐</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="cmt-expand">展开 1 条回复</div>
+        </div>
+      </div>
+
+      <!-- 评论2（触发评论）-->
+      <div class="cmt-item" id="trigger-comment">
+        <div class="cmt-avatar" style="background:linear-gradient(135deg,#ffd6db,#ffb3bb);">🧑</div>
+        <div class="cmt-right">
+          <div class="cmt-user-row"><span class="cmt-username">微胖也要穿美美的</span></div>
+          <div class="cmt-text">@找货薯 微胖身材，想穿这种多巴胺风格，有显瘦又好看的推荐吗？预算300以内</div>
+          <div class="cmt-meta-row">
+            <div class="cmt-meta-left">
+              <span>2025-08-08 · 江苏</span>
+              <span class="cmt-reply-btn">回复</span>
+            </div>
+            <div class="cmt-meta-right">
+              <span class="cmt-like">♡ 3</span>
+              <span class="cmt-dislike-icon">😐</span>
+            </div>
+          </div>
+          <!-- 找货薯嵌套回复 -->
+          <div class="cmt-nested" id="huashu-nested" style="display:none;">
+            <div class="cmt-nested-item">
+              <div class="cmt-nested-avatar" style="background:linear-gradient(135deg,#ff2442,#ff6b35);">🤖</div>
+              <div class="cmt-nested-body">
+                <div class="cmt-nested-user huashu-nested-user">找货薯</div>
+                <div class="cmt-nested-text" id="huashu-reply-text"></div>
+                <div class="cmt-nested-meta">
+                  <div class="cmt-nested-meta-left"><span>刚刚</span><span>回复</span></div>
+                  <div class="cmt-nested-meta-right"><span>♡</span><span>😐</span></div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="comment-item">
-        <div class="avatar">🎀</div>
-        <div class="comment-body">
-          <div class="comment-user">爱穿搭的小鱼</div>
-          <div class="comment-text">第二套配色太绝了，有没有链接啊</div>
-          <div class="comment-time-row">
-            <span class="comment-time">2小时前 · 北京</span>
-            <span class="comment-like">♡ 12</span>
+      <!-- 评论3 -->
+      <div class="cmt-item">
+        <div class="cmt-avatar" style="background:linear-gradient(135deg,#c8e8ff,#90c8ff);">😺</div>
+        <div class="cmt-right">
+          <div class="cmt-user-row"><span class="cmt-username">小满胜万全</span></div>
+          <div class="cmt-text">怎么🥹搜不到啊</div>
+          <div class="cmt-meta-row">
+            <div class="cmt-meta-left">
+              <span>2025-08-08 · 山东</span>
+              <span class="cmt-reply-btn">回复</span>
+            </div>
+            <div class="cmt-meta-right">
+              <span class="cmt-like">♡ 1</span>
+              <span class="cmt-dislike-icon">😐</span>
+            </div>
+          </div>
+          <div class="cmt-nested">
+            <div class="cmt-nested-item">
+              <div class="cmt-nested-avatar" style="background:linear-gradient(135deg,#e8d0f8,#d0b0f0);">🐰</div>
+              <div class="cmt-nested-body">
+                <div class="cmt-nested-user">玩够12圈</div>
+                <div class="cmt-nested-text">我也找不到🥹</div>
+                <div class="cmt-nested-meta">
+                  <div class="cmt-nested-meta-left"><span>2025-10-18 · 广东</span><span>回复</span></div>
+                  <div class="cmt-nested-meta-right"><span>♡ 1</span><span>😐</span></div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- 触发评论 -->
-      <div class="comment-item" id="trigger-comment">
-        <div class="avatar" style="background:#ffe0e0;">🧑</div>
-        <div class="comment-body">
-          <div class="comment-user">微胖也要穿美美的</div>
-          <div class="comment-text" id="trigger-text">@找货薯 我是微胖身材，想穿这种多巴胺风格，有没有显瘦又好看的推荐？预算300以内</div>
-          <div class="comment-time-row">
-            <span class="comment-time">刚刚 · 江苏</span>
-            <span class="comment-like">♡</span>
-          </div>
-          <!-- 找货薯回复（文字链形式）-->
-          <div class="huashu-reply" id="huashu-reply">
-            <div class="huashu-reply-tag">🤖 找货薯</div>
-            <div id="huashu-reply-text"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="comment-item">
-        <div class="avatar">🦋</div>
-        <div class="comment-body">
-          <div class="comment-user">元气满满向日葵</div>
-          <div class="comment-text">好看好看！博主是几码的呀</div>
-          <div class="comment-time-row">
-            <span class="comment-time">1分钟前 · 广东</span>
-            <span class="comment-like">♡ 3</span>
+      <!-- 评论4 -->
+      <div class="cmt-item">
+        <div class="cmt-avatar" style="background:linear-gradient(135deg,#f8d0e8,#f0b0d0);">🌺</div>
+        <div class="cmt-right">
+          <div class="cmt-user-row"><span class="cmt-username">佳佳＋佳</span></div>
+          <div class="cmt-text">多巴胺穿搭</div>
+          <div class="cmt-meta-row">
+            <div class="cmt-meta-left">
+              <span>刚刚 · 广东</span>
+              <span class="cmt-reply-btn">回复</span>
+            </div>
+            <div class="cmt-meta-right">
+              <span class="cmt-like">♡</span>
+              <span class="cmt-dislike-icon">😐</span>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="comment-item">
-        <div class="avatar">🐰</div>
-        <div class="comment-body">
-          <div class="comment-user">momo</div>
-          <div class="comment-text">哇 宝宝，想要外套和裙子链接</div>
-          <div class="comment-time-row">
-            <span class="comment-time">2分钟前 · 江西</span>
-            <span class="comment-like">♡</span>
-          </div>
-        </div>
-      </div>
-    </div>
+    </div><!-- /screen -->
 
-    <!-- 底部操作栏 -->
-    <div class="comment-action-bar">
-      <div style="flex:1; background:#f5f5f5; border-radius:18px; padding:7px 14px; font-size:13px; color:#bbb;">说点什么…</div>
-      <div style="display:flex;gap:16px;margin-left:14px;">
-        <div class="action-item"><span class="icon">♡</span><span class="action-likes">727</span></div>
-        <div class="action-item"><span class="icon">☆</span><span>152</span></div>
-        <div class="action-item"><span class="icon">💬</span><span>372</span></div>
+    <!-- 底部固定操作栏 -->
+    <div class="note-action-bar">
+      <div class="na-input">
+        <span class="na-pencil">✏️</span>
+        <span style="font-size:13px;color:#bbb;">说点什么…</span>
+      </div>
+      <div class="na-actions">
+        <div class="na-action"><span class="na-action-icon">♡</span><span>592</span></div>
+        <div class="na-action"><span class="na-action-icon">☆</span><span>321</span></div>
+        <div class="na-action"><span class="na-action-icon">💬</span><span>8</span></div>
       </div>
     </div>
   </div>
@@ -922,15 +1091,15 @@ window.addEventListener('DOMContentLoaded', () => {
 
 // ==================== 评论区：初始预触发 ====================
 setTimeout(() => {
-  const replyEl = document.getElementById('huashu-reply');
+  const nestedEl = document.getElementById('huashu-nested');
   const textEl = document.getElementById('huashu-reply-text');
-  textEl.innerHTML = `回复<strong>微胖也要穿美美的</strong>：微胖穿多巴胺风首选渐变色＋A字廓形，推荐你看
-    <a class="reply-product-link" onclick="alert('跳转商品')">渐变针织开衫（¥189）</a>，
-    显瘦显高效果最好；还有
-    <a class="reply-product-link" onclick="alert('跳转商品')">薄荷绿A字半裙（¥148）</a>
-    高腰线显腿长。都在300以内，笔记里真人上身评价很好✨
+  textEl.innerHTML = `微胖穿多巴胺风首选渐变色＋A字廓形～推荐
+    <a class="reply-product-link" onclick="alert('跳转商品详情')">渐变针织开衫（¥189）</a>
+    显瘦显高效果最好；
+    <a class="reply-product-link" onclick="alert('跳转商品详情')">薄荷绿A字半裙（¥148）</a>
+    高腰线显腿长 ✨ 都在300以内，真人微胖上身好评很多
     <div class="reply-more" onclick="alert('进入私信，已带入上下文')">💬 查看更多推荐 →</div>`;
-  replyEl.classList.add('show');
+  nestedEl.style.display = 'block';
 }, 400);
 
 // ==================== 私信页逻辑 ====================
