@@ -6,695 +6,526 @@
 <title>小红书线索经营工作台</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
-* { box-sizing: border-box; }
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
-  background: #F7F8FA;
-  color: #1a1a1a;
-}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif; background: #F7F8FA; color: #1a1a1a; height: 100vh; overflow: hidden; display: flex; }
 
 /* ── 侧边栏 ── */
-.sidebar {
-  width: 220px;
-  min-width: 220px;
-  background: #fff;
-  border-right: 1px solid #F0F0F0;
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  position: sticky;
-  top: 0;
-  overflow: hidden;
-}
-.nav-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 14px;
-  border-radius: 10px;
-  font-size: 14px;
-  color: #555;
-  cursor: pointer;
-  transition: all .18s;
-  position: relative;
-  font-weight: 500;
-}
+.sidebar { width: 200px; min-width: 200px; background: #fff; border-right: 1px solid #EBEBEB; display: flex; flex-direction: column; height: 100vh; }
+.nav-logo { padding: 18px 16px 14px; border-bottom: 1px solid #F0F0F0; display: flex; align-items: center; gap: 10px; }
+.logo-icon { width: 34px; height: 34px; border-radius: 10px; background: linear-gradient(135deg, #FF2442, #FF6B7A); display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 3px 8px rgba(255,36,66,.3); }
+nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.nav-section { font-size: 10px; color: #C0C0C0; font-weight: 700; letter-spacing: .08em; padding: 10px 8px 4px; }
+.nav-item { display: flex; align-items: center; gap: 9px; padding: 9px 10px; border-radius: 9px; font-size: 13px; color: #555; cursor: pointer; transition: all .15s; font-weight: 500; position: relative; }
 .nav-item:hover { background: #FFF5F6; color: #FF2442; }
 .nav-item.active { background: #FFF0F2; color: #FF2442; font-weight: 600; }
-.nav-badge {
-  margin-left: auto;
-  background: #FF2442;
-  color: #fff;
-  font-size: 11px;
-  font-weight: 700;
-  padding: 1px 6px;
-  border-radius: 20px;
-  min-width: 18px;
-  text-align: center;
-}
-.nav-icon { width: 20px; height: 20px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+.nav-badge { margin-left: auto; background: #FF2442; color: #fff; font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 20px; }
+.nav-user { padding: 12px 12px 16px; border-top: 1px solid #F0F0F0; }
+.user-card { background: #F7F8FA; border-radius: 10px; padding: 9px 10px; display: flex; align-items: center; gap: 8px; }
 
-/* ── 页面切换 ── */
-.page { display: none; }
-.page.active { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+/* ── 页面容器 ── */
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+.page { display: none; flex: 1; flex-direction: column; overflow: hidden; }
+.page.active { display: flex; }
+.topbar { height: 54px; background: #fff; border-bottom: 1px solid #EBEBEB; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+.page-body { flex: 1; overflow-y: auto; padding: 20px 24px; }
 
-/* ── 顶栏 ── */
-.topbar {
-  height: 56px;
-  background: #fff;
-  border-bottom: 1px solid #F0F0F0;
-  padding: 0 28px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-shrink: 0;
-}
-.topbar-title { font-size: 16px; font-weight: 700; color: #1a1a1a; }
-.topbar-sub { font-size: 12px; color: #999; margin-top: 1px; }
+/* ── 卡片 ── */
+.card { background: #fff; border-radius: 14px; border: 1px solid #EBEBEB; }
+.stat-card { background: #fff; border-radius: 14px; border: 1px solid #EBEBEB; padding: 18px 20px; position: relative; overflow: hidden; }
 
-/* ── 主内容滚动区 ── */
-.page-body { flex: 1; overflow-y: auto; padding: 24px 28px; }
+/* ── 工作台三列 ── */
+.wb-layout { flex: 1; display: flex; overflow: hidden; min-height: 0; }
+.wb-list-col { width: 260px; min-width: 260px; background: #fff; border-right: 1px solid #EBEBEB; display: flex; flex-direction: column; overflow: hidden; }
+.wb-detail-col { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: #F7F8FA; min-width: 0; border-right: 1px solid #EBEBEB; }
+.wb-sidebar-col { width: 260px; min-width: 260px; background: #fff; display: flex; flex-direction: column; overflow: hidden; }
 
-/* ── 数据卡片 ── */
-.stat-card {
-  background: #fff;
-  border-radius: 16px;
-  padding: 20px 22px;
-  border: 1px solid #F0F0F0;
-  position: relative;
-  overflow: hidden;
-}
-.stat-card::before {
-  content: '';
-  position: absolute;
-  top: 0; right: 0;
-  width: 80px; height: 80px;
-  border-radius: 0 16px 0 80px;
-  opacity: .06;
-}
-.stat-card.red::before { background: #FF2442; }
-.stat-card.orange::before { background: #FF6B35; }
-.stat-card.blue::before { background: #3B82F6; }
-.stat-card.green::before { background: #10B981; }
-
-/* ── 小卡片通用 ── */
-.card {
-  background: #fff;
-  border-radius: 16px;
-  border: 1px solid #F0F0F0;
-}
-
-/* ── 意向标签 ── */
-.tag-hot { background: #FEE2E2; color: #DC2626; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 20px; }
-.tag-warm { background: #FEF3C7; color: #D97706; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 20px; }
-.tag-cold { background: #F3F4F6; color: #9CA3AF; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 20px; }
-
-/* ── 柱状图 ── */
-.bar-wrap { display: flex; align-items: flex-end; gap: 8px; height: 100px; }
-.bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
-.bar-val { font-size: 11px; color: #999; }
-.bar-body { width: 100%; border-radius: 6px 6px 0 0; transition: height .5s ease; }
-.bar-label { font-size: 11px; color: #bbb; }
-.bar-label.today { color: #FF2442; font-weight: 700; }
-.bar-val.today { color: #FF2442; font-weight: 700; }
-
-/* ── 对话气泡 ── */
-.bubble-ai {
-  background: #F4F5F7;
-  border-radius: 4px 14px 14px 14px;
-  padding: 10px 14px;
-  font-size: 13.5px;
-  color: #333;
-  line-height: 1.65;
-  max-width: 340px;
-}
-.bubble-user {
-  background: #FF2442;
-  color: #fff;
-  border-radius: 14px 4px 14px 14px;
-  padding: 10px 14px;
-  font-size: 13.5px;
-  line-height: 1.65;
-  max-width: 280px;
-}
-
-/* ── 线索列表 ── */
-.lead-row {
-  padding: 14px 16px;
-  border-bottom: 1px solid #F7F7F7;
-  cursor: pointer;
-  transition: background .15s;
-  position: relative;
-}
-.lead-row:hover { background: #FFF8F9; }
-.lead-row.active { background: #FFF0F2; }
-.lead-row.active::before {
-  content: '';
-  position: absolute;
-  left: 0; top: 0; bottom: 0;
-  width: 3px;
-  background: #FF2442;
-  border-radius: 0 2px 2px 0;
-}
+/* ── 对话列表 ── */
+.lead-item { padding: 13px 14px; border-bottom: 1px solid #F5F5F5; cursor: pointer; position: relative; transition: background .12s; }
+.lead-item:hover { background: #FFF8F9; }
+.lead-item.active { background: #FFF0F2; }
+.lead-item.active::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: #FF2442; border-radius: 0 2px 2px 0; }
 
 /* ── Tab ── */
-.tab-bar { display: flex; background: #F5F5F5; border-radius: 10px; padding: 3px; gap: 2px; }
-.tab-btn { flex: 1; text-align: center; padding: 6px 8px; border-radius: 8px; font-size: 12px; font-weight: 500; color: #888; cursor: pointer; transition: all .15s; white-space: nowrap; }
-.tab-btn.active { background: #fff; color: #1a1a1a; font-weight: 600; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+.tab-bar { display: flex; background: #F5F5F5; border-radius: 8px; padding: 3px; }
+.tab-btn { flex: 1; text-align: center; padding: 5px 4px; border-radius: 6px; font-size: 11px; font-weight: 500; color: #888; cursor: pointer; transition: all .15s; white-space: nowrap; }
+.tab-btn.active { background: #fff; color: #1a1a1a; font-weight: 700; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
 
-/* ── 预约状态徽章 ── */
-.badge-pending { background: #FFF7ED; color: #EA580C; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
-.badge-confirmed { background: #ECFDF5; color: #059669; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
-.badge-done { background: #EFF6FF; color: #2563EB; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
-.badge-cancelled { background: #F9FAFB; color: #9CA3AF; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
+/* ── 意向标签 ── */
+.tag { display: inline-flex; align-items: center; gap: 3px; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; }
+.tag-hot { background: #FEE2E2; color: #DC2626; }
+.tag-warm { background: #FEF3C7; color: #D97706; }
+.tag-cold { background: #F3F4F6; color: #9CA3AF; }
+.tag-pending { background: #FFF7ED; color: #EA580C; }
+.tag-ai { background: #EFF6FF; color: #2563EB; }
+.tag-taken { background: #F0FDF4; color: #16A34A; }
+
+/* ── 气泡 ── */
+.bubble-ai { background: #F4F5F7; border-radius: 3px 12px 12px 12px; padding: 9px 13px; font-size: 13px; color: #333; line-height: 1.65; max-width: 320px; }
+.bubble-user { background: #FF2442; color: #fff; border-radius: 12px 3px 12px 12px; padding: 9px 13px; font-size: 13px; line-height: 1.65; max-width: 280px; }
+.bubble-system { background: transparent; text-align: center; color: #bbb; font-size: 11px; padding: 4px 0; }
+
+/* ── Skill 记录 ── */
+.skill-record { background: #F0F7FF; border: 1px solid #DBEAFE; border-radius: 8px; padding: 8px 12px; font-size: 12px; color: #1E40AF; margin: 4px 0; display: flex; align-items: center; gap: 6px; }
 
 /* ── 按钮 ── */
-.btn-primary { background: #FF2442; color: #fff; border: none; border-radius: 10px; padding: 8px 20px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all .15s; }
-.btn-primary:hover { background: #E81F3A; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(255,36,66,.3); }
-.btn-ghost { background: transparent; color: #666; border: 1px solid #E5E7EB; border-radius: 10px; padding: 7px 16px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all .15s; }
-.btn-ghost:hover { background: #F9FAFB; border-color: #D1D5DB; }
-.btn-takeover { background: #FF2442; color: #fff; border: none; border-radius: 12px; padding: 11px 28px; font-size: 14px; font-weight: 700; cursor: pointer; transition: all .18s; box-shadow: 0 4px 14px rgba(255,36,66,.3); }
-.btn-takeover:hover { background: #E81F3A; transform: translateY(-1px); }
-.btn-takeover.done { background: #10B981; box-shadow: 0 4px 14px rgba(16,185,129,.25); }
-.btn-takeover.done:hover { background: #059669; }
+.btn-red { background: #FF2442; color: #fff; border: none; border-radius: 9px; padding: 8px 18px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all .15s; }
+.btn-red:hover { background: #E81F3A; box-shadow: 0 3px 10px rgba(255,36,66,.3); }
+.btn-red:disabled { background: #10B981; cursor: default; box-shadow: none; }
+.btn-ghost { background: #fff; color: #555; border: 1px solid #DDDFE2; border-radius: 9px; padding: 7px 16px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all .15s; }
+.btn-ghost:hover { border-color: #FF2442; color: #FF2442; background: #FFF8F9; }
+.btn-sm { padding: 5px 12px; font-size: 12px; border-radius: 7px; }
 
-/* ── 回传状态按钮 ── */
-.status-btn { border: 1.5px solid #E5E7EB; color: #666; background: #fff; border-radius: 8px; padding: 6px 14px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all .15s; }
-.status-btn:hover { border-color: #FF2442; color: #FF2442; background: #FFF5F6; }
-.status-btn.selected { border-color: #FF2442; color: #FF2442; background: #FFF0F2; }
+/* ── 回复输入框区 ── */
+.reply-box { border-top: 1px solid #EBEBEB; background: #fff; padding: 12px 16px; flex-shrink: 0; }
+.reply-input { width: 100%; border: 1px solid #E5E7EB; border-radius: 10px; padding: 10px 14px; font-size: 13px; color: #1a1a1a; resize: none; outline: none; font-family: inherit; line-height: 1.55; transition: border-color .15s; }
+.reply-input:focus { border-color: #FF2442; box-shadow: 0 0 0 3px rgba(255,36,66,.08); }
+.reply-toolbar { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
+.reply-tools { display: flex; gap: 6px; }
+.tool-btn { width: 30px; height: 30px; border-radius: 7px; border: 1px solid #E5E7EB; background: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; transition: all .15s; color: #888; }
+.tool-btn:hover { background: #FFF5F6; border-color: #FF2442; color: #FF2442; }
 
-/* ── Range slider ── */
-input[type=range] { -webkit-appearance: none; width: 100%; height: 6px; border-radius: 3px; background: #F0F0F0; outline: none; }
-input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: #FF2442; cursor: pointer; box-shadow: 0 2px 6px rgba(255,36,66,.4); }
+/* ── 回传面板 ── */
+.feedback-panel { padding: 16px; border-bottom: 1px solid #F0F0F0; }
+.feedback-btn { border: 1.5px solid #E5E7EB; color: #555; background: #fff; border-radius: 8px; padding: 6px 0; font-size: 12px; font-weight: 600; cursor: pointer; transition: all .15s; text-align: center; }
+.feedback-btn:hover { border-color: #FF2442; color: #FF2442; background: #FFF8F9; }
+.feedback-btn.selected { border-color: #FF2442; color: #FF2442; background: #FFF0F2; }
+.feedback-btn.success { border-color: #10B981; color: #10B981; background: #ECFDF5; }
 
-/* ── Toggle ── */
-.toggle-wrap { position: relative; display: inline-block; width: 44px; height: 24px; }
-.toggle-wrap input { opacity: 0; width: 0; height: 0; }
-.toggle-slider { position: absolute; inset: 0; background: #E5E7EB; border-radius: 12px; transition: .2s; cursor: pointer; }
-.toggle-slider::before { content: ''; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: .2s; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
-.toggle-wrap input:checked + .toggle-slider { background: #FF2442; }
-.toggle-wrap input:checked + .toggle-slider::before { transform: translateX(20px); }
+/* ── 看板 ── */
+.board-stat { background: #fff; border-radius: 14px; border: 1px solid #EBEBEB; padding: 18px 20px; }
+.lead-row { display: flex; align-items: center; gap: 12px; padding: 11px 16px; border-bottom: 1px solid #F5F5F5; cursor: pointer; transition: background .12s; }
+.lead-row:hover { background: #FFF8F9; }
+.lead-row:last-child { border-bottom: none; }
+.empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; color: #C0C0C0; }
 
-/* ── avatar circle ── */
-.av { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; color: #fff; flex-shrink: 0; }
+/* ── avatar ── */
+.av { border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #fff; flex-shrink: 0; }
 
-/* ── 滚动条美化 ── */
-::-webkit-scrollbar { width: 5px; height: 5px; }
+/* ── 进度环 ── */
+.ring-wrap { position: relative; width: 80px; height: 80px; }
+.ring-label { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+
+/* ── scrollbar ── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #E5E7EB; border-radius: 10px; }
-::-webkit-scrollbar-thumb:hover { background: #D1D5DB; }
+::-webkit-scrollbar-thumb { background: #E0E0E0; border-radius: 4px; }
 
-/* ── 飞轮提示 ── */
-.flywheel-tip { background: linear-gradient(135deg, #FFF0F2, #FFF7F8); border: 1px solid #FFD6DC; border-radius: 10px; padding: 10px 14px; color: #CC1033; font-size: 12px; font-weight: 500; }
+/* ── 数据为空兜底 ── */
+.empty-banner { background: #F9FAFB; border: 1px dashed #D1D5DB; border-radius: 12px; padding: 28px; text-align: center; color: #9CA3AF; }
 
-/* ── 分隔 ── */
-.divider { width: 1px; background: #F0F0F0; align-self: stretch; }
+/* ── 回传激励提示 ── */
+.flywheel { background: linear-gradient(135deg, #FFF0F2, #FFF8F9); border: 1px solid #FFD6DC; border-radius: 10px; padding: 10px 14px; }
 
-/* ── 工作台三列布局 ── */
-.workbench-layout { display: flex; flex: 1; min-height: 0; overflow: hidden; }
-.wb-list { width: 280px; min-width: 280px; background: #fff; border-right: 1px solid #F0F0F0; display: flex; flex-direction: column; overflow: hidden; }
-.wb-detail { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: #F7F8FA; }
+/* ── toggle ── */
+.toggle-wrap { position: relative; display: inline-block; width: 40px; height: 22px; }
+.toggle-wrap input { opacity: 0; width: 0; height: 0; }
+.toggle-slider { position: absolute; inset: 0; background: #E5E7EB; border-radius: 11px; transition: .2s; cursor: pointer; }
+.toggle-slider::before { content: ''; position: absolute; width: 16px; height: 16px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: .2s; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+.toggle-wrap input:checked + .toggle-slider { background: #FF2442; }
+.toggle-wrap input:checked + .toggle-slider::before { transform: translateX(18px); }
 
-/* ── 图表空心圆 ── */
-.donut { position: relative; width: 90px; height: 90px; }
-.donut-hole { position: absolute; inset: 20px; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; flex-direction: column; }
+/* ── 柱状图 ── */
+.chart-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.chart-bar { width: 100%; border-radius: 5px 5px 0 0; }
+.chart-val { font-size: 10px; color: #999; }
+.chart-lbl { font-size: 10px; color: #C0C0C0; }
+.chart-lbl.today { color: #FF2442; font-weight: 700; }
+.chart-val.today { color: #FF2442; font-weight: 700; }
+
+/* 模态 */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.4); display: flex; align-items: center; justify-content: center; z-index: 100; backdrop-filter: blur(2px); }
+.modal { background: #fff; border-radius: 18px; padding: 28px; width: 420px; box-shadow: 0 20px 60px rgba(0,0,0,.15); }
 </style>
 </head>
-<body style="display:flex; height:100vh; overflow:hidden;">
+<body>
 
-<!-- ════════════════════════════════
-     侧边栏
-════════════════════════════════ -->
+<!-- ══════ 侧边栏 ══════ -->
 <aside class="sidebar">
-  <!-- Logo -->
-  <div style="padding:20px 18px 16px; border-bottom:1px solid #F0F0F0;">
-    <div style="display:flex; align-items:center; gap:10px;">
-      <div style="width:36px;height:36px;border-radius:12px;background:linear-gradient(135deg,#FF2442,#FF6B7A);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 10px rgba(255,36,66,.3);">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z" fill="white"/></svg>
-      </div>
-      <div>
-        <div style="font-size:14px;font-weight:700;color:#1a1a1a;">线索经营</div>
-        <div style="font-size:11px;color:#999;margin-top:1px;">商家工作台</div>
-      </div>
+  <div class="nav-logo">
+    <div class="logo-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" fill="rgba(255,255,255,.3)"/><path d="M9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z" fill="white"/></svg>
+    </div>
+    <div>
+      <div style="font-size:13px;font-weight:700;color:#1a1a1a;">线索经营</div>
+      <div style="font-size:10px;color:#bbb;margin-top:1px;">商家工作台</div>
     </div>
   </div>
-
-  <!-- 菜单 -->
-  <nav style="padding:12px 10px;flex:1;display:flex;flex-direction:column;gap:4px;">
-    <div style="font-size:11px;color:#bbb;font-weight:600;padding:4px 6px 8px;letter-spacing:.05em;">MAIN</div>
-    <div class="nav-item active" id="nav-dashboard" onclick="showPage('dashboard')">
-      <div class="nav-icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
-      </div>
+  <nav>
+    <div class="nav-section">WORKSPACE</div>
+    <div class="nav-item active" id="nav-board" onclick="showPage('board')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
       线索看板
     </div>
-    <div class="nav-item" id="nav-workbench" onclick="showPage('workbench')">
-      <div class="nav-icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-      </div>
+    <div class="nav-item" id="nav-wb" onclick="showPage('wb')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
       线索工作台
       <span class="nav-badge">3</span>
     </div>
-    <div class="nav-item" id="nav-bookings" onclick="showPage('bookings')">
-      <div class="nav-icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-      </div>
+    <div class="nav-item" id="nav-book" onclick="showPage('book')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
       预约管理
     </div>
-    <div style="margin-top:8px;font-size:11px;color:#bbb;font-weight:600;padding:4px 6px 8px;letter-spacing:.05em;">CONFIG</div>
-    <div class="nav-item" id="nav-aiconfig" onclick="showPage('aiconfig')">
-      <div class="nav-icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M4.93 19.07l1.41-1.41M19.07 19.07l-1.41-1.41M12 2v2M12 20v2M2 12h2M20 12h2"/></svg>
-      </div>
-      AI 配置
-    </div>
   </nav>
-
-  <!-- 用户 -->
-  <div style="padding:14px 14px 18px;border-top:1px solid #F0F0F0;">
-    <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;background:#F7F8FA;">
-      <div class="av" style="width:32px;height:32px;font-size:13px;background:linear-gradient(135deg,#FF7A8E,#FF2442);">婚</div>
+  <div class="nav-user">
+    <div class="user-card">
+      <div class="av" style="width:30px;height:30px;font-size:12px;background:linear-gradient(135deg,#FF7A8E,#FF2442);">婚</div>
       <div style="flex:1;min-width:0;">
-        <div style="font-size:13px;font-weight:600;color:#1a1a1a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">婚纱摄影旗舰店</div>
-        <div style="font-size:11px;color:#999;">企业号 · 已认证</div>
+        <div style="font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">婚纱摄影旗舰店</div>
+        <div style="font-size:10px;color:#bbb;margin-top:1px;">企业号</div>
       </div>
-      <div style="width:8px;height:8px;border-radius:50%;background:#10B981;flex-shrink:0;"></div>
+      <div style="width:7px;height:7px;border-radius:50%;background:#10B981;flex-shrink:0;"></div>
     </div>
   </div>
 </aside>
 
-<!-- ════════════════════════════════
-     内容区
-════════════════════════════════ -->
-<div style="flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;">
+<!-- ══════ 主内容 ══════ -->
+<div class="main">
 
 
-<!-- ════  页面1：线索看板  ════ -->
-<div id="page-dashboard" class="page active">
+<!-- ═══════════════════════════════════
+  页面①：线索工作台
+═══════════════════════════════════ -->
+<div id="page-wb" class="page" style="display:none;flex-direction:column;">
   <div class="topbar">
     <div>
-      <div class="topbar-title">线索看板</div>
-      <div class="topbar-sub">今日数据 · 2026年4月1日 周三</div>
+      <span style="font-size:15px;font-weight:700;">线索工作台</span>
+      <span style="font-size:12px;color:#999;margin-left:10px;">实时对话管理</span>
     </div>
-    <div style="display:flex;gap:10px;">
-      <button class="btn-ghost" style="font-size:13px;">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;margin-right:5px;vertical-align:middle;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        导出报告
-      </button>
-      <button class="btn-primary">+ 添加线索</button>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <span style="font-size:12px;color:#999;background:#F5F5F5;padding:4px 10px;border-radius:20px;">🔄 自动刷新 30s</span>
     </div>
   </div>
 
-  <div class="page-body">
-    <!-- 数据卡片 -->
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px;">
-      <div class="stat-card red">
-        <div style="font-size:12px;color:#999;margin-bottom:6px;">今日新增线索</div>
-        <div style="font-size:32px;font-weight:800;color:#1a1a1a;line-height:1;">47</div>
-        <div style="margin-top:8px;font-size:12px;color:#10B981;font-weight:600;">↑ 12% 较昨日</div>
-        <div style="position:absolute;top:18px;right:18px;font-size:26px;opacity:.7;">🎯</div>
-      </div>
-      <div class="stat-card orange">
-        <div style="font-size:12px;color:#999;margin-bottom:6px;">高意向线索</div>
-        <div style="font-size:32px;font-weight:800;color:#1a1a1a;line-height:1;">18</div>
-        <div style="margin-top:8px;display:flex;gap:6px;">
-          <span class="tag-hot">热 8</span>
-          <span class="tag-warm">温 10</span>
-        </div>
-        <div style="position:absolute;top:18px;right:18px;font-size:26px;opacity:.7;">🔥</div>
-      </div>
-      <div class="stat-card blue">
-        <div style="font-size:12px;color:#999;margin-bottom:6px;">AI 处理率</div>
-        <div style="font-size:32px;font-weight:800;color:#1a1a1a;line-height:1;">76%</div>
-        <div style="margin-top:8px;font-size:12px;color:#999;">36 / 47 条 AI 自动处理</div>
-        <div style="position:absolute;top:18px;right:18px;font-size:26px;opacity:.7;">🤖</div>
-      </div>
-      <div class="stat-card green">
-        <div style="font-size:12px;color:#999;margin-bottom:6px;">回传完成率</div>
-        <div style="font-size:32px;font-weight:800;color:#FF2442;line-height:1;">62%</div>
-        <div style="margin-top:8px;font-size:12px;color:#FF2442;font-weight:600;">↑ 5% · 飞轮加速</div>
-        <div style="position:absolute;top:18px;right:18px;font-size:26px;opacity:.7;">♻️</div>
-      </div>
-    </div>
-
-    <!-- 图表 + 意向分布 -->
-    <div style="display:grid;grid-template-columns:1fr 380px;gap:16px;margin-bottom:20px;">
-      <!-- 柱状图 -->
-      <div class="card" style="padding:22px 24px;">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
-          <div style="font-size:14px;font-weight:700;color:#1a1a1a;">近7日线索趋势</div>
-          <div style="font-size:12px;color:#999;">条数</div>
-        </div>
-        <div class="bar-wrap">
-          <div class="bar-col">
-            <div class="bar-val">32</div>
-            <div class="bar-body" style="height:65%;background:linear-gradient(to top,#FFBCC5,#FFD6DC);"></div>
-            <div class="bar-label">3/26</div>
-          </div>
-          <div class="bar-col">
-            <div class="bar-val">28</div>
-            <div class="bar-body" style="height:56%;background:linear-gradient(to top,#FFBCC5,#FFD6DC);"></div>
-            <div class="bar-label">3/27</div>
-          </div>
-          <div class="bar-col">
-            <div class="bar-val">41</div>
-            <div class="bar-body" style="height:82%;background:linear-gradient(to top,#FF8E9E,#FFB0BD);"></div>
-            <div class="bar-label">3/28</div>
-          </div>
-          <div class="bar-col">
-            <div class="bar-val">35</div>
-            <div class="bar-body" style="height:70%;background:linear-gradient(to top,#FFBCC5,#FFD6DC);"></div>
-            <div class="bar-label">3/29</div>
-          </div>
-          <div class="bar-col">
-            <div class="bar-val">38</div>
-            <div class="bar-body" style="height:76%;background:linear-gradient(to top,#FF8E9E,#FFB0BD);"></div>
-            <div class="bar-label">3/30</div>
-          </div>
-          <div class="bar-col">
-            <div class="bar-val">42</div>
-            <div class="bar-body" style="height:84%;background:linear-gradient(to top,#FF7A8E,#FFAAB8);"></div>
-            <div class="bar-label">3/31</div>
-          </div>
-          <div class="bar-col">
-            <div class="bar-val today">47</div>
-            <div class="bar-body" style="height:94%;background:linear-gradient(to top,#FF2442,#FF6B7A);box-shadow:0 4px 12px rgba(255,36,66,.35);"></div>
-            <div class="bar-label today">今日</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 意向分布 -->
-      <div class="card" style="padding:22px 24px;">
-        <div style="font-size:14px;font-weight:700;color:#1a1a1a;margin-bottom:20px;">意向分布</div>
-        <div style="display:flex;flex-direction:column;gap:16px;">
-          <div>
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-              <div style="display:flex;align-items:center;gap:6px;font-size:13px;color:#444;font-weight:500;">
-                <div style="width:8px;height:8px;border-radius:2px;background:#FF2442;"></div>热意向
-              </div>
-              <span style="font-size:13px;font-weight:700;color:#FF2442;">8 条</span>
-            </div>
-            <div style="height:8px;background:#F3F4F6;border-radius:4px;overflow:hidden;">
-              <div style="height:100%;width:17%;background:linear-gradient(to right,#FF2442,#FF6B7A);border-radius:4px;"></div>
-            </div>
-          </div>
-          <div>
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-              <div style="display:flex;align-items:center;gap:6px;font-size:13px;color:#444;font-weight:500;">
-                <div style="width:8px;height:8px;border-radius:2px;background:#FBBF24;"></div>温意向
-              </div>
-              <span style="font-size:13px;font-weight:700;color:#D97706;">21 条</span>
-            </div>
-            <div style="height:8px;background:#F3F4F6;border-radius:4px;overflow:hidden;">
-              <div style="height:100%;width:45%;background:linear-gradient(to right,#FBBF24,#FCD34D);border-radius:4px;"></div>
-            </div>
-          </div>
-          <div>
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-              <div style="display:flex;align-items:center;gap:6px;font-size:13px;color:#444;font-weight:500;">
-                <div style="width:8px;height:8px;border-radius:2px;background:#D1D5DB;"></div>冷意向
-              </div>
-              <span style="font-size:13px;font-weight:700;color:#9CA3AF;">18 条</span>
-            </div>
-            <div style="height:8px;background:#F3F4F6;border-radius:4px;overflow:hidden;">
-              <div style="height:100%;width:38%;background:linear-gradient(to right,#D1D5DB,#E5E7EB);border-radius:4px;"></div>
-            </div>
-          </div>
-        </div>
-        <div class="flywheel-tip" style="margin-top:20px;">
-          💡 本周回传 31 条数据，有效线索率提升 <strong>+8%</strong>
-        </div>
-      </div>
-    </div>
-
-    <!-- 队列 -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-      <!-- 高意向 -->
-      <div class="card" style="padding:20px 22px;">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-          <div style="font-size:14px;font-weight:700;color:#1a1a1a;">🔥 高意向 · 优先跟进</div>
-          <button onclick="showPage('workbench')" style="font-size:12px;color:#FF2442;background:none;border:none;cursor:pointer;font-weight:600;">全部查看 →</button>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:4px;">
-          <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;background:#FAFAFA;cursor:pointer;" onmouseenter="this.style.background='#FFF5F6'" onmouseleave="this.style.background='#FAFAFA'">
-            <div class="av" style="background:linear-gradient(135deg,#FF7A8E,#FF2442);">梅</div>
-            <div style="flex:1;min-width:0;">
-              <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
-                <span style="font-size:13px;font-weight:600;">梅子酱</span>
-                <span class="tag-hot">🔴 热</span>
-              </div>
-              <div style="font-size:12px;color:#999;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">明确询问6月档期，已提供婚礼日期</div>
-            </div>
-            <button class="btn-primary" style="padding:6px 14px;font-size:12px;white-space:nowrap;" onclick="showPage('workbench')">跟进</button>
-          </div>
-          <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;background:#FAFAFA;cursor:pointer;" onmouseenter="this.style.background='#FFF5F6'" onmouseleave="this.style.background='#FAFAFA'">
-            <div class="av" style="background:linear-gradient(135deg,#C084FC,#A855F7);">晴</div>
-            <div style="flex:1;min-width:0;">
-              <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
-                <span style="font-size:13px;font-weight:600;">晴天小鹿</span>
-                <span class="tag-hot">🔴 热</span>
-              </div>
-              <div style="font-size:12px;color:#999;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">对比了3家，要求发套餐详情和档期</div>
-            </div>
-            <button class="btn-primary" style="padding:6px 14px;font-size:12px;white-space:nowrap;" onclick="showPage('workbench')">跟进</button>
-          </div>
-          <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;background:#FAFAFA;cursor:pointer;" onmouseenter="this.style.background='#FFF5F6'" onmouseleave="this.style.background='#FAFAFA'">
-            <div class="av" style="background:linear-gradient(135deg,#FCD34D,#F59E0B);">糖</div>
-            <div style="flex:1;min-width:0;">
-              <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
-                <span style="font-size:13px;font-weight:600;">糖糖爱摄影</span>
-                <span class="tag-warm">🟡 温</span>
-              </div>
-              <div style="font-size:12px;color:#999;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">咨询森系风格，想先看案例集</div>
-            </div>
-            <button class="btn-ghost" style="padding:6px 14px;font-size:12px;white-space:nowrap;" onclick="showPage('workbench')">跟进</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- 沉默唤醒 -->
-      <div class="card" style="padding:20px 22px;">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-          <div style="font-size:14px;font-weight:700;color:#1a1a1a;">😴 沉默线索 · 待唤醒</div>
-          <span style="font-size:12px;color:#999;">3条 · 超48h未回复</span>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:4px;">
-          <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;background:#FAFAFA;">
-            <div class="av" style="background:linear-gradient(135deg,#93C5FD,#60A5FA);">安</div>
-            <div style="flex:1;min-width:0;">
-              <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
-                <span style="font-size:13px;font-weight:600;color:#666;">安静的橡皮擦</span>
-                <span style="background:#F3F4F6;color:#9CA3AF;font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;">沉默 72h</span>
-              </div>
-              <div style="font-size:12px;color:#bbb;">AI推送了套餐，用户未回复</div>
-            </div>
-            <button class="btn-ghost" style="padding:6px 14px;font-size:12px;white-space:nowrap;">唤醒</button>
-          </div>
-          <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;background:#FAFAFA;">
-            <div class="av" style="background:linear-gradient(135deg,#6EE7B7,#34D399);">星</div>
-            <div style="flex:1;min-width:0;">
-              <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
-                <span style="font-size:13px;font-weight:600;color:#666;">星语心愿</span>
-                <span style="background:#F3F4F6;color:#9CA3AF;font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;">沉默 56h</span>
-              </div>
-              <div style="font-size:12px;color:#bbb;">询问过价格，看完套餐后未回复</div>
-            </div>
-            <button class="btn-ghost" style="padding:6px 14px;font-size:12px;white-space:nowrap;">唤醒</button>
-          </div>
-          <div style="margin-top:8px;padding:12px 14px;border-radius:10px;background:linear-gradient(135deg,#F0FDF4,#DCFCE7);border:1px solid #BBF7D0;">
-            <div style="font-size:12px;color:#059669;font-weight:600;">💡 建议发送唤醒话术：</div>
-            <div style="font-size:12px;color:#16A34A;margin-top:4px;">「上次聊到的套餐，本月有限时优惠，想了解吗？」</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<!-- ════  页面2：线索工作台  ════ -->
-<div id="page-workbench" class="page">
-  <div class="topbar">
-    <div>
-      <div class="topbar-title">线索工作台</div>
-      <div class="topbar-sub">实时对话管理 · AI 处理中 / 待接管 / 已接管</div>
-    </div>
-  </div>
-  <div class="workbench-layout">
+  <div class="wb-layout">
 
     <!-- 左：对话列表 -->
-    <div class="wb-list">
-      <div style="padding:14px 14px 10px;">
-        <div class="tab-bar" id="wb-tabs">
-          <div class="tab-btn active" onclick="wbTab(this,'wbt-ai')">AI处理中 <span style="color:#FF2442">2</span></div>
-          <div class="tab-btn" onclick="wbTab(this,'wbt-pending')">待接管 <span style="color:#EA580C">3</span></div>
+    <div class="wb-list-col">
+      <div style="padding:12px 12px 10px;border-bottom:1px solid #F0F0F0;">
+        <div class="tab-bar" id="wb-tab-bar">
+          <div class="tab-btn active" onclick="wbTab(this,'wbt-ai')">AI处理中<span style="color:#FF2442;margin-left:2px;">2</span></div>
+          <div class="tab-btn" onclick="wbTab(this,'wbt-pending')">待接管<span style="color:#EA580C;margin-left:2px;">3</span></div>
           <div class="tab-btn" onclick="wbTab(this,'wbt-done')">已接管</div>
         </div>
+        <div style="margin-top:8px;position:relative;">
+          <input placeholder="搜索线索…" style="width:100%;border:1px solid #EBEBEB;border-radius:7px;padding:6px 10px 6px 28px;font-size:12px;color:#555;outline:none;background:#FAFAFA;">
+          <svg style="position:absolute;left:9px;top:50%;transform:translateY(-50%);opacity:.4;" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        </div>
       </div>
+
       <div style="flex:1;overflow-y:auto;">
         <!-- AI处理中 -->
         <div id="wbt-ai">
-          <div class="lead-row active" onclick="leadSelect(this)">
-            <div style="display:flex;gap:10px;align-items:flex-start;">
-              <div class="av" style="background:linear-gradient(135deg,#FF7A8E,#FF2442);">梅</div>
+          <div class="lead-item active" onclick="leadClick(this,'lead-mei')">
+            <div style="display:flex;align-items:flex-start;gap:9px;">
+              <div style="position:relative;flex-shrink:0;">
+                <div class="av" style="width:36px;height:36px;font-size:13px;background:linear-gradient(135deg,#FF7A8E,#FF2442);">梅</div>
+                <div style="position:absolute;bottom:0;right:0;width:10px;height:10px;border-radius:50%;background:#3B82F6;border:2px solid #fff;"></div>
+              </div>
               <div style="flex:1;min-width:0;">
-                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
                   <span style="font-size:13px;font-weight:600;">梅子酱</span>
-                  <span style="font-size:11px;color:#bbb;">10:32</span>
+                  <span style="font-size:10px;color:#bbb;">10:32</span>
                 </div>
-                <div style="margin-bottom:5px;"><span class="tag-hot">🔴 热意向</span></div>
-                <div style="font-size:12px;color:#999;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">AI: 您好！6月份我们有几个档期可以...</div>
+                <div style="margin-bottom:4px;display:flex;gap:4px;">
+                  <span class="tag tag-hot">🔴 热意向</span>
+                  <span class="tag tag-ai">AI 中</span>
+                </div>
+                <div style="font-size:11px;color:#999;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">AI: 6月份可用档期有6/7、6/14…</div>
               </div>
             </div>
           </div>
-          <div class="lead-row" onclick="leadSelect(this)">
-            <div style="display:flex;gap:10px;align-items:flex-start;">
-              <div class="av" style="background:linear-gradient(135deg,#C084FC,#A855F7);">晴</div>
+          <div class="lead-item" onclick="leadClick(this,'lead-qing')">
+            <div style="display:flex;align-items:flex-start;gap:9px;">
+              <div style="position:relative;flex-shrink:0;">
+                <div class="av" style="width:36px;height:36px;font-size:13px;background:linear-gradient(135deg,#C084FC,#A855F7);">晴</div>
+                <div style="position:absolute;bottom:0;right:0;width:10px;height:10px;border-radius:50%;background:#3B82F6;border:2px solid #fff;"></div>
+              </div>
               <div style="flex:1;min-width:0;">
-                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
                   <span style="font-size:13px;font-weight:600;">晴天小鹿</span>
-                  <span style="font-size:11px;color:#bbb;">09:17</span>
+                  <span style="font-size:10px;color:#bbb;">09:17</span>
                 </div>
-                <div style="margin-bottom:5px;"><span class="tag-hot">🔴 热意向</span></div>
-                <div style="font-size:12px;color:#999;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">用户: 能发森系套餐的详细内容吗？</div>
+                <div style="margin-bottom:4px;display:flex;gap:4px;">
+                  <span class="tag tag-hot">🔴 热意向</span>
+                  <span class="tag tag-ai">AI 中</span>
+                </div>
+                <div style="font-size:11px;color:#999;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">用户: 能发森系套餐详细内容吗？</div>
               </div>
             </div>
           </div>
         </div>
         <!-- 待接管 -->
         <div id="wbt-pending" style="display:none;">
-          <div class="lead-row" onclick="leadSelect(this)">
-            <div style="display:flex;gap:10px;align-items:flex-start;">
-              <div class="av" style="background:linear-gradient(135deg,#FCD34D,#F59E0B);">糖</div>
+          <div class="lead-item" onclick="leadClick(this,'lead-tang')">
+            <div style="display:flex;align-items:flex-start;gap:9px;">
+              <div class="av" style="width:36px;height:36px;font-size:13px;background:linear-gradient(135deg,#FCD34D,#F59E0B);">糖</div>
               <div style="flex:1;min-width:0;">
-                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
                   <span style="font-size:13px;font-weight:600;">糖糖爱摄影</span>
-                  <span style="font-size:11px;color:#bbb;">昨天</span>
+                  <span style="font-size:10px;color:#bbb;">昨天</span>
                 </div>
-                <div style="margin-bottom:5px;display:flex;gap:4px;"><span class="tag-warm">🟡 温</span><span style="background:#FFF7ED;color:#EA580C;font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;">待接管</span></div>
-                <div style="font-size:12px;color:#999;">AI 置信度不足，转人工处理</div>
+                <div style="margin-bottom:4px;display:flex;gap:4px;">
+                  <span class="tag tag-warm">🟡 温意向</span>
+                  <span class="tag tag-pending">待接管</span>
+                </div>
+                <div style="font-size:11px;color:#bbb;">AI 置信度不足，转人工</div>
+              </div>
+            </div>
+          </div>
+          <div class="lead-item" onclick="leadClick(this,'lead-tang')">
+            <div style="display:flex;align-items:flex-start;gap:9px;">
+              <div class="av" style="width:36px;height:36px;font-size:13px;background:linear-gradient(135deg,#6EE7B7,#059669);">云</div>
+              <div style="flex:1;min-width:0;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+                  <span style="font-size:13px;font-weight:600;">云淡风轻之旅</span>
+                  <span style="font-size:10px;color:#bbb;">昨天</span>
+                </div>
+                <div style="margin-bottom:4px;display:flex;gap:4px;">
+                  <span class="tag tag-warm">🟡 温意向</span>
+                  <span class="tag tag-pending">待接管</span>
+                </div>
+                <div style="font-size:11px;color:#bbb;">问了档期，AI 未完成应答</div>
+              </div>
+            </div>
+          </div>
+          <div class="lead-item" onclick="leadClick(this,'lead-tang')">
+            <div style="display:flex;align-items:flex-start;gap:9px;">
+              <div class="av" style="width:36px;height:36px;font-size:13px;background:linear-gradient(135deg,#818CF8,#6366F1);">安</div>
+              <div style="flex:1;min-width:0;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+                  <span style="font-size:13px;font-weight:600;">安静的橡皮擦</span>
+                  <span style="font-size:10px;color:#bbb;">3天前</span>
+                </div>
+                <div style="margin-bottom:4px;display:flex;gap:4px;">
+                  <span class="tag tag-cold">⚪ 冷意向</span>
+                  <span class="tag tag-pending">待接管</span>
+                </div>
+                <div style="font-size:11px;color:#bbb;">仅浏览，未进一步咨询</div>
               </div>
             </div>
           </div>
         </div>
         <!-- 已接管 -->
         <div id="wbt-done" style="display:none;">
-          <div style="padding:40px 20px;text-align:center;color:#ccc;font-size:13px;">暂无已接管线索</div>
+          <div class="empty-state">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#D1D5DB" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            <div style="margin-top:10px;font-size:13px;">暂无已接管线索</div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- 右：对话详情 -->
-    <div class="wb-detail">
+    <!-- 中：对话详情 -->
+    <div class="wb-detail-col" id="detail-panel">
       <!-- 用户信息条 -->
-      <div style="background:#fff;border-bottom:1px solid #F0F0F0;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
-        <div style="display:flex;align-items:center;gap:14px;">
-          <div class="av" style="width:44px;height:44px;background:linear-gradient(135deg,#FF7A8E,#FF2442);">梅</div>
-          <div>
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
-              <span style="font-size:15px;font-weight:700;">梅子酱</span>
-              <span class="tag-hot">🔴 高意向</span>
-              <span style="background:#EFF6FF;color:#2563EB;font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;">AI 处理中</span>
-            </div>
-            <div style="display:flex;gap:16px;">
-              <span style="font-size:12px;color:#999;">📍 广告私信</span>
-              <span style="font-size:12px;color:#999;">⏱ 进线 10:24</span>
-              <span style="font-size:12px;color:#999;">⚡ 触发 Skill：档期查询</span>
-              <span style="font-size:12px;color:#999;">💬 会话 8 轮</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 对话内容 -->
-      <div style="flex:1;overflow-y:auto;padding:20px 24px;display:flex;flex-direction:column;gap:16px;">
-
-        <div style="display:flex;gap:10px;align-items:flex-start;">
-          <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#FF2442,#FF6B7A);display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:800;flex-shrink:0;">AI</div>
-          <div>
-            <div style="font-size:11px;color:#bbb;margin-bottom:5px;">AI 员工 · 10:24</div>
-            <div class="bubble-ai">您好！欢迎咨询我们的婚纱摄影服务 💕<br>请问您是想了解哪种风格呢？我们目前最受欢迎的有「森系自然」「轻法式」和「复古胶片」三个系列～</div>
-          </div>
-        </div>
-
-        <div style="display:flex;gap:10px;align-items:flex-start;flex-direction:row-reverse;">
-          <div class="av" style="background:linear-gradient(135deg,#FF7A8E,#FF2442);">梅</div>
-          <div style="text-align:right;">
-            <div style="font-size:11px;color:#bbb;margin-bottom:5px;">梅子酱 · 10:25</div>
-            <div class="bubble-user" style="margin-left:auto;">我想了解一下6月的档期，森系风格，我们婚礼是6月15号</div>
-          </div>
-        </div>
-
-        <div style="display:flex;gap:10px;align-items:flex-start;">
-          <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#FF2442,#FF6B7A);display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:800;flex-shrink:0;">AI</div>
-          <div>
-            <div style="font-size:11px;color:#bbb;margin-bottom:5px;">AI 员工 · 10:25</div>
-            <div class="bubble-ai">好的！6月15日周日～6月份可用档期：<br><br>📅 <strong>6月7日（周六）</strong> · 可预约<br>📅 <strong>6月14日（周六）</strong> · 可预约<br>📅 <strong>6月21日（周六）</strong> · <span style="color:#EF4444">已满</span><br>📅 <strong>6月28日（周六）</strong> · 可预约<br><br>建议婚礼前一两周拍摄哦，请问倾向哪个时间？</div>
-          </div>
-        </div>
-
-        <div style="display:flex;gap:10px;align-items:flex-start;flex-direction:row-reverse;">
-          <div class="av" style="background:linear-gradient(135deg,#FF7A8E,#FF2442);">梅</div>
-          <div style="text-align:right;">
-            <div style="font-size:11px;color:#bbb;margin-bottom:5px;">梅子酱 · 10:27</div>
-            <div class="bubble-user" style="margin-left:auto;">6月14日比较合适，价格大概是多少呀？</div>
-          </div>
-        </div>
-
-        <div style="display:flex;gap:10px;align-items:flex-start;">
-          <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#FF2442,#FF6B7A);display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:800;flex-shrink:0;">AI</div>
-          <div>
-            <div style="font-size:11px;color:#bbb;margin-bottom:5px;">AI 员工 · 10:27</div>
-            <div class="bubble-ai">森系系列有两个档位：<br><br>✨ <strong>轻奢森系</strong> · <span style="color:#FF2442;font-weight:700;">5,888 元</span><br>6套造型 · 200张精修 · 8h外景<br><br>👑 <strong>臻品森系</strong> · <span style="color:#FF2442;font-weight:700;">9,888 元</span><br>10套造型 · 500张精修 · 全天外景+棚拍<br><br>6月14日两个档位都有空哦，想了解哪个？</div>
-          </div>
-        </div>
-
-        <div style="display:flex;gap:10px;align-items:flex-start;flex-direction:row-reverse;">
-          <div class="av" style="background:linear-gradient(135deg,#FF7A8E,#FF2442);">梅</div>
-          <div style="text-align:right;">
-            <div style="font-size:11px;color:#bbb;margin-bottom:5px;">梅子酱 · 10:32</div>
-            <div class="bubble-user" style="margin-left:auto;">臻品套餐能便宜一点吗？我们两家一起来可以打折吗？</div>
-          </div>
-        </div>
-
-        <div style="display:flex;gap:10px;align-items:flex-start;">
-          <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#FF2442,#FF6B7A);display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:800;flex-shrink:0;">AI</div>
-          <div>
-            <div style="font-size:11px;color:#bbb;margin-bottom:5px;">AI 员工 · 10:32</div>
-            <div class="bubble-ai">关于优惠政策我帮您转接专属顾问来详细沟通～顾问会在5分钟内联系您哦 💕</div>
-            <div style="margin-top:6px;display:flex;align-items:center;gap:5px;font-size:11px;color:#EA580C;background:#FFF7ED;padding:5px 10px;border-radius:6px;width:fit-content;">
-              <span>⚡</span><span>AI 触发转人工 · 等待销售接管</span>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- 底部操作区 -->
-      <div style="background:#fff;border-top:1px solid #F0F0F0;padding:16px 24px;flex-shrink:0;">
-        <!-- 意向说明 -->
-        <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:14px;padding:12px 16px;background:#FFF8F9;border-radius:12px;border:1px solid #FFE4E8;">
-          <span style="font-size:18px;flex-shrink:0;">🔴</span>
-          <div>
-            <span style="font-size:13px;font-weight:700;color:#FF2442;">高意向线索</span>
-            <p style="font-size:12px;color:#888;margin-top:3px;line-height:1.5;">用户明确询问价格并提供了婚礼日期（6月15日），主动发起折扣询问，购买意愿强烈</p>
-          </div>
-        </div>
-        <!-- 按钮区 -->
+      <div style="background:#fff;border-bottom:1px solid #EBEBEB;padding:12px 18px;flex-shrink:0;">
         <div style="display:flex;align-items:center;justify-content:space-between;">
-          <div style="display:flex;align-items:center;gap:8px;">
-            <span style="font-size:13px;font-weight:600;color:#555;">回传状态：</span>
-            <button class="status-btn" onclick="setStatus(this,'到访')">到访</button>
-            <button class="status-btn" onclick="setStatus(this,'成交')">成交 🎉</button>
-            <button class="status-btn" onclick="setStatus(this,'无效')">无效</button>
-            <button class="status-btn" onclick="setStatus(this,'跟进中')">跟进中</button>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div class="av" style="width:42px;height:42px;font-size:15px;background:linear-gradient(135deg,#FF7A8E,#FF2442);">梅</div>
+            <div>
+              <div style="display:flex;align-items:center;gap:7px;margin-bottom:4px;">
+                <span style="font-size:14px;font-weight:700;">梅子酱</span>
+                <span class="tag tag-hot">🔴 高意向</span>
+                <span class="tag tag-ai" id="status-badge">AI 处理中</span>
+              </div>
+              <div style="display:flex;gap:14px;">
+                <span style="font-size:11px;color:#aaa;">📍 广告私信</span>
+                <span style="font-size:11px;color:#aaa;">⏱ 进线 10:24</span>
+                <span style="font-size:11px;color:#aaa;">💬 已对话 8 轮</span>
+                <span style="font-size:11px;color:#aaa;">⚡ 触发 Skill：档期查询 · 套餐报价</span>
+              </div>
+            </div>
           </div>
-          <button class="btn-takeover" id="takeover-btn" onclick="doTakeover(this)">⚡ 一键接管</button>
+          <button class="btn-red" id="takeover-btn" onclick="doTakeover()">⚡ 一键接管</button>
         </div>
-        <!-- 回传成功 -->
-        <div id="callback-tip" style="display:none;margin-top:12px;padding:10px 16px;background:#ECFDF5;border-radius:10px;border:1px solid #A7F3D0;font-size:13px;font-weight:500;color:#065F46;">
-          ✅ 回传成功！数据已同步，预计下周投放有效线索率 +5%～+8%
+      </div>
+
+      <!-- Skill 触发记录条 -->
+      <div style="background:#F8FAFF;border-bottom:1px solid #E8EEFF;padding:8px 18px;flex-shrink:0;display:flex;align-items:center;gap:8px;flex-wrap:wrap;" id="skill-bar">
+        <span style="font-size:11px;color:#6B7280;font-weight:600;">本次 Skill 记录：</span>
+        <div class="skill-record">📅 档期查询 · 触发 10:25 · 已完成</div>
+        <div class="skill-record">💰 套餐报价 · 触发 10:27 · 已完成</div>
+        <div style="margin-left:auto;" class="skill-record" style="background:#FEF3C7;border-color:#FDE68A;color:#92400E;">⚠️ 折扣议价 · 置信度 38% · 已转人工</div>
+      </div>
+
+      <!-- 对话区 -->
+      <div style="flex:1;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:14px;" id="chat-scroll">
+
+        <div class="bubble-system">2026年4月1日 10:24 · 广告点击进线</div>
+
+        <div style="display:flex;gap:8px;align-items:flex-start;">
+          <div class="av" style="width:28px;height:28px;font-size:10px;font-weight:800;background:linear-gradient(135deg,#FF2442,#FF6B7A);flex-shrink:0;">AI</div>
+          <div>
+            <div style="font-size:10px;color:#C0C0C0;margin-bottom:4px;">AI 员工 · 10:24</div>
+            <div class="bubble-ai">您好！欢迎咨询我们的婚纱摄影服务 💕<br>请问您想了解哪种风格？我们最受欢迎的有「森系自然」「轻法式」「复古胶片」三个系列～</div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:8px;align-items:flex-start;flex-direction:row-reverse;">
+          <div class="av" style="width:28px;height:28px;font-size:11px;background:linear-gradient(135deg,#FF7A8E,#FF2442);flex-shrink:0;">梅</div>
+          <div style="text-align:right;">
+            <div style="font-size:10px;color:#C0C0C0;margin-bottom:4px;">梅子酱 · 10:25</div>
+            <div class="bubble-user" style="margin-left:auto;">我想了解6月的档期，森系风格，婚礼6月15号</div>
+          </div>
+        </div>
+
+        <div class="bubble-system">⚡ Skill 触发：档期查询</div>
+
+        <div style="display:flex;gap:8px;align-items:flex-start;">
+          <div class="av" style="width:28px;height:28px;font-size:10px;font-weight:800;background:linear-gradient(135deg,#FF2442,#FF6B7A);flex-shrink:0;">AI</div>
+          <div>
+            <div style="font-size:10px;color:#C0C0C0;margin-bottom:4px;">AI 员工 · 10:25</div>
+            <div class="bubble-ai">好的！6月份可用档期：<br><br>📅 <b>6月7日（周六）</b> 可预约<br>📅 <b>6月14日（周六）</b> 可预约<br>📅 <b>6月21日（周六）</b> <span style="color:#EF4444">已满</span><br>📅 <b>6月28日（周六）</b> 可预约<br><br>建议婚礼前1-2周拍摄，哪天方便？</div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:8px;align-items:flex-start;flex-direction:row-reverse;">
+          <div class="av" style="width:28px;height:28px;font-size:11px;background:linear-gradient(135deg,#FF7A8E,#FF2442);flex-shrink:0;">梅</div>
+          <div style="text-align:right;">
+            <div style="font-size:10px;color:#C0C0C0;margin-bottom:4px;">梅子酱 · 10:27</div>
+            <div class="bubble-user" style="margin-left:auto;">6月14日比较合适，价格大概多少？</div>
+          </div>
+        </div>
+
+        <div class="bubble-system">⚡ Skill 触发：套餐报价</div>
+
+        <div style="display:flex;gap:8px;align-items:flex-start;">
+          <div class="av" style="width:28px;height:28px;font-size:10px;font-weight:800;background:linear-gradient(135deg,#FF2442,#FF6B7A);flex-shrink:0;">AI</div>
+          <div>
+            <div style="font-size:10px;color:#C0C0C0;margin-bottom:4px;">AI 员工 · 10:27</div>
+            <div class="bubble-ai">森系系列两个档位：<br><br>✨ <b>轻奢森系</b> · <span style="color:#FF2442;font-weight:700;">5,888 元</span><br><span style="font-size:12px;color:#888;">6套造型 · 200张精修 · 8h外景</span><br><br>👑 <b>臻品森系</b> · <span style="color:#FF2442;font-weight:700;">9,888 元</span><br><span style="font-size:12px;color:#888;">10套造型 · 500张精修 · 全天外景+棚拍</span><br><br>6月14日两档都有空哦，想了解哪个？</div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:8px;align-items:flex-start;flex-direction:row-reverse;">
+          <div class="av" style="width:28px;height:28px;font-size:11px;background:linear-gradient(135deg,#FF7A8E,#FF2442);flex-shrink:0;">梅</div>
+          <div style="text-align:right;">
+            <div style="font-size:10px;color:#C0C0C0;margin-bottom:4px;">梅子酱 · 10:32</div>
+            <div class="bubble-user" style="margin-left:auto;">臻品套餐能便宜点吗？两家一起来能打折吗？</div>
+          </div>
+        </div>
+
+        <div style="background:#FFF7ED;border:1px solid #FDE68A;border-radius:8px;padding:8px 12px;font-size:11px;color:#92400E;display:flex;align-items:center;gap:6px;">
+          <span>⚠️</span>
+          <span>AI 置信度 38%，触发转人工条件 — 等待销售接管，上下文已保存</span>
+        </div>
+
+        <div style="display:flex;gap:8px;align-items:flex-start;">
+          <div class="av" style="width:28px;height:28px;font-size:10px;font-weight:800;background:linear-gradient(135deg,#FF2442,#FF6B7A);flex-shrink:0;">AI</div>
+          <div>
+            <div style="font-size:10px;color:#C0C0C0;margin-bottom:4px;">AI 员工 · 10:32</div>
+            <div class="bubble-ai">关于优惠我帮您转接专属顾问来详聊～顾问会在5分钟内联系您 💕</div>
+          </div>
+        </div>
+
+        <!-- 接管后回复（初始隐藏） -->
+        <div id="takeover-msg" style="display:none;">
+          <div class="bubble-system">✅ 销售已接管 · 上下文完整继承</div>
+          <div style="margin-top:14px;display:flex;gap:8px;align-items:flex-start;flex-direction:row-reverse;">
+            <div class="av" style="width:28px;height:28px;font-size:11px;background:linear-gradient(135deg,#10B981,#059669);flex-shrink:0;">我</div>
+            <div style="text-align:right;">
+              <div style="font-size:10px;color:#C0C0C0;margin-bottom:4px;">销售 小李 · 10:35</div>
+              <div class="bubble-user" style="margin-left:auto;background:#10B981;">您好梅小姐！我是专属顾问小李，看到您对臻品套餐很感兴趣～两家一起来的话可以享受9折优惠哦，6月14日档期我们可以帮您优先保留！</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 回复框（接管前锁定） -->
+      <div class="reply-box" id="reply-area">
+        <div id="reply-locked" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;background:#FAFAFA;border-radius:10px;color:#bbb;font-size:13px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          接管后才能发送消息
+        </div>
+        <div id="reply-active" style="display:none;">
+          <textarea class="reply-input" id="reply-input" rows="3" placeholder="输入回复内容…"></textarea>
+          <div class="reply-toolbar">
+            <div class="reply-tools">
+              <div class="tool-btn" title="话术库">📝</div>
+              <div class="tool-btn" title="发送图片">🖼️</div>
+              <div class="tool-btn" title="发送名片">📇</div>
+              <div class="tool-btn" title="快捷套餐">💼</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="font-size:11px;color:#bbb;" id="char-count">0 / 500</span>
+              <button class="btn-ghost btn-sm" onclick="sendMsg()">发送</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 右：意向+客户档案+回传 -->
+    <div class="wb-sidebar-col">
+      <!-- 意向标签 -->
+      <div style="padding:16px;border-bottom:1px solid #F0F0F0;">
+        <div style="font-size:12px;font-weight:700;color:#555;margin-bottom:10px;text-transform:uppercase;letter-spacing:.04em;">意向分析</div>
+        <div style="background:#FFF8F9;border:1px solid #FFE4E8;border-radius:11px;padding:12px 14px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+            <span class="tag tag-hot" style="font-size:13px;padding:4px 12px;">🔴 高意向</span>
+            <span style="font-size:11px;color:#bbb;">置信度 92%</span>
+          </div>
+          <div style="font-size:12px;color:#666;line-height:1.7;">
+            <div style="display:flex;align-items:flex-start;gap:5px;margin-bottom:4px;"><span style="color:#FF2442;margin-top:1px;">•</span> 明确提供婚礼日期（6月15日）</div>
+            <div style="display:flex;align-items:flex-start;gap:5px;margin-bottom:4px;"><span style="color:#FF2442;margin-top:1px;">•</span> 主动询问具体档期和价格</div>
+            <div style="display:flex;align-items:flex-start;gap:5px;"><span style="color:#FF2442;margin-top:1px;">•</span> 发起折扣谈判，购买意愿强</div>
+          </div>
+        </div>
+        <div style="margin-top:10px;font-size:11px;color:#bbb;">
+          意向定义来自 · 私信通 AI 策略层<br>
+          <span style="color:#3B82F6;">热：主动问价/给日期/讨价还价</span>
+        </div>
+      </div>
+
+      <!-- 客户档案 -->
+      <div style="padding:16px;border-bottom:1px solid #F0F0F0;">
+        <div style="font-size:12px;font-weight:700;color:#555;margin-bottom:10px;text-transform:uppercase;letter-spacing:.04em;">客户档案</div>
+        <div style="display:flex;flex-direction:column;gap:7px;">
+          <div style="display:flex;justify-content:space-between;font-size:12px;">
+            <span style="color:#999;">AI 生成摘要</span>
+          </div>
+          <div style="background:#F7F8FA;border-radius:8px;padding:10px 12px;font-size:12px;color:#555;line-height:1.65;">
+            意向拍摄「臻品森系」套餐，婚礼日期6月15日，倾向6月14日拍摄，关注折扣，询问两家同拍优惠。
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:#999;padding:2px 0;">
+            <span>进线来源</span><span style="color:#333;font-weight:500;">广告私信</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:#999;padding:2px 0;">
+            <span>会话轮次</span><span style="color:#333;font-weight:500;">8 轮 · 8 分钟</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:#999;padding:2px 0;">
+            <span>触发 Skill</span><span style="color:#333;font-weight:500;">档期查询 · 报价</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 回传填报 -->
+      <div class="feedback-panel" id="feedback-panel">
+        <div style="font-size:12px;font-weight:700;color:#555;margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em;">结果回传</div>
+        <div style="font-size:11px;color:#bbb;margin-bottom:10px;">接管跟进后请填写结果，帮助 AI 更准投放</div>
+
+        <div id="feedback-locked-tip" style="background:#FAFAFA;border:1px dashed #E5E7EB;border-radius:9px;padding:10px 12px;text-align:center;font-size:12px;color:#C0C0C0;margin-bottom:10px;">
+          ⚡ 接管线索后可填写回传
+        </div>
+
+        <div id="feedback-form" style="display:none;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;">
+            <button class="feedback-btn" onclick="pickFeedback(this,'到访')">✅ 到访</button>
+            <button class="feedback-btn" onclick="pickFeedback(this,'成交')">🎉 成交</button>
+            <button class="feedback-btn" onclick="pickFeedback(this,'跟进中')">⏳ 跟进中</button>
+            <button class="feedback-btn" onclick="pickFeedback(this,'无效')">❌ 无效</button>
+          </div>
+          <textarea id="feedback-note" placeholder="备注（可选）：例如原因、下次跟进时间…" style="width:100%;border:1px solid #E5E7EB;border-radius:8px;padding:8px 10px;font-size:12px;color:#555;resize:none;outline:none;font-family:inherit;line-height:1.5;" rows="2"></textarea>
+          <button class="btn-red" style="width:100%;margin-top:8px;padding:9px;" id="submit-feedback-btn" onclick="submitFeedback()" disabled style="opacity:.5;">提交回传</button>
+          <div id="feedback-success" style="display:none;margin-top:8px;">
+            <div class="flywheel">
+              <div style="font-size:12px;font-weight:700;color:#CC1033;margin-bottom:3px;">✅ 回传成功</div>
+              <div style="font-size:11px;color:#FF7A8E;line-height:1.6;">数据已同步投放模型<br>预计本周有效线索率 <b>↑ 5%~8%</b></div>
+            </div>
+            <div style="margin-top:8px;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;padding:8px 10px;font-size:11px;color:#15803D;line-height:1.55;">
+              <b>数据流向</b>：线索ID · 意向标签 · 回传状态 · 时间戳 → 知然归因模型 → 投放优化
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -702,389 +533,486 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px;
 </div>
 
 
-<!-- ════  页面3：预约管理  ════ -->
-<div id="page-bookings" class="page">
+<!-- ═══════════════════════════════════
+  页面②：线索看板
+═══════════════════════════════════ -->
+<div id="page-board" class="page active">
   <div class="topbar">
     <div>
-      <div class="topbar-title">预约管理</div>
-      <div class="topbar-sub">AI 自动承接后的预约汇总</div>
+      <span style="font-size:15px;font-weight:700;">线索看板</span>
+      <span style="font-size:12px;color:#999;margin-left:10px;">今日数据 · 2026年4月1日</span>
     </div>
-    <button class="btn-primary">+ 手动添加预约</button>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span style="font-size:12px;color:#10B981;background:#F0FDF4;border:1px solid #BBF7D0;padding:4px 10px;border-radius:20px;">● 数据最后刷新 10:38</span>
+      <button class="btn-ghost btn-sm" onclick="refreshBoard()">🔄 立即刷新</button>
+      <button class="btn-red btn-sm" onclick="showPage('wb')">进工作台跟进 →</button>
+    </div>
+  </div>
+
+  <div class="page-body">
+    <!-- 总览卡片 -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;">
+      <div class="stat-card">
+        <div style="font-size:11px;color:#999;margin-bottom:6px;">今日新增线索</div>
+        <div style="font-size:30px;font-weight:800;line-height:1;color:#1a1a1a;">47</div>
+        <div style="margin-top:6px;font-size:11px;color:#10B981;font-weight:600;">↑ 12% 较昨日</div>
+        <div style="position:absolute;top:16px;right:16px;font-size:24px;opacity:.6;">🎯</div>
+      </div>
+      <div class="stat-card">
+        <div style="font-size:11px;color:#999;margin-bottom:6px;">高意向线索</div>
+        <div style="font-size:30px;font-weight:800;line-height:1;color:#1a1a1a;">18</div>
+        <div style="margin-top:6px;display:flex;gap:5px;">
+          <span class="tag tag-hot">热 8</span><span class="tag tag-warm">温 10</span>
+        </div>
+        <div style="position:absolute;top:16px;right:16px;font-size:24px;opacity:.6;">🔥</div>
+      </div>
+      <div class="stat-card">
+        <div style="font-size:11px;color:#999;margin-bottom:6px;">AI 处理率</div>
+        <div style="font-size:30px;font-weight:800;line-height:1;color:#1a1a1a;">76%</div>
+        <div style="margin-top:6px;font-size:11px;color:#999;">36 / 47 条 AI 自动处理</div>
+        <div style="position:absolute;top:16px;right:16px;font-size:24px;opacity:.6;">🤖</div>
+      </div>
+      <div class="stat-card">
+        <div style="font-size:11px;color:#999;margin-bottom:6px;">回传完成率</div>
+        <div style="font-size:30px;font-weight:800;line-height:1;color:#FF2442;">62%</div>
+        <div style="margin-top:6px;font-size:11px;color:#FF2442;font-weight:600;">↑ 5% · 投放持续优化中</div>
+        <div style="position:absolute;top:16px;right:16px;font-size:24px;opacity:.6;">♻️</div>
+      </div>
+    </div>
+
+    <!-- 图表 + 意向分布 -->
+    <div style="display:grid;grid-template-columns:1fr 320px;gap:14px;margin-bottom:20px;">
+      <!-- 柱状图 -->
+      <div class="card" style="padding:18px 22px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+          <span style="font-size:13px;font-weight:700;">近7日线索趋势</span>
+          <span style="font-size:11px;color:#bbb;">刷新间隔 5min · 数据来自私信通</span>
+        </div>
+        <div style="display:flex;align-items:flex-end;gap:6px;height:90px;">
+          <div class="chart-col"><div class="chart-val">32</div><div class="chart-bar" style="height:65%;background:linear-gradient(to top,#FFBCC5,#FFD6DC);"></div><div class="chart-lbl">3/26</div></div>
+          <div class="chart-col"><div class="chart-val">28</div><div class="chart-bar" style="height:56%;background:linear-gradient(to top,#FFBCC5,#FFD6DC);"></div><div class="chart-lbl">3/27</div></div>
+          <div class="chart-col"><div class="chart-val">41</div><div class="chart-bar" style="height:82%;background:linear-gradient(to top,#FF8E9E,#FFB0BD);"></div><div class="chart-lbl">3/28</div></div>
+          <div class="chart-col"><div class="chart-val">35</div><div class="chart-bar" style="height:70%;background:linear-gradient(to top,#FFBCC5,#FFD6DC);"></div><div class="chart-lbl">3/29</div></div>
+          <div class="chart-col"><div class="chart-val">38</div><div class="chart-bar" style="height:76%;background:linear-gradient(to top,#FF8E9E,#FFB0BD);"></div><div class="chart-lbl">3/30</div></div>
+          <div class="chart-col"><div class="chart-val">42</div><div class="chart-bar" style="height:84%;background:linear-gradient(to top,#FF7A8E,#FFAAB8);"></div><div class="chart-lbl">3/31</div></div>
+          <div class="chart-col"><div class="chart-val today">47</div><div class="chart-bar" style="height:94%;background:linear-gradient(to top,#FF2442,#FF6B7A);box-shadow:0 3px 10px rgba(255,36,66,.4);"></div><div class="chart-lbl today">今日</div></div>
+        </div>
+      </div>
+      <!-- 意向分布 -->
+      <div class="card" style="padding:18px 22px;">
+        <div style="font-size:13px;font-weight:700;margin-bottom:14px;">今日意向分布</div>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px;">
+              <span style="display:flex;align-items:center;gap:5px;color:#555;"><span style="width:8px;height:8px;border-radius:2px;background:#FF2442;display:inline-block;"></span>热意向</span>
+              <span style="font-weight:700;color:#FF2442;">8 条 · 17%</span>
+            </div>
+            <div style="height:7px;background:#F3F4F6;border-radius:4px;overflow:hidden;"><div style="height:100%;width:17%;background:linear-gradient(to right,#FF2442,#FF6B7A);border-radius:4px;"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px;">
+              <span style="display:flex;align-items:center;gap:5px;color:#555;"><span style="width:8px;height:8px;border-radius:2px;background:#FBBF24;display:inline-block;"></span>温意向</span>
+              <span style="font-weight:700;color:#D97706;">21 条 · 45%</span>
+            </div>
+            <div style="height:7px;background:#F3F4F6;border-radius:4px;overflow:hidden;"><div style="height:100%;width:45%;background:linear-gradient(to right,#FBBF24,#FCD34D);border-radius:4px;"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px;">
+              <span style="display:flex;align-items:center;gap:5px;color:#555;"><span style="width:8px;height:8px;border-radius:2px;background:#D1D5DB;display:inline-block;"></span>冷意向</span>
+              <span style="font-weight:700;color:#9CA3AF;">18 条 · 38%</span>
+            </div>
+            <div style="height:7px;background:#F3F4F6;border-radius:4px;overflow:hidden;"><div style="height:100%;width:38%;background:#D1D5DB;border-radius:4px;"></div></div>
+          </div>
+        </div>
+        <div style="margin-top:14px;background:linear-gradient(135deg,#FFF0F2,#FFF7F8);border:1px solid #FFD6DC;border-radius:9px;padding:9px 12px;font-size:11px;color:#CC1033;font-weight:500;line-height:1.65;">
+          💡 本周回传 31 条，有效线索率 <b>↑ 8%</b>，继续回传可提升投放精准度
+        </div>
+      </div>
+    </div>
+
+    <!-- 两列队列 -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+      <!-- 高意向队列 -->
+      <div class="card">
+        <div style="padding:14px 18px 10px;border-bottom:1px solid #F5F5F5;display:flex;align-items:center;justify-content:space-between;">
+          <div>
+            <span style="font-size:13px;font-weight:700;">🔥 高意向 · 优先跟进</span>
+            <span style="font-size:11px;color:#bbb;margin-left:8px;">热线索优先排列</span>
+          </div>
+          <button class="btn-ghost btn-sm" onclick="showPage('wb')" style="font-size:11px;">全部 →</button>
+        </div>
+        <div>
+          <!-- 热线索 1 -->
+          <div class="lead-row" onclick="showPage('wb')">
+            <div class="av" style="width:34px;height:34px;font-size:12px;background:linear-gradient(135deg,#FF7A8E,#FF2442);">梅</div>
+            <div style="flex:1;min-width:0;">
+              <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
+                <span style="font-size:13px;font-weight:600;">梅子酱</span>
+                <span class="tag tag-hot">🔴 热</span>
+              </div>
+              <div style="font-size:11px;color:#999;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">问了档期+价格+折扣，等待接管</div>
+            </div>
+            <div style="text-align:right;flex-shrink:0;">
+              <button class="btn-red btn-sm" onclick="event.stopPropagation();showPage('wb')">跟进</button>
+            </div>
+          </div>
+          <!-- 热线索 2 -->
+          <div class="lead-row" onclick="showPage('wb')">
+            <div class="av" style="width:34px;height:34px;font-size:12px;background:linear-gradient(135deg,#C084FC,#A855F7);">晴</div>
+            <div style="flex:1;min-width:0;">
+              <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
+                <span style="font-size:13px;font-weight:600;">晴天小鹿</span>
+                <span class="tag tag-hot">🔴 热</span>
+              </div>
+              <div style="font-size:11px;color:#999;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">对比3家，要套餐详情，意向高</div>
+            </div>
+            <div style="text-align:right;flex-shrink:0;">
+              <button class="btn-red btn-sm" onclick="event.stopPropagation();showPage('wb')">跟进</button>
+            </div>
+          </div>
+          <!-- 温线索 -->
+          <div class="lead-row" onclick="showPage('wb')">
+            <div class="av" style="width:34px;height:34px;font-size:12px;background:linear-gradient(135deg,#FCD34D,#F59E0B);">糖</div>
+            <div style="flex:1;min-width:0;">
+              <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
+                <span style="font-size:13px;font-weight:600;">糖糖爱摄影</span>
+                <span class="tag tag-warm">🟡 温</span>
+              </div>
+              <div style="font-size:11px;color:#999;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">咨询森系风格，想看案例集</div>
+            </div>
+            <div style="text-align:right;flex-shrink:0;">
+              <button class="btn-ghost btn-sm" onclick="event.stopPropagation();showPage('wb')">跟进</button>
+            </div>
+          </div>
+          <!-- 看板内快速回传入口 -->
+          <div style="padding:10px 16px;background:#FAFAFA;border-top:1px solid #F0F0F0;">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <span style="font-size:11px;color:#bbb;">📝 看板快捷回传</span>
+              <button class="btn-ghost btn-sm" style="font-size:11px;" onclick="openFeedbackModal()">标记结果</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 沉默唤醒队列 -->
+      <div class="card">
+        <div style="padding:14px 18px 10px;border-bottom:1px solid #F5F5F5;display:flex;align-items:center;justify-content:space-between;">
+          <div>
+            <span style="font-size:13px;font-weight:700;">😴 沉默线索 · 待唤醒</span>
+            <span style="font-size:11px;color:#bbb;margin-left:8px;">≥ 48h 未回复</span>
+          </div>
+          <span style="font-size:11px;color:#EA580C;background:#FFF7ED;padding:2px 8px;border-radius:20px;font-weight:600;">3 条</span>
+        </div>
+        <div>
+          <div class="lead-row">
+            <div class="av" style="width:34px;height:34px;font-size:12px;background:linear-gradient(135deg,#93C5FD,#60A5FA);">安</div>
+            <div style="flex:1;min-width:0;">
+              <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
+                <span style="font-size:13px;font-weight:600;color:#555;">安静的橡皮擦</span>
+                <span style="background:#FEF3C7;color:#D97706;font-size:10px;font-weight:700;padding:1px 7px;border-radius:20px;">沉默 72h</span>
+              </div>
+              <div style="font-size:11px;color:#bbb;">AI 推了套餐，用户未回复</div>
+            </div>
+            <button class="btn-ghost btn-sm" style="font-size:11px;flex-shrink:0;">唤醒</button>
+          </div>
+          <div class="lead-row">
+            <div class="av" style="width:34px;height:34px;font-size:12px;background:linear-gradient(135deg,#6EE7B7,#059669);">星</div>
+            <div style="flex:1;min-width:0;">
+              <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
+                <span style="font-size:13px;font-weight:600;color:#555;">星语心愿</span>
+                <span style="background:#FEF3C7;color:#D97706;font-size:10px;font-weight:700;padding:1px 7px;border-radius:20px;">沉默 56h</span>
+              </div>
+              <div style="font-size:11px;color:#bbb;">看完套餐价格后未回复</div>
+            </div>
+            <button class="btn-ghost btn-sm" style="font-size:11px;flex-shrink:0;">唤醒</button>
+          </div>
+          <div class="lead-row">
+            <div class="av" style="width:34px;height:34px;font-size:12px;background:linear-gradient(135deg,#E9D5FF,#C084FC);">小</div>
+            <div style="flex:1;min-width:0;">
+              <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
+                <span style="font-size:13px;font-weight:600;color:#555;">小鱼爱旅行</span>
+                <span style="background:#FEF3C7;color:#D97706;font-size:10px;font-weight:700;padding:1px 7px;border-radius:20px;">沉默 48h</span>
+              </div>
+              <div style="font-size:11px;color:#bbb;">询问外景地点后失联</div>
+            </div>
+            <button class="btn-ghost btn-sm" style="font-size:11px;flex-shrink:0;">唤醒</button>
+          </div>
+          <div style="padding:10px 16px;background:#F0FDF4;border-top:1px solid #DCFCE7;">
+            <div style="font-size:11px;color:#16A34A;line-height:1.6;">💡 建议唤醒话术：<br>「上次聊到的套餐本月有限时优惠，想了解吗？」</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 数据为空兜底示意 -->
+    <div style="margin-top:14px;">
+      <details style="cursor:pointer;">
+        <summary style="font-size:12px;color:#bbb;padding:4px 0;list-style:none;display:flex;align-items:center;gap:5px;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          数据为空时的兜底逻辑（设计说明）
+        </summary>
+        <div style="margin-top:8px;padding:14px 16px;background:#F9FAFB;border-radius:10px;font-size:12px;color:#6B7280;line-height:1.8;">
+          <b>刷新频率：</b>看板数据每 5 分钟自动刷新；对话列表每 30 秒增量更新<br>
+          <b>数据为空时：</b>高意向队列为空 → 显示「今日暂无高意向线索，继续保持回传可提升精准度」空态卡片，不折叠模块<br>
+          <b>沉默队列为空：</b>显示「所有线索都在活跃跟进中 🎉」正向激励<br>
+          <b>接口异常时：</b>顶部展示「数据获取失败，显示上次缓存」提示条，不展示空模块
+        </div>
+      </details>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════
+  页面③：预约管理（精简）
+═══════════════════════════════════ -->
+<div id="page-book" class="page" style="display:none;flex-direction:column;">
+  <div class="topbar">
+    <div><span style="font-size:15px;font-weight:700;">预约管理</span><span style="font-size:12px;color:#999;margin-left:10px;">AI 承接后的预约汇总</span></div>
+    <button class="btn-red btn-sm">+ 手动添加</button>
   </div>
   <div class="page-body">
-    <!-- 筛选 -->
-    <div class="card" style="padding:16px 20px;margin-bottom:16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
-      <div style="display:flex;align-items:center;gap:8px;">
-        <span style="font-size:13px;color:#666;">日期：</span>
-        <input type="date" value="2026-04-01" style="border:1px solid #E5E7EB;border-radius:8px;padding:6px 12px;font-size:13px;color:#333;outline:none;">
-      </div>
-      <div style="display:flex;align-items:center;gap:6px;">
-        <span style="font-size:13px;color:#666;">状态：</span>
-        <button class="status-btn selected" onclick="filterBooking(this,'all')" data-f="all">全部</button>
-        <button class="status-btn" onclick="filterBooking(this,'pending')" data-f="pending">待确认</button>
-        <button class="status-btn" onclick="filterBooking(this,'confirmed')" data-f="confirmed">已确认</button>
-        <button class="status-btn" onclick="filterBooking(this,'done')" data-f="done">已完成</button>
-        <button class="status-btn" onclick="filterBooking(this,'cancelled')" data-f="cancelled">已取消</button>
-      </div>
-      <div style="margin-left:auto;font-size:13px;color:#999;">共 6 条预约</div>
+    <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center;">
+      <input type="date" value="2026-04-01" style="border:1px solid #E5E7EB;border-radius:8px;padding:6px 12px;font-size:12px;color:#333;outline:none;">
+      <button class="feedback-btn selected btn-sm" onclick="filterBk(this,'all')" data-f="all" style="padding:5px 14px;">全部</button>
+      <button class="feedback-btn btn-sm" onclick="filterBk(this,'pending')" data-f="pending" style="padding:5px 14px;">待确认</button>
+      <button class="feedback-btn btn-sm" onclick="filterBk(this,'confirmed')" data-f="confirmed" style="padding:5px 14px;">已确认</button>
+      <button class="feedback-btn btn-sm" onclick="filterBk(this,'done')" data-f="done" style="padding:5px 14px;">已完成</button>
+      <span style="margin-left:auto;font-size:12px;color:#bbb;">共 6 条</span>
     </div>
-
-    <!-- 预约列表 -->
-    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;">
-
-      <div class="card booking-item" data-status="pending" style="padding:18px 22px;display:flex;align-items:center;gap:16px;transition:box-shadow .2s;" onmouseenter="this.style.boxShadow='0 4px 20px rgba(255,36,66,.08)'" onmouseleave="this.style.boxShadow=''">
-        <div class="av" style="background:linear-gradient(135deg,#FF7A8E,#FF2442);">梅</div>
-        <div style="flex:1;min-width:0;">
-          <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
-            <span style="font-weight:700;font-size:14px;">梅子酱</span>
-            <span class="tag-hot">🔴 热</span>
-          </div>
-          <div style="font-size:13px;color:#666;">婚纱摄影 · 臻品森系套餐</div>
-        </div>
-        <div style="text-align:center;min-width:120px;">
-          <div style="font-size:14px;font-weight:600;color:#1a1a1a;">2026-05-14</div>
-          <div style="font-size:12px;color:#999;">10:00 · 外景拍摄</div>
-        </div>
-        <div style="text-align:center;min-width:80px;">
-          <div style="font-size:11px;color:#999;margin-bottom:3px;">来源</div>
-          <div style="font-size:12px;font-weight:600;color:#2563EB;">AI 自动预约</div>
-        </div>
-        <span class="badge-pending">待确认</span>
-        <div style="display:flex;gap:8px;">
-          <button class="btn-primary" style="padding:7px 16px;font-size:12px;" onclick="confirmBk(this)">确认</button>
-          <button class="btn-ghost" style="padding:7px 14px;font-size:12px;">改期</button>
-          <button class="btn-ghost" style="padding:7px 14px;font-size:12px;color:#EF4444;" onmouseenter="this.style.borderColor='#EF4444'" onmouseleave="this.style.borderColor='#E5E7EB'">取消</button>
-        </div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div class="card bk-item" data-status="pending" style="padding:14px 18px;display:flex;align-items:center;gap:14px;">
+        <div class="av" style="width:36px;height:36px;font-size:13px;background:linear-gradient(135deg,#FF7A8E,#FF2442);">梅</div>
+        <div style="flex:1;min-width:0;"><div style="display:flex;gap:6px;margin-bottom:3px;align-items:center;"><b style="font-size:13px;">梅子酱</b><span class="tag tag-hot">🔴 热</span></div><div style="font-size:12px;color:#666;">婚纱摄影 · 臻品森系</div></div>
+        <div style="text-align:center;min-width:100px;"><div style="font-size:13px;font-weight:600;">2026-05-14</div><div style="font-size:11px;color:#bbb;">10:00</div></div>
+        <div style="min-width:80px;text-align:center;"><div style="font-size:10px;color:#bbb;margin-bottom:2px;">来源</div><div style="font-size:11px;font-weight:600;color:#2563EB;">AI自动</div></div>
+        <span class="badge-pending" style="background:#FFF7ED;color:#EA580C;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;white-space:nowrap;">待确认</span>
+        <div style="display:flex;gap:6px;"><button class="btn-red btn-sm" onclick="confirmBk(this)">确认</button><button class="btn-ghost btn-sm">改期</button></div>
       </div>
-
-      <div class="card booking-item" data-status="confirmed" style="padding:18px 22px;display:flex;align-items:center;gap:16px;" onmouseenter="this.style.boxShadow='0 4px 20px rgba(0,0,0,.06)'" onmouseleave="this.style.boxShadow=''">
-        <div class="av" style="background:linear-gradient(135deg,#C084FC,#A855F7);">晴</div>
-        <div style="flex:1;min-width:0;">
-          <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
-            <span style="font-weight:700;font-size:14px;">晴天小鹿</span>
-            <span class="tag-hot">🔴 热</span>
-          </div>
-          <div style="font-size:13px;color:#666;">婚纱摄影 · 轻奢森系套餐</div>
-        </div>
-        <div style="text-align:center;min-width:120px;">
-          <div style="font-size:14px;font-weight:600;color:#1a1a1a;">2026-05-21</div>
-          <div style="font-size:12px;color:#999;">09:00 · 外景拍摄</div>
-        </div>
-        <div style="text-align:center;min-width:80px;">
-          <div style="font-size:11px;color:#999;margin-bottom:3px;">来源</div>
-          <div style="font-size:12px;font-weight:600;color:#2563EB;">AI 自动预约</div>
-        </div>
-        <span class="badge-confirmed">已确认</span>
-        <div style="display:flex;gap:8px;">
-          <button class="btn-ghost" style="padding:7px 14px;font-size:12px;">改期</button>
-          <button class="btn-ghost" style="padding:7px 14px;font-size:12px;color:#EF4444;" onmouseenter="this.style.borderColor='#EF4444'" onmouseleave="this.style.borderColor='#E5E7EB'">取消</button>
-        </div>
+      <div class="card bk-item" data-status="confirmed" style="padding:14px 18px;display:flex;align-items:center;gap:14px;">
+        <div class="av" style="width:36px;height:36px;font-size:13px;background:linear-gradient(135deg,#C084FC,#A855F7);">晴</div>
+        <div style="flex:1;min-width:0;"><div style="display:flex;gap:6px;margin-bottom:3px;align-items:center;"><b style="font-size:13px;">晴天小鹿</b><span class="tag tag-hot">🔴 热</span></div><div style="font-size:12px;color:#666;">婚纱摄影 · 轻奢森系</div></div>
+        <div style="text-align:center;min-width:100px;"><div style="font-size:13px;font-weight:600;">2026-05-21</div><div style="font-size:11px;color:#bbb;">09:00</div></div>
+        <div style="min-width:80px;text-align:center;"><div style="font-size:10px;color:#bbb;margin-bottom:2px;">来源</div><div style="font-size:11px;font-weight:600;color:#2563EB;">AI自动</div></div>
+        <span style="background:#ECFDF5;color:#059669;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;white-space:nowrap;">已确认</span>
+        <div style="display:flex;gap:6px;"><button class="btn-ghost btn-sm">改期</button></div>
       </div>
-
-      <div class="card booking-item" data-status="done" style="padding:18px 22px;display:flex;align-items:center;gap:16px;" onmouseenter="this.style.boxShadow='0 4px 20px rgba(0,0,0,.06)'" onmouseleave="this.style.boxShadow=''">
-        <div class="av" style="background:linear-gradient(135deg,#FCD34D,#F59E0B);">糖</div>
-        <div style="flex:1;min-width:0;">
-          <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
-            <span style="font-weight:700;font-size:14px;color:#666;">糖糖爱摄影</span>
-            <span class="tag-warm">🟡 温</span>
-          </div>
-          <div style="font-size:13px;color:#999;">婚纱摄影 · 轻奢森系套餐</div>
-        </div>
-        <div style="text-align:center;min-width:120px;">
-          <div style="font-size:14px;font-weight:600;color:#666;">2026-03-28</div>
-          <div style="font-size:12px;color:#bbb;">10:00 · 已完成</div>
-        </div>
-        <div style="text-align:center;min-width:80px;">
-          <div style="font-size:11px;color:#bbb;margin-bottom:3px;">来源</div>
-          <div style="font-size:12px;font-weight:600;color:#9CA3AF;">人工预约</div>
-        </div>
-        <span class="badge-done">已完成</span>
-        <div><button class="btn-ghost" style="padding:7px 16px;font-size:12px;">查看详情</button></div>
+      <div class="card bk-item" data-status="done" style="padding:14px 18px;display:flex;align-items:center;gap:14px;opacity:.75;">
+        <div class="av" style="width:36px;height:36px;font-size:13px;background:linear-gradient(135deg,#FCD34D,#F59E0B);">糖</div>
+        <div style="flex:1;min-width:0;"><div style="display:flex;gap:6px;margin-bottom:3px;align-items:center;"><b style="font-size:13px;color:#666;">糖糖爱摄影</b><span class="tag tag-warm">🟡 温</span></div><div style="font-size:12px;color:#999;">婚纱摄影 · 轻奢森系</div></div>
+        <div style="text-align:center;min-width:100px;"><div style="font-size:13px;font-weight:600;color:#666;">2026-03-28</div><div style="font-size:11px;color:#bbb;">10:00</div></div>
+        <div style="min-width:80px;text-align:center;"><div style="font-size:10px;color:#bbb;margin-bottom:2px;">来源</div><div style="font-size:11px;font-weight:600;color:#9CA3AF;">人工</div></div>
+        <span style="background:#EFF6FF;color:#2563EB;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;white-space:nowrap;">已完成</span>
+        <div><button class="btn-ghost btn-sm">详情</button></div>
       </div>
-
-      <div class="card booking-item" data-status="pending" style="padding:18px 22px;display:flex;align-items:center;gap:16px;" onmouseenter="this.style.boxShadow='0 4px 20px rgba(255,36,66,.08)'" onmouseleave="this.style.boxShadow=''">
-        <div class="av" style="background:linear-gradient(135deg,#6EE7B7,#059669);">云</div>
-        <div style="flex:1;min-width:0;">
-          <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
-            <span style="font-weight:700;font-size:14px;">云淡风轻之旅</span>
-            <span class="tag-warm">🟡 温</span>
-          </div>
-          <div style="font-size:13px;color:#666;">婚纱摄影 · 轻奢森系套餐</div>
-        </div>
-        <div style="text-align:center;min-width:120px;">
-          <div style="font-size:14px;font-weight:600;color:#1a1a1a;">2026-06-07</div>
-          <div style="font-size:12px;color:#999;">14:00 · 外景拍摄</div>
-        </div>
-        <div style="text-align:center;min-width:80px;">
-          <div style="font-size:11px;color:#999;margin-bottom:3px;">来源</div>
-          <div style="font-size:12px;font-weight:600;color:#2563EB;">AI 自动预约</div>
-        </div>
-        <span class="badge-pending">待确认</span>
-        <div style="display:flex;gap:8px;">
-          <button class="btn-primary" style="padding:7px 16px;font-size:12px;" onclick="confirmBk(this)">确认</button>
-          <button class="btn-ghost" style="padding:7px 14px;font-size:12px;">改期</button>
-          <button class="btn-ghost" style="padding:7px 14px;font-size:12px;color:#EF4444;" onmouseenter="this.style.borderColor='#EF4444'" onmouseleave="this.style.borderColor='#E5E7EB'">取消</button>
-        </div>
-      </div>
-
-      <div class="card booking-item" data-status="cancelled" style="padding:18px 22px;display:flex;align-items:center;gap:16px;opacity:.55;">
-        <div class="av" style="background:#D1D5DB;">安</div>
-        <div style="flex:1;min-width:0;">
-          <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
-            <span style="font-weight:700;font-size:14px;color:#9CA3AF;">安静的橡皮擦</span>
-            <span class="tag-cold">⚪ 冷</span>
-          </div>
-          <div style="font-size:13px;color:#bbb;">婚纱摄影 · 臻品森系套餐</div>
-        </div>
-        <div style="text-align:center;min-width:120px;">
-          <div style="font-size:14px;font-weight:600;color:#9CA3AF;text-decoration:line-through;">2026-04-05</div>
-          <div style="font-size:12px;color:#bbb;">10:00</div>
-        </div>
-        <div style="text-align:center;min-width:80px;">
-          <div style="font-size:11px;color:#bbb;margin-bottom:3px;">来源</div>
-          <div style="font-size:12px;font-weight:600;color:#D1D5DB;">AI 自动预约</div>
-        </div>
-        <span class="badge-cancelled">已取消</span>
-        <div><button class="btn-ghost" style="padding:7px 16px;font-size:12px;">重新预约</button></div>
-      </div>
-
-      <div class="card booking-item" data-status="confirmed" style="padding:18px 22px;display:flex;align-items:center;gap:16px;" onmouseenter="this.style.boxShadow='0 4px 20px rgba(0,0,0,.06)'" onmouseleave="this.style.boxShadow=''">
-        <div class="av" style="background:linear-gradient(135deg,#818CF8,#6366F1);">星</div>
-        <div style="flex:1;min-width:0;">
-          <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
-            <span style="font-weight:700;font-size:14px;">星语心愿</span>
-            <span class="tag-warm">🟡 温</span>
-          </div>
-          <div style="font-size:13px;color:#666;">婚纱摄影 · 轻奢森系套餐</div>
-        </div>
-        <div style="text-align:center;min-width:120px;">
-          <div style="font-size:14px;font-weight:600;color:#1a1a1a;">2026-06-28</div>
-          <div style="font-size:12px;color:#999;">09:30 · 外景拍摄</div>
-        </div>
-        <div style="text-align:center;min-width:80px;">
-          <div style="font-size:11px;color:#999;margin-bottom:3px;">来源</div>
-          <div style="font-size:12px;font-weight:600;color:#2563EB;">AI 自动预约</div>
-        </div>
-        <span class="badge-confirmed">已确认</span>
-        <div style="display:flex;gap:8px;">
-          <button class="btn-ghost" style="padding:7px 14px;font-size:12px;">改期</button>
-          <button class="btn-ghost" style="padding:7px 14px;font-size:12px;color:#EF4444;" onmouseenter="this.style.borderColor='#EF4444'" onmouseleave="this.style.borderColor='#E5E7EB'">取消</button>
-        </div>
+      <div class="card bk-item" data-status="pending" style="padding:14px 18px;display:flex;align-items:center;gap:14px;">
+        <div class="av" style="width:36px;height:36px;font-size:13px;background:linear-gradient(135deg,#6EE7B7,#059669);">云</div>
+        <div style="flex:1;min-width:0;"><div style="display:flex;gap:6px;margin-bottom:3px;align-items:center;"><b style="font-size:13px;">云淡风轻之旅</b><span class="tag tag-warm">🟡 温</span></div><div style="font-size:12px;color:#666;">婚纱摄影 · 轻奢森系</div></div>
+        <div style="text-align:center;min-width:100px;"><div style="font-size:13px;font-weight:600;">2026-06-07</div><div style="font-size:11px;color:#bbb;">14:00</div></div>
+        <div style="min-width:80px;text-align:center;"><div style="font-size:10px;color:#bbb;margin-bottom:2px;">来源</div><div style="font-size:11px;font-weight:600;color:#2563EB;">AI自动</div></div>
+        <span class="badge-pending" style="background:#FFF7ED;color:#EA580C;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;white-space:nowrap;">待确认</span>
+        <div style="display:flex;gap:6px;"><button class="btn-red btn-sm" onclick="confirmBk(this)">确认</button><button class="btn-ghost btn-sm">改期</button></div>
       </div>
     </div>
-
-    <!-- 底部汇总 -->
-    <div class="card" style="padding:18px 28px;display:flex;align-items:center;gap:32px;">
-      <div style="text-align:center;">
-        <div style="font-size:28px;font-weight:800;color:#1a1a1a;">6</div>
-        <div style="font-size:12px;color:#999;margin-top:2px;">近30日预约</div>
-      </div>
-      <div class="divider"></div>
-      <div style="text-align:center;">
-        <div style="font-size:28px;font-weight:800;color:#EA580C;">2</div>
-        <div style="font-size:12px;color:#999;margin-top:2px;">待确认</div>
-      </div>
-      <div class="divider"></div>
-      <div style="text-align:center;">
-        <div style="font-size:28px;font-weight:800;color:#059669;">2</div>
-        <div style="font-size:12px;color:#999;margin-top:2px;">已确认</div>
-      </div>
-      <div class="divider"></div>
-      <div style="text-align:center;">
-        <div style="font-size:28px;font-weight:800;color:#FF2442;">67%</div>
-        <div style="font-size:12px;color:#999;margin-top:2px;">完成率</div>
-      </div>
-      <div style="margin-left:auto;padding:12px 18px;border-radius:12px;background:linear-gradient(135deg,#FFF0F2,#FFF7F8);border:1px solid #FFD6DC;">
-        <div style="font-size:13px;color:#CC1033;font-weight:600;">💡 AI 自动预约占比 <strong>83%</strong></div>
-        <div style="font-size:12px;color:#FF7A8E;margin-top:3px;">本月节省客服工时约 <strong>12h</strong></div>
+    <div style="margin-top:14px;padding:14px 20px;background:#fff;border-radius:12px;border:1px solid #EBEBEB;display:flex;gap:24px;align-items:center;">
+      <div style="text-align:center;"><div style="font-size:24px;font-weight:800;">6</div><div style="font-size:11px;color:#999;">近30日预约</div></div>
+      <div style="width:1px;height:36px;background:#EBEBEB;"></div>
+      <div style="text-align:center;"><div style="font-size:24px;font-weight:800;color:#EA580C;">2</div><div style="font-size:11px;color:#999;">待确认</div></div>
+      <div style="width:1px;height:36px;background:#EBEBEB;"></div>
+      <div style="text-align:center;"><div style="font-size:24px;font-weight:800;color:#059669;">2</div><div style="font-size:11px;color:#999;">已确认</div></div>
+      <div style="width:1px;height:36px;background:#EBEBEB;"></div>
+      <div style="text-align:center;"><div style="font-size:24px;font-weight:800;color:#FF2442;">67%</div><div style="font-size:11px;color:#999;">完成率</div></div>
+      <div style="margin-left:auto;background:linear-gradient(135deg,#FFF0F2,#FFF7F8);border:1px solid #FFD6DC;border-radius:10px;padding:10px 16px;font-size:12px;color:#CC1033;font-weight:500;line-height:1.7;">
+        💡 AI 自动预约占比 <b>83%</b><br>本月节省客服工时约 <b>12h</b>
       </div>
     </div>
   </div>
 </div>
 
 
-<!-- ════  页面4：AI 配置  ════ -->
-<div id="page-aiconfig" class="page">
-  <div class="topbar">
-    <div>
-      <div class="topbar-title">AI 配置</div>
-      <div class="topbar-sub">调整 AI 员工的工作策略与回复风格</div>
+</div><!-- /main -->
+
+<!-- ══ 看板快捷回传模态 ══ -->
+<div id="feedback-modal" style="display:none;" class="modal-overlay" onclick="if(event.target===this)closeFeedbackModal()">
+  <div class="modal">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+      <div style="font-size:15px;font-weight:700;">快捷回传 · 梅子酱</div>
+      <button onclick="closeFeedbackModal()" style="border:none;background:none;font-size:18px;color:#bbb;cursor:pointer;">✕</button>
     </div>
-    <button class="btn-primary" onclick="saveConfig(this)">保存配置</button>
-  </div>
-  <div class="page-body" style="max-width:760px;">
-    <div style="display:flex;flex-direction:column;gap:16px;">
-
-      <!-- 转人工阈值 -->
-      <div class="card" style="padding:24px 26px;">
-        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px;">
-          <div>
-            <div style="font-size:15px;font-weight:700;">转人工阈值</div>
-            <div style="font-size:13px;color:#999;margin-top:4px;">AI 置信度低于此值时，自动转接人工客服</div>
-          </div>
-          <div style="font-size:32px;font-weight:800;color:#FF2442;" id="threshold-val">50%</div>
-        </div>
-        <div style="margin-top:18px;">
-          <input type="range" id="threshold-input" min="30" max="70" value="50" oninput="updateThreshold(this)">
-          <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:12px;color:#bbb;">
-            <span>30% 宽松，AI 多处理</span>
-            <span>70% 严格，多转人工</span>
-          </div>
-        </div>
-        <div style="margin-top:16px;padding:12px 16px;background:#F7F8FA;border-radius:10px;font-size:13px;color:#666;line-height:1.6;">
-          当前设置：置信度 &lt; <strong style="color:#1a1a1a;" id="threshold-tip2">50%</strong> 时转人工 · 今日已触发 <strong style="color:#FF2442;">8</strong> 次 · 平均响应时长 <strong style="color:#1a1a1a;">2.3 min</strong>
-        </div>
-      </div>
-
-      <!-- 回复风格 -->
-      <div class="card" style="padding:24px 26px;">
-        <div style="font-size:15px;font-weight:700;margin-bottom:4px;">回复语气风格</div>
-        <div style="font-size:13px;color:#999;margin-bottom:18px;">影响所有 AI 自动回复的表达方式</div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;" id="style-grid">
-          <div class="style-card" onclick="pickStyle(this,'活泼','哇哇哇！我们有超棒的新客折扣哦 🌟 首拍直接9折！心动了嘛？告诉我想要哪个套餐我帮你算！')" style="padding:18px;border:2px solid #E5E7EB;border-radius:14px;cursor:pointer;text-align:center;transition:all .18s;">
-            <div style="font-size:32px;margin-bottom:10px;">🌟</div>
-            <div style="font-size:14px;font-weight:700;color:#1a1a1a;margin-bottom:4px;">活泼</div>
-            <div style="font-size:12px;color:#999;line-height:1.5;">活力四射，多用 emoji<br>亲近感强</div>
-          </div>
-          <div class="style-card" onclick="pickStyle(this,'专业','您好，我们目前针对新客户提供首次预约九折优惠。请问您意向的是哪个套餐系列？我可以为您提供详细报价单。')" style="padding:18px;border:2px solid #E5E7EB;border-radius:14px;cursor:pointer;text-align:center;transition:all .18s;">
-            <div style="font-size:32px;margin-bottom:10px;">💼</div>
-            <div style="font-size:14px;font-weight:700;color:#1a1a1a;margin-bottom:4px;">专业</div>
-            <div style="font-size:12px;color:#999;line-height:1.5;">严谨规范，突出可信度<br>适合高客单价场景</div>
-          </div>
-          <div class="style-card active" onclick="pickStyle(this,'亲切','亲爱的，我们现在有新客优惠呢～首次预约可以享受九折哦 💕 告诉我想要哪个套餐，我帮您看看具体金额～')" style="padding:18px;border:2px solid #FF2442;border-radius:14px;cursor:pointer;text-align:center;transition:all .18s;background:#FFF8F9;">
-            <div style="font-size:32px;margin-bottom:10px;">💕</div>
-            <div style="font-size:14px;font-weight:700;color:#FF2442;margin-bottom:4px;">亲切 <span style="font-size:11px;background:#FF2442;color:#fff;padding:1px 6px;border-radius:20px;vertical-align:middle;">当前</span></div>
-            <div style="font-size:12px;color:#888;line-height:1.5;">温暖自然，像朋友聊天<br>转化率最高</div>
-          </div>
-        </div>
-        <!-- 预览 -->
-        <div style="margin-top:16px;padding:16px;background:#F7F8FA;border-radius:12px;">
-          <div style="font-size:12px;color:#bbb;margin-bottom:10px;">回复预览 · 用户问：「你们有折扣吗」</div>
-          <div style="display:flex;gap:8px;align-items:flex-start;">
-            <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#FF2442,#FF6B7A);display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;font-weight:800;flex-shrink:0;">AI</div>
-            <div class="bubble-ai" id="style-preview">亲爱的，我们现在有新客优惠呢～首次预约可以享受九折哦 💕 告诉我想要哪个套餐，我帮您看看具体金额～</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Skill 开关 -->
-      <div class="card" style="padding:24px 26px;">
-        <div style="font-size:15px;font-weight:700;margin-bottom:4px;">Skill 开关</div>
-        <div style="font-size:13px;color:#999;margin-bottom:18px;">控制各个自动化 Skill 的启用状态</div>
-        <div style="display:flex;flex-direction:column;gap:0;">
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid #F5F5F5;">
-            <div>
-              <div style="font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:2px;">📅 档期查询</div>
-              <div style="font-size:12px;color:#999;">用户询问可用档期时自动触发 · 今日触发 <strong style="color:#1a1a1a">23</strong> 次</div>
-            </div>
-            <label class="toggle-wrap"><input type="checkbox" checked><span class="toggle-slider"></span></label>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid #F5F5F5;">
-            <div>
-              <div style="font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:2px;">💰 套餐报价</div>
-              <div style="font-size:12px;color:#999;">用户询问价格时自动返回套餐信息 · 今日触发 <strong style="color:#1a1a1a">18</strong> 次</div>
-            </div>
-            <label class="toggle-wrap"><input type="checkbox" checked><span class="toggle-slider"></span></label>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;">
-            <div>
-              <div style="font-size:14px;font-weight:600;color:#9CA3AF;margin-bottom:2px;">🎨 案例展示 <span style="font-size:11px;background:#F3F4F6;color:#9CA3AF;padding:1px 6px;border-radius:20px;">已关闭</span></div>
-              <div style="font-size:12px;color:#bbb;">自动发送相关风格拍摄案例集</div>
-            </div>
-            <label class="toggle-wrap"><input type="checkbox"><span class="toggle-slider"></span></label>
-          </div>
-        </div>
-      </div>
-
+    <div style="font-size:12px;color:#999;margin-bottom:14px;padding:10px 14px;background:#F7F8FA;border-radius:9px;line-height:1.65;">
+      <b style="color:#555;">为什么要回传？</b><br>
+      你填写的结果会直接传给投放模型，帮助系统识别高转化线索特征，让下一批广告更精准触达高意向用户。
+      <span style="color:#FF2442;font-weight:600;">回传越多，线索越准。</span>
     </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;" id="modal-feedback-grid">
+      <button class="feedback-btn" onclick="modalPick(this,'到访')" style="padding:12px;">✅ 到访</button>
+      <button class="feedback-btn" onclick="modalPick(this,'成交')" style="padding:12px;">🎉 成交</button>
+      <button class="feedback-btn" onclick="modalPick(this,'跟进中')" style="padding:12px;">⏳ 跟进中</button>
+      <button class="feedback-btn" onclick="modalPick(this,'无效')" style="padding:12px;">❌ 无效</button>
+    </div>
+    <textarea placeholder="备注（可选）" style="width:100%;border:1px solid #E5E7EB;border-radius:9px;padding:10px 12px;font-size:13px;color:#555;resize:none;outline:none;font-family:inherit;" rows="2"></textarea>
+    <div style="margin-top:10px;font-size:11px;color:#bbb;line-height:1.6;">
+      回传字段：线索ID · 意向等级 · 结果状态 · 备注 · 时间戳<br>
+      数据流向：→ 知然归因模型 → 投放策略优化
+    </div>
+    <button class="btn-red" style="width:100%;margin-top:12px;padding:11px;" id="modal-submit" onclick="submitModal()" disabled>提交回传</button>
   </div>
 </div>
-
-
-</div><!-- end 内容区 -->
 
 <script>
+// ── 页面切换
 function showPage(id) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(p => { p.style.display = 'none'; p.classList.remove('active'); });
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('page-' + id).classList.add('active');
-  document.getElementById('nav-' + id).classList.add('active');
+  const pg = document.getElementById('page-' + id);
+  if (pg) { pg.style.display = 'flex'; pg.classList.add('active'); }
+  const nav = document.getElementById('nav-' + id);
+  if (nav) nav.classList.add('active');
 }
 
+// ── 工作台 Tab
 function wbTab(btn, tabId) {
-  document.querySelectorAll('#wb-tabs .tab-btn').forEach(b => b.classList.remove('active'));
-  ['wbt-ai','wbt-pending','wbt-done'].forEach(id => { document.getElementById(id).style.display = 'none'; });
+  document.querySelectorAll('#wb-tab-bar .tab-btn').forEach(b => b.classList.remove('active'));
+  ['wbt-ai', 'wbt-pending', 'wbt-done'].forEach(id => { const el = document.getElementById(id); if(el) el.style.display = 'none'; });
   btn.classList.add('active');
-  document.getElementById(tabId).style.display = 'block';
+  const target = document.getElementById(tabId);
+  if (target) target.style.display = 'block';
 }
 
-function leadSelect(el) {
-  document.querySelectorAll('.lead-row').forEach(r => r.classList.remove('active'));
+// ── 选中线索
+function leadClick(el) {
+  document.querySelectorAll('.lead-item').forEach(i => i.classList.remove('active'));
   el.classList.add('active');
 }
 
-function doTakeover(btn) {
+// ── 一键接管
+let takenOver = false;
+function doTakeover() {
+  if (takenOver) return;
+  takenOver = true;
+  const btn = document.getElementById('takeover-btn');
   btn.textContent = '✅ 已接管';
-  btn.classList.add('done');
+  btn.style.background = '#10B981';
   btn.disabled = true;
+  // 状态徽章
+  const badge = document.getElementById('status-badge');
+  badge.textContent = '已接管';
+  badge.className = 'tag tag-taken';
+  // 解锁回复框
+  document.getElementById('reply-locked').style.display = 'none';
+  document.getElementById('reply-active').style.display = 'block';
+  // 解锁回传
+  document.getElementById('feedback-locked-tip').style.display = 'none';
+  document.getElementById('feedback-form').style.display = 'block';
+  // 展示接管消息
+  document.getElementById('takeover-msg').style.display = 'block';
+  // 滚动到底
+  const chat = document.getElementById('chat-scroll');
+  setTimeout(() => { chat.scrollTop = chat.scrollHeight; }, 100);
+  // nav badge
+  const badge2 = document.querySelector('#nav-wb .nav-badge');
+  if (badge2) badge2.textContent = '2';
 }
 
-function setStatus(btn, s) {
-  document.querySelectorAll('.status-btn').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
-  document.getElementById('callback-tip').style.display = 'block';
+// ── 发送消息
+function sendMsg() {
+  const input = document.getElementById('reply-input');
+  const text = input.value.trim();
+  if (!text) return;
+  const chat = document.getElementById('chat-scroll');
+  const div = document.createElement('div');
+  div.style.cssText = 'display:flex;gap:8px;align-items:flex-start;flex-direction:row-reverse;';
+  div.innerHTML = `
+    <div class="av" style="width:28px;height:28px;font-size:11px;background:linear-gradient(135deg,#10B981,#059669);flex-shrink:0;">我</div>
+    <div style="text-align:right;">
+      <div style="font-size:10px;color:#C0C0C0;margin-bottom:4px;">销售 小李 · 刚刚</div>
+      <div class="bubble-user" style="margin-left:auto;background:#10B981;">${text}</div>
+    </div>`;
+  chat.appendChild(div);
+  input.value = '';
+  updateCharCount();
+  chat.scrollTop = chat.scrollHeight;
 }
 
-function filterBooking(btn, status) {
-  document.querySelectorAll('.status-btn[data-f]').forEach(b => b.classList.remove('selected'));
+// ── 字数统计
+const replyInput = document.getElementById('reply-input');
+if (replyInput) {
+  replyInput.addEventListener('input', updateCharCount);
+  replyInput.addEventListener('keydown', e => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) sendMsg(); });
+}
+function updateCharCount() {
+  const el = document.getElementById('char-count');
+  if (!el) return;
+  const val = document.getElementById('reply-input').value.length;
+  el.textContent = val + ' / 500';
+}
+
+// ── 工作台回传
+let feedbackChosen = null;
+function pickFeedback(btn, val) {
+  document.querySelectorAll('#feedback-panel .feedback-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
-  document.querySelectorAll('.booking-item').forEach(item => {
+  feedbackChosen = val;
+  document.getElementById('submit-feedback-btn').disabled = false;
+  document.getElementById('submit-feedback-btn').style.opacity = '1';
+}
+function submitFeedback() {
+  document.getElementById('feedback-success').style.display = 'block';
+  document.getElementById('submit-feedback-btn').textContent = '✅ 已回传';
+  document.getElementById('submit-feedback-btn').style.background = '#10B981';
+  document.getElementById('submit-feedback-btn').disabled = true;
+}
+
+// ── 看板刷新
+function refreshBoard() {
+  const btn = event.target;
+  btn.textContent = '刷新中…';
+  btn.disabled = true;
+  setTimeout(() => {
+    btn.textContent = '🔄 立即刷新';
+    btn.disabled = false;
+    const ts = document.querySelector('.topbar .text-green-600, .topbar span[style*="10B981"]');
+    if (ts) ts.textContent = '● 数据最后刷新 ' + new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'});
+  }, 1200);
+}
+
+// ── 预约筛选
+function filterBk(btn, status) {
+  document.querySelectorAll('.feedback-btn[data-f]').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.querySelectorAll('.bk-item').forEach(item => {
     item.style.display = (status === 'all' || item.dataset.status === status) ? '' : 'none';
   });
 }
 
+// ── 确认预约
 function confirmBk(btn) {
-  const card = btn.closest('.booking-item');
+  const card = btn.closest('.bk-item');
+  if (!card) return;
   card.dataset.status = 'confirmed';
-  const badge = card.querySelector('.badge-pending');
-  if (badge) { badge.className = 'badge-confirmed'; badge.textContent = '已确认'; }
+  const badge = card.querySelector('[class*="badge-pending"], span[style*="EA580C"]');
+  if (badge) { badge.style.background = '#ECFDF5'; badge.style.color = '#059669'; badge.textContent = '已确认'; }
   btn.textContent = '✅ 已确认';
   btn.style.background = '#10B981';
   btn.disabled = true;
 }
 
-function updateThreshold(slider) {
-  const v = slider.value;
-  document.getElementById('threshold-val').textContent = v + '%';
-  document.getElementById('threshold-tip2').textContent = v + '%';
-  const pct = ((v - 30) / 40 * 100).toFixed(1);
-  slider.style.background = `linear-gradient(to right, #FF2442 0%, #FF2442 ${pct}%, #E5E7EB ${pct}%, #E5E7EB 100%)`;
+// ── 看板快捷回传 modal
+function openFeedbackModal() { document.getElementById('feedback-modal').style.display = 'flex'; }
+function closeFeedbackModal() { document.getElementById('feedback-modal').style.display = 'none'; }
+let modalChosen = null;
+function modalPick(btn, val) {
+  document.querySelectorAll('#modal-feedback-grid .feedback-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  modalChosen = val;
+  document.getElementById('modal-submit').disabled = false;
 }
-// init slider
-(function(){ const s = document.getElementById('threshold-input'); if(s) updateThreshold(s); })();
-
-function pickStyle(el, name, preview) {
-  document.querySelectorAll('.style-card').forEach(c => {
-    c.classList.remove('active');
-    c.style.borderColor = '#E5E7EB';
-    c.style.background = '';
-    const label = c.querySelector('div:nth-child(2)');
-    if (label) { label.style.color = '#1a1a1a'; }
-    const badge = c.querySelector('.badge-cur');
-    if (badge) badge.remove();
-  });
-  el.style.borderColor = '#FF2442';
-  el.style.background = '#FFF8F9';
-  const label = el.querySelector('div:nth-child(2)');
-  if (label) label.style.color = '#FF2442';
-  document.getElementById('style-preview').textContent = preview;
-}
-
-function saveConfig(btn) {
-  const orig = btn.textContent;
-  btn.textContent = '✅ 已保存';
+function submitModal() {
+  const btn = document.getElementById('modal-submit');
+  btn.textContent = '✅ 回传成功';
   btn.style.background = '#10B981';
-  setTimeout(() => { btn.textContent = orig; btn.style.background = ''; }, 2000);
+  btn.disabled = true;
+  setTimeout(() => closeFeedbackModal(), 1500);
 }
 </script>
 </body>
