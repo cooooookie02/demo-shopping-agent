@@ -21,562 +21,382 @@
   /* ===== 手机外壳 ===== */
   .phone-wrap { display: flex; flex-direction: column; align-items: center; }
   .phone-label {
-    font-size: 12px;
-    color: #888;
-    margin-bottom: 10px;
-    font-weight: 500;
-    letter-spacing: 0.3px;
+    font-size: 12px; color: #888; margin-bottom: 10px;
+    font-weight: 500; letter-spacing: 0.3px;
   }
   .phone {
-    width: 375px;
-    height: 780px;
+    width: 375px; height: 812px;
     background: #fff;
     border-radius: 48px;
-    box-shadow: 0 24px 64px rgba(0,0,0,0.16), inset 0 0 0 1px rgba(255,255,255,0.1);
+    box-shadow: 0 24px 64px rgba(0,0,0,0.15);
     overflow: hidden;
-    position: relative;
     border: 9px solid #1a1a1a;
     flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
+    display: flex; flex-direction: column;
   }
   .phone-notch {
-    height: 34px;
-    background: #1a1a1a;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
+    height: 34px; background: #1a1a1a;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
   }
-  .phone-notch-inner {
-    width: 110px; height: 18px;
-    background: #000;
-    border-radius: 0 0 14px 14px;
-  }
+  .phone-notch-inner { width: 110px; height: 18px; background: #000; border-radius: 0 0 14px 14px; }
   .status-bar {
-    height: 26px;
-    background: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 18px;
-    font-size: 11px;
-    font-weight: 600;
-    flex-shrink: 0;
+    height: 26px; background: #fff;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 18px; font-size: 11px; font-weight: 600; flex-shrink: 0;
+    color: #111;
   }
-  .status-icons { display: flex; gap: 4px; align-items: center; }
-  .screen {
-    flex: 1;
-    overflow-y: auto;
-    overflow-x: hidden;
-    background: #fff;
-    position: relative;
-  }
+  .screen { flex: 1; overflow-y: auto; overflow-x: hidden; background: #fff; }
   .screen::-webkit-scrollbar { display: none; }
 
   /* ===== 通用搜索栏 ===== */
-  .search-bar-wrap {
-    padding: 10px 14px 8px;
-    background: #fff;
-    border-bottom: 1px solid #f0f0f0;
-    flex-shrink: 0;
+  .search-header {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px 8px; background: #fff;
+    border-bottom: 1px solid #f0f0f0; flex-shrink: 0;
   }
+  .back-icon { font-size: 18px; color: #333; cursor: pointer; }
   .search-bar {
-    display: flex;
-    align-items: center;
-    background: #f5f5f5;
-    border-radius: 22px;
-    padding: 8px 14px;
-    gap: 8px;
+    flex: 1; display: flex; align-items: center;
+    background: #f5f5f5; border-radius: 22px; padding: 7px 14px; gap: 6px;
   }
   .search-bar input {
     border: none; background: transparent;
     font-size: 14px; flex: 1; outline: none; color: #333;
   }
-  .search-btn {
-    background: #ff2442; color: #fff;
-    border: none; border-radius: 16px;
-    padding: 5px 14px; font-size: 13px;
-    cursor: pointer; white-space: nowrap;
-  }
+  .search-clear { color: #bbb; font-size: 14px; cursor: pointer; }
+  .search-btn-text { font-size: 14px; font-weight: 500; color: #333; cursor: pointer; white-space: nowrap; }
 
-  /* ===== AI 问一问卡片（仿现有样式）===== */
-  .ai-card {
-    margin: 10px 12px;
-    background: #fff;
-    border: 1px solid #ececec;
-    border-radius: 14px;
-    overflow: hidden;
-    display: none;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  /* ===== Tab栏 ===== */
+  .tabs-bar {
+    display: flex; align-items: center; gap: 0;
+    padding: 0 14px; border-bottom: 1px solid #f0f0f0;
+    overflow-x: auto; scrollbar-width: none; flex-shrink: 0;
   }
-  .ai-card.show { display: block; }
+  .tabs-bar::-webkit-scrollbar { display: none; }
+  .tab-item {
+    padding: 10px 12px 9px; font-size: 14px; color: #888;
+    white-space: nowrap; cursor: pointer; position: relative; flex-shrink: 0;
+  }
+  .tab-item.active { color: #111; font-weight: 600; }
+  .tab-item.active::after {
+    content: ''; position: absolute; bottom: 0; left: 50%;
+    transform: translateX(-50%); width: 20px; height: 2px;
+    background: #ff2442; border-radius: 2px;
+  }
+  .tab-item.ai-tab { color: #4a90d9; display: flex; align-items: center; gap: 4px; }
+  .tab-item.ai-tab svg { width: 14px; height: 14px; }
 
-  .ai-card-header {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    padding: 11px 14px 0;
-    font-size: 13px;
-    color: #222;
-    font-weight: 600;
-  }
-  .ai-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 3px;
-    background: linear-gradient(90deg, #ff2442, #ff6b35);
-    color: #fff;
-    font-size: 10px;
-    font-weight: 700;
-    padding: 2px 7px;
-    border-radius: 10px;
-    letter-spacing: 0.5px;
-  }
-  .ai-intro {
-    font-size: 13px;
-    color: #444;
-    line-height: 1.65;
-    padding: 8px 14px 10px;
-  }
-  .ai-intro em {
-    font-style: normal;
-    color: #ff2442;
-    font-weight: 500;
-  }
-
-  /* ===== 横划商品卡片组 ===== */
-  .product-carousel-wrap {
-    padding: 0 0 12px;
-  }
-  .product-carousel {
-    display: flex;
-    gap: 10px;
-    padding: 4px 14px 6px;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-  }
-  .product-carousel::-webkit-scrollbar { display: none; }
-
-  .p-card {
-    flex-shrink: 0;
-    width: 140px;
-    background: #fff;
+  /* ===== AI问一问卡片（搜索结果页内嵌）===== */
+  .ai-inline-card {
+    margin: 10px 14px;
+    border: 1px solid #e8e8e8;
     border-radius: 12px;
-    border: 1px solid #ececec;
     overflow: hidden;
-    scroll-snap-align: start;
-    cursor: pointer;
-    transition: box-shadow 0.15s, transform 0.15s;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    background: #fff;
   }
-  .p-card:hover { box-shadow: 0 4px 12px rgba(255,36,66,0.13); transform: translateY(-1px); }
-  .p-card:active { transform: scale(0.97); }
-
-  .p-card-img {
-    width: 100%; height: 120px;
+  .ai-inline-body { padding: 12px 14px; }
+  .ai-inline-intro {
+    font-size: 13px; color: #444; line-height: 1.65; margin-bottom: 10px;
+  }
+  /* 商品行：小图+名称+推荐% */
+  .ai-product-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 7px 0; border-top: 1px solid #f5f5f5;
+    cursor: pointer;
+  }
+  .ai-product-row:first-child { border-top: none; }
+  .ai-prod-num {
+    width: 18px; font-size: 13px; font-weight: 700; color: #333;
+    flex-shrink: 0; text-align: center;
+  }
+  .ai-prod-num.n1 { color: #ff2442; }
+  .ai-prod-num.n2 { color: #ff8800; }
+  .ai-prod-num.n3 { color: #aaa; }
+  .ai-prod-thumb {
+    width: 38px; height: 38px; border-radius: 8px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 38px;
-    background: linear-gradient(135deg, #fff5f6, #fff0f0);
-    position: relative;
+    font-size: 20px; flex-shrink: 0;
+    background: linear-gradient(135deg, #fff5f6, #ffe8eb);
   }
-  .p-card-img.blue { background: linear-gradient(135deg, #f0f5ff, #e8f0fe); }
-  .p-card-img.green { background: linear-gradient(135deg, #f0fff4, #e6f4ea); }
-  .p-card-img.yellow { background: linear-gradient(135deg, #fffbf0, #fff8e1); }
-  .p-card-img.purple { background: linear-gradient(135deg, #f8f0ff, #f3e5f5); }
+  .ai-prod-thumb.blue { background: linear-gradient(135deg, #f0f5ff, #e3ecff); }
+  .ai-prod-thumb.green { background: linear-gradient(135deg, #f0fff4, #e0f5e9); }
+  .ai-prod-thumb.yellow { background: linear-gradient(135deg, #fffbf0, #fff3d6); }
+  .ai-prod-name { flex: 1; font-size: 13px; color: #222; line-height: 1.4; }
+  .ai-prod-pct { font-size: 12px; color: #999; white-space: nowrap; }
 
-  .p-card-match {
-    position: absolute;
-    top: 6px; right: 6px;
-    background: rgba(255,36,66,0.92);
-    color: #fff;
-    font-size: 9px;
-    font-weight: 700;
-    padding: 2px 5px;
-    border-radius: 6px;
-    letter-spacing: 0.3px;
+  /* 底部footer */
+  .ai-inline-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 14px 10px; border-top: 1px solid #f5f5f5;
   }
-  .p-card-match.high { background: rgba(255,36,66,0.92); }
-  .p-card-match.mid { background: rgba(255,107,53,0.9); }
-
-  .p-card-body { padding: 8px 9px 10px; }
-  .p-card-name {
-    font-size: 12px;
-    font-weight: 600;
-    color: #222;
-    line-height: 1.4;
-    margin-bottom: 3px;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  .p-card-sub {
-    font-size: 10px; color: #999; margin-bottom: 5px;
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  .p-card-price { font-size: 15px; font-weight: 700; color: #ff2442; }
-  .p-card-price span { font-size: 10px; }
-  .p-card-rating { font-size: 10px; color: #ff9900; margin-top: 2px; }
-
-  /* 滑动提示 */
-  .swipe-hint {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    padding: 0 14px 4px;
-    font-size: 10px;
-    color: #bbb;
-  }
-  .swipe-dots {
-    display: flex; gap: 3px; margin-left: auto;
-  }
-  .swipe-dot {
-    width: 4px; height: 4px; border-radius: 2px;
-    background: #e0e0e0; transition: all 0.2s;
-  }
-  .swipe-dot.active { width: 12px; background: #ff2442; }
-
-  /* 查看更多 */
-  .ai-more-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    margin: 0 14px 12px;
-    padding: 9px;
-    border: 1px solid #ffd6db;
-    border-radius: 10px;
-    font-size: 13px;
-    color: #ff2442;
-    font-weight: 500;
-    cursor: pointer;
-    background: #fff8f8;
-    transition: background 0.15s;
-  }
-  .ai-more-btn:hover { background: #fff0f2; }
-  .ai-more-btn:active { background: #ffd6db; }
-
-  .ai-footer {
-    padding: 6px 14px 10px;
-    font-size: 10px;
-    color: #ccc;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    border-top: 1px solid #f5f5f5;
+  .ai-inline-footer-left { font-size: 11px; color: #bbb; display: flex; align-items: center; gap: 4px; }
+  .ai-inline-footer-right {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: #f5f5f5; display: flex; align-items: center; justify-content: center;
+    font-size: 14px; cursor: pointer; color: #666;
   }
 
   /* ===== 筛选标签 ===== */
   .filter-tags {
-    display: flex; gap: 6px; padding: 8px 12px 6px;
-    overflow-x: auto; scrollbar-width: none;
-    flex-shrink: 0;
+    display: flex; gap: 6px; padding: 8px 14px 6px;
+    overflow-x: auto; scrollbar-width: none; flex-shrink: 0;
   }
   .filter-tags::-webkit-scrollbar { display: none; }
   .filter-tag {
-    padding: 5px 12px; border-radius: 14px;
-    font-size: 12px; background: #f5f5f5; color: #555;
-    white-space: nowrap; cursor: pointer;
+    padding: 5px 12px; border-radius: 14px; font-size: 12px;
+    background: #f5f5f5; color: #555; white-space: nowrap; cursor: pointer;
     border: 1px solid transparent; transition: all 0.15s;
   }
   .filter-tag.active { background: #fff0f2; color: #ff2442; border-color: #ffd6db; }
 
   /* ===== 笔记流 ===== */
   .note-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 7px;
-    padding: 6px 10px 20px;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 7px; padding: 6px 10px 20px;
   }
-  .note-card {
-    background: #fff;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-  }
-  .note-img {
-    width: 100%; aspect-ratio: 3/4;
-    background: linear-gradient(135deg, #f8e8ea, #fce4d6);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 28px;
-  }
+  .note-card { background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+  .note-img { width: 100%; aspect-ratio: 3/4; display: flex; align-items: center; justify-content: center; font-size: 28px; }
   .note-body { padding: 7px 8px; }
   .note-title { font-size: 12px; color: #333; line-height: 1.4; }
   .note-meta { display: flex; align-items: center; justify-content: space-between; margin-top: 5px; }
-  .note-author { font-size: 10px; color: #999; }
+  .note-author { font-size: 10px; color: #999; display: flex; align-items: center; gap: 3px; }
+  .note-author-avatar { width: 14px; height: 14px; border-radius: 50%; background: #ddd; display: inline-block; font-size: 8px; text-align: center; line-height: 14px; }
   .note-likes { font-size: 10px; color: #999; }
+
+  /* ===== 问一问详情页 ===== */
+  .ww-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 16px; border-bottom: 1px solid #f0f0f0; flex-shrink: 0;
+  }
+  .ww-header-left { font-size: 18px; color: #333; cursor: pointer; }
+  .ww-header-title {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 15px; font-weight: 600; color: #111;
+  }
+  .ww-header-title svg { width: 16px; height: 16px; }
+  .ww-header-right { display: flex; gap: 14px; font-size: 18px; color: #333; cursor: pointer; }
+
+  .ww-content { padding: 16px 16px 30px; }
+  .ww-title { font-size: 20px; font-weight: 700; color: #111; line-height: 1.3; margin-bottom: 6px; }
+  .ww-meta {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 12px; color: #999; margin-bottom: 14px;
+  }
+  .ww-meta-icon { color: #4a90d9; font-size: 13px; }
+  .ww-intro { font-size: 14px; color: #333; line-height: 1.7; margin-bottom: 18px; }
+
+  /* 商品条目 */
+  .ww-product-block { margin-bottom: 20px; }
+  .ww-product-header {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 6px;
+  }
+  .ww-product-name {
+    font-size: 15px; font-weight: 700; color: #1a6bb5;
+    cursor: pointer; text-decoration: none;
+  }
+  .ww-product-name:hover { text-decoration: underline; }
+  .ww-product-sup { font-size: 10px; color: #4a90d9; vertical-align: super; }
+  .ww-pct-pill {
+    display: inline-flex; align-items: center; gap: 3px;
+    background: #f0f5ff; color: #4a90d9; border: 1px solid #cde0ff;
+    font-size: 11px; padding: 2px 8px; border-radius: 10px; cursor: pointer;
+    white-space: nowrap;
+  }
+  .ww-pct-pill::after { content: ' ›'; }
+  .ww-product-desc { font-size: 13px; color: #555; line-height: 1.6; margin-bottom: 8px; }
+
+  /* 3宫格图片 */
+  .ww-img-grid {
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 3px; border-radius: 8px; overflow: hidden; margin-bottom: 8px;
+  }
+  .ww-img-cell {
+    aspect-ratio: 1/1;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px; position: relative;
+  }
+  .ww-img-count {
+    position: absolute; bottom: 4px; right: 5px;
+    background: rgba(0,0,0,0.45); color: #fff;
+    font-size: 10px; padding: 1px 5px; border-radius: 4px;
+  }
+
+  /* 商品卡片（穿插在文字里）*/
+  .ww-product-card {
+    display: flex; align-items: center; gap: 10px;
+    border: 1px solid #eee; border-radius: 10px; padding: 10px 12px;
+    margin-bottom: 8px; cursor: pointer; background: #fafafa;
+  }
+  .ww-pc-img {
+    width: 52px; height: 52px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px; flex-shrink: 0;
+  }
+  .ww-pc-info { flex: 1; min-width: 0; }
+  .ww-pc-name { font-size: 13px; font-weight: 600; color: #222; margin-bottom: 2px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ww-pc-tags { display: flex; gap: 3px; margin-bottom: 3px; flex-wrap: wrap; }
+  .ww-pc-tag {
+    font-size: 10px; padding: 1px 5px; border-radius: 4px;
+    background: #fff0f2; color: #ff2442; border: 1px solid #ffd6db;
+  }
+  .ww-pc-price { font-size: 15px; font-weight: 700; color: #ff2442; }
+  .ww-pc-price span { font-size: 11px; }
+  .ww-pc-rating { font-size: 10px; color: #aaa; }
+  .ww-pc-btn {
+    background: #ff2442; color: #fff; border: none; border-radius: 14px;
+    padding: 6px 12px; font-size: 12px; font-weight: 600; cursor: pointer; flex-shrink: 0;
+  }
+
+  /* 底部loading */
+  .ww-loading {
+    display: flex; align-items: center; gap: 8px;
+    padding: 12px 16px; font-size: 13px; color: #999;
+    border-top: 1px solid #f5f5f5; flex-shrink: 0;
+  }
+  .ww-loading-dot {
+    width: 6px; height: 6px; border-radius: 50%; background: #ccc;
+    animation: pulse 1.4s infinite;
+  }
+  .ww-loading-dot:nth-child(2) { animation-delay: 0.2s; }
+  .ww-loading-dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes pulse { 0%,60%,100%{opacity:1} 30%{opacity:0.3} }
 
   /* ===== 评论页 ===== */
   .note-banner {
-    width: 100%; height: 190px;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    width: 100%; height: 200px;
     display: flex; align-items: flex-end; padding: 14px;
     position: relative; flex-shrink: 0;
+    background: linear-gradient(135deg, #667eea, #764ba2);
   }
-  .note-banner-title { font-size: 15px; font-weight: 700; color: #fff; line-height: 1.4; }
+  .note-banner-title { font-size: 16px; font-weight: 700; color: #fff; line-height: 1.4; }
   .note-banner-sub { font-size: 11px; color: rgba(255,255,255,0.75); margin-top: 3px; }
+
   .comment-section { overflow-y: auto; flex: 1; padding-bottom: 60px; }
   .comment-section::-webkit-scrollbar { display: none; }
-  .comment-header {
-    padding: 12px 16px 8px;
-    font-size: 13px; font-weight: 600; color: #222;
-    border-bottom: 1px solid #f5f5f5;
-  }
-  .comment-item {
-    padding: 11px 16px;
-    border-bottom: 1px solid #f8f8f8;
-    display: flex; gap: 10px;
-  }
-  .avatar {
-    width: 34px; height: 34px; border-radius: 50%;
-    flex-shrink: 0; display: flex; align-items: center; justify-content: center;
-    font-size: 15px; background: #f0f0f0;
-  }
+  .comment-header { padding: 12px 16px 8px; font-size: 13px; font-weight: 600; color: #222; border-bottom: 1px solid #f5f5f5; }
+
+  .comment-item { padding: 11px 16px; border-bottom: 1px solid #f8f8f8; display: flex; gap: 10px; }
+  .avatar { width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 15px; background: #f0f0f0; }
   .comment-body { flex: 1; min-width: 0; }
   .comment-user { font-size: 12px; font-weight: 500; color: #333; }
   .comment-text { font-size: 13px; color: #444; margin-top: 3px; line-height: 1.5; }
-  .comment-time { font-size: 10px; color: #bbb; margin-top: 3px; }
+  .comment-time-row { display: flex; align-items: center; justify-content: space-between; margin-top: 4px; }
+  .comment-time { font-size: 10px; color: #bbb; }
+  .comment-location { font-size: 10px; color: #bbb; }
+  .comment-like { font-size: 10px; color: #bbb; display: flex; align-items: center; gap: 2px; }
 
-  /* AI 回复（评论区）*/
-  .ai-reply {
-    background: linear-gradient(135deg, #fff8f8, #fff5f5);
-    border: 1px solid #ffd6db;
-    border-radius: 10px;
-    padding: 9px 11px;
-    margin-top: 7px;
-    font-size: 12px; color: #333; line-height: 1.6;
+  /* 找货薯回复 */
+  .huashu-reply {
+    margin-top: 8px;
+    padding: 10px 12px;
+    background: #f8f8f8;
+    border-radius: 8px;
+    font-size: 13px; color: #333; line-height: 1.65;
     display: none;
+    border-left: 2px solid #ff2442;
   }
-  .ai-reply.show { display: block; }
-  .ai-reply-tag {
-    display: inline-flex; align-items: center; gap: 3px;
-    background: linear-gradient(90deg,#ff2442,#ff6b35);
-    color: #fff; font-size: 9px; padding: 2px 6px;
-    border-radius: 8px; margin-bottom: 5px; font-weight: 700;
+  .huashu-reply.show { display: block; }
+  .huashu-reply-tag {
+    font-size: 11px; font-weight: 700; color: #ff2442; margin-bottom: 5px;
+    display: flex; align-items: center; gap: 4px;
   }
-
-  /* 评论区横划商品卡片 */
-  .comment-product-carousel {
-    display: flex;
-    gap: 8px;
-    overflow-x: auto;
-    scrollbar-width: none;
-    margin-top: 8px;
-    padding-bottom: 2px;
-    -webkit-overflow-scrolling: touch;
+  /* 文字链商品 */
+  .reply-product-link {
+    color: #1a6bb5; font-weight: 500; cursor: pointer;
+    text-decoration: none; border-bottom: 1px solid rgba(26,107,181,0.25);
   }
-  .comment-product-carousel::-webkit-scrollbar { display: none; }
-  .cp-card {
-    flex-shrink: 0;
-    width: 118px;
-    background: #fff;
-    border-radius: 10px;
-    border: 1px solid #ececec;
-    overflow: hidden;
-    cursor: pointer;
-  }
-  .cp-card-img {
-    height: 88px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 30px;
-    background: linear-gradient(135deg, #fff5f6, #fff0f0);
-  }
-  .cp-card-img.blue { background: linear-gradient(135deg, #f0f5ff, #e8f0fe); }
-  .cp-card-img.green { background: linear-gradient(135deg, #f0fff4, #e6f4ea); }
-  .cp-card-body { padding: 6px 8px 8px; }
-  .cp-card-name { font-size: 11px; font-weight: 600; color: #222; line-height: 1.3; margin-bottom: 2px; }
-  .cp-card-price { font-size: 13px; font-weight: 700; color: #ff2442; }
-  .cp-card-tag { font-size: 9px; color: #ff2442; margin-top: 1px; }
-
-  .comment-more-link {
-    display: flex;
-    align-items: center;
-    gap: 3px;
-    margin-top: 8px;
-    font-size: 11px;
-    color: #ff2442;
-    font-weight: 500;
-    cursor: pointer;
+  .reply-product-link:hover { color: #ff2442; }
+  .reply-more {
+    display: inline-flex; align-items: center; gap: 2px;
+    margin-top: 6px; font-size: 11px; color: #ff2442;
+    font-weight: 500; cursor: pointer;
   }
 
   .comment-input-bar {
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    background: #fff; border-top: 1px solid #eee;
-    padding: 9px 14px;
-    display: flex; gap: 8px; align-items: center;
-  }
-  .comment-input {
-    flex: 1; background: #f5f5f5; border: none;
-    border-radius: 18px; padding: 7px 12px;
-    font-size: 13px; outline: none; color: #333;
-  }
-  .send-btn {
-    background: #ff2442; color: #fff; border: none;
-    border-radius: 18px; padding: 7px 13px;
-    font-size: 13px; cursor: pointer; white-space: nowrap;
-  }
-
-  /* ===== 私信页 ===== */
-  .dm-header {
-    padding: 12px 16px; border-bottom: 1px solid #f0f0f0;
-    display: flex; align-items: center; gap: 10px;
-    background: #fff; flex-shrink: 0;
-  }
-  .dm-avatar {
-    width: 38px; height: 38px; border-radius: 50%;
-    background: linear-gradient(135deg, #ff2442, #ff6b35);
-    display: flex; align-items: center; justify-content: center;
-    color: #fff; font-size: 17px; flex-shrink: 0;
-  }
-  .dm-name { font-size: 14px; font-weight: 600; color: #222; }
-  .dm-status { font-size: 11px; color: #4caf50; }
-
-  /* 上下文引用条 */
-  .dm-context-bar {
-    background: #fff8f8;
-    border-bottom: 1px solid #fde8ea;
-    padding: 8px 14px;
-    font-size: 11px;
-    color: #cc2233;
-    display: flex;
-    align-items: flex-start;
-    gap: 6px;
-    flex-shrink: 0;
-  }
-  .dm-context-bar .ctx-icon { font-size: 13px; flex-shrink: 0; margin-top: 0px; }
-  .dm-context-text { line-height: 1.5; }
-  .dm-context-text strong { font-weight: 600; }
-
-  .dm-messages {
-    flex: 1;
-    padding: 14px;
-    display: flex; flex-direction: column; gap: 14px;
-    overflow-y: auto;
-    background: #f8f8f8;
-    padding-bottom: 70px;
-  }
-  .dm-messages::-webkit-scrollbar { display: none; }
-
-  .time-label {
-    text-align: center; font-size: 10px; color: #bbb;
-  }
-
-  /* 气泡 */
-  .bubble-wrap { display: flex; gap: 8px; align-items: flex-end; }
-  .bubble-wrap.right { flex-direction: row-reverse; }
-  .bubble {
-    max-width: 230px;
-    padding: 9px 13px;
-    border-radius: 18px;
-    font-size: 13px; line-height: 1.6; color: #333;
-  }
-  .bubble.user { background: #ff2442; color: #fff; border-bottom-right-radius: 4px; }
-  .bubble.agent { background: #fff; border: 1px solid #eee; border-bottom-left-radius: 4px; }
-
-  /* 私信横划商品卡片 */
-  .dm-product-carousel {
-    display: flex;
-    gap: 10px;
-    overflow-x: auto;
-    scrollbar-width: none;
-    padding: 2px 0 4px;
-    -webkit-overflow-scrolling: touch;
-  }
-  .dm-product-carousel::-webkit-scrollbar { display: none; }
-  .dm-p-card {
-    flex-shrink: 0;
-    width: 148px;
-    background: #fff;
-    border-radius: 14px;
-    border: 1px solid #ececec;
-    overflow: hidden;
-    cursor: pointer;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-    transition: box-shadow 0.15s;
-  }
-  .dm-p-card:hover { box-shadow: 0 4px 12px rgba(255,36,66,0.12); }
-  .dm-p-card-img {
-    height: 110px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 40px;
-    background: linear-gradient(135deg, #fff5f6, #fff0f0);
-    position: relative;
-  }
-  .dm-p-card-img.blue { background: linear-gradient(135deg, #f0f5ff, #e8f0fe); }
-  .dm-p-card-img.green { background: linear-gradient(135deg, #f0fff4, #e6f4ea); }
-  .dm-p-match {
-    position: absolute; top: 6px; left: 6px;
-    background: rgba(255,36,66,0.9); color: #fff;
-    font-size: 9px; font-weight: 700;
-    padding: 2px 5px; border-radius: 6px;
-  }
-  .dm-p-card-body { padding: 9px 10px 10px; }
-  .dm-p-card-name { font-size: 12px; font-weight: 600; color: #222; line-height: 1.4; margin-bottom: 3px; }
-  .dm-p-card-tags { display: flex; gap: 3px; flex-wrap: wrap; margin-bottom: 5px; }
-  .dm-p-card-tag {
-    font-size: 9px; padding: 1px 5px; border-radius: 6px;
-    background: #fff0f2; color: #ff2442; border: 1px solid #ffd6db;
-  }
-  .dm-p-card-price { font-size: 15px; font-weight: 700; color: #ff2442; }
-  .dm-p-card-price span { font-size: 10px; }
-  .dm-p-card-btn {
-    width: 100%; background: #ff2442; color: #fff;
-    border: none; border-radius: 16px;
-    padding: 7px; font-size: 12px; font-weight: 600;
-    cursor: pointer; margin-top: 7px;
-  }
-
-  .dm-input-bar {
     position: absolute; bottom: 0; left: 0; right: 0;
     background: #fff; border-top: 1px solid #eee;
     padding: 9px 14px; display: flex; gap: 8px; align-items: center;
   }
-  .dm-input {
+  .comment-input {
     flex: 1; background: #f5f5f5; border: none;
-    border-radius: 18px; padding: 8px 13px;
-    font-size: 13px; outline: none; color: #333;
+    border-radius: 18px; padding: 7px 12px; font-size: 13px; outline: none; color: #333;
   }
+  .comment-input::placeholder { color: #bbb; }
+  .send-btn {
+    background: #ff2442; color: #fff; border: none;
+    border-radius: 18px; padding: 7px 14px; font-size: 13px; cursor: pointer;
+  }
+  .comment-action-bar {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: #fff; border-top: 1px solid #eee;
+    padding: 8px 20px; display: flex; align-items: center; justify-content: space-between;
+  }
+  .action-item { display: flex; flex-direction: column; align-items: center; gap: 1px; font-size: 10px; color: #666; cursor: pointer; }
+  .action-item .icon { font-size: 22px; }
+  .action-likes { font-size: 13px; font-weight: 600; color: #333; }
+
+  /* ===== 私信页 ===== */
+  .dm-header {
+    padding: 10px 16px; border-bottom: 1px solid #f0f0f0;
+    display: flex; align-items: center; gap: 10px; background: #fff; flex-shrink: 0;
+  }
+  .dm-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg,#ff2442,#ff6b35); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 16px; flex-shrink: 0; }
+  .dm-name { font-size: 14px; font-weight: 600; color: #222; }
+  .dm-status { font-size: 11px; color: #4caf50; }
+
+  .dm-context-bar {
+    background: #fff8f8; border-bottom: 1px solid #fde8ea;
+    padding: 7px 14px; font-size: 11px; color: #cc2233;
+    display: flex; align-items: flex-start; gap: 6px; flex-shrink: 0;
+  }
+  .dm-context-text { line-height: 1.5; }
+  .dm-context-text strong { font-weight: 600; }
+
+  .dm-messages {
+    flex: 1; padding: 14px; display: flex; flex-direction: column; gap: 14px;
+    overflow-y: auto; background: #f8f8f8; padding-bottom: 70px;
+  }
+  .dm-messages::-webkit-scrollbar { display: none; }
+  .time-label { text-align: center; font-size: 10px; color: #bbb; }
+
+  .bubble-wrap { display: flex; gap: 8px; align-items: flex-end; }
+  .bubble-wrap.right { flex-direction: row-reverse; }
+  .bubble { max-width: 230px; padding: 9px 13px; border-radius: 18px; font-size: 13px; line-height: 1.6; color: #333; }
+  .bubble.user { background: #ff2442; color: #fff; border-bottom-right-radius: 4px; }
+  .bubble.agent { background: #fff; border: 1px solid #eee; border-bottom-left-radius: 4px; }
+
+  /* 私信商品卡片（横划）*/
+  .dm-product-carousel { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; padding: 2px 0 4px; -webkit-overflow-scrolling: touch; }
+  .dm-product-carousel::-webkit-scrollbar { display: none; }
+  .dm-p-card { flex-shrink: 0; width: 148px; background: #fff; border-radius: 12px; border: 1px solid #ececec; overflow: hidden; cursor: pointer; box-shadow: 0 1px 5px rgba(0,0,0,0.06); }
+  .dm-p-card-img { height: 110px; display: flex; align-items: center; justify-content: center; font-size: 38px; background: linear-gradient(135deg,#fff5f6,#fff0f0); }
+  .dm-p-card-img.blue { background: linear-gradient(135deg,#f0f5ff,#e8f0fe); }
+  .dm-p-card-img.green { background: linear-gradient(135deg,#f0fff4,#e6f4ea); }
+  .dm-p-card-body { padding: 8px 10px 10px; }
+  .dm-p-card-name { font-size: 12px; font-weight: 600; color: #222; line-height: 1.4; margin-bottom: 3px; }
+  .dm-p-card-tags { display: flex; gap: 3px; flex-wrap: wrap; margin-bottom: 4px; }
+  .dm-p-card-tag { font-size: 9px; padding: 1px 5px; border-radius: 5px; background: #fff0f2; color: #ff2442; border: 1px solid #ffd6db; }
+  .dm-p-card-price { font-size: 15px; font-weight: 700; color: #ff2442; }
+  .dm-p-card-price span { font-size: 10px; }
+  .dm-p-card-btn { width: 100%; background: #ff2442; color: #fff; border: none; border-radius: 14px; padding: 6px; font-size: 12px; font-weight: 600; cursor: pointer; margin-top: 6px; }
+
+  .dm-input-bar { position: absolute; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid #eee; padding: 9px 14px; display: flex; gap: 8px; align-items: center; }
+  .dm-input { flex: 1; background: #f5f5f5; border: none; border-radius: 18px; padding: 8px 13px; font-size: 13px; outline: none; color: #333; }
 
   /* 打字动画 */
-  .typing {
-    display: flex; gap: 4px; align-items: center;
-    padding: 9px 13px; background: #fff;
-    border-radius: 18px; border: 1px solid #eee;
-    width: fit-content;
-  }
-  .typing span {
-    width: 5px; height: 5px; background: #bbb; border-radius: 50%;
-    animation: bounce 1.2s infinite;
-  }
+  .typing { display: flex; gap: 4px; align-items: center; padding: 9px 13px; background: #fff; border-radius: 18px; border: 1px solid #eee; width: fit-content; }
+  .typing span { width: 5px; height: 5px; background: #bbb; border-radius: 50%; animation: bounce 1.2s infinite; }
   .typing span:nth-child(2) { animation-delay: 0.2s; }
   .typing span:nth-child(3) { animation-delay: 0.4s; }
-  @keyframes bounce {
-    0%, 60%, 100% { transform: translateY(0); }
-    30% { transform: translateY(-5px); }
-  }
+  @keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-5px)} }
 
   .hidden { display: none !important; }
 
-  /* 搜索query预设按钮 */
-  .preset-queries {
-    display: flex; gap: 6px; padding: 6px 12px 0;
-    overflow-x: auto; scrollbar-width: none;
-  }
+  /* 快捷query按钮 */
+  .preset-queries { display: flex; gap: 6px; padding: 6px 14px 0; overflow-x: auto; scrollbar-width: none; }
   .preset-queries::-webkit-scrollbar { display: none; }
-  .preset-q {
-    flex-shrink: 0;
-    padding: 5px 10px; border-radius: 12px;
-    font-size: 11px; background: #fff0f2; color: #ff2442;
-    border: 1px solid #ffd6db; cursor: pointer;
-    white-space: nowrap; transition: all 0.15s;
-  }
+  .preset-q { flex-shrink: 0; padding: 5px 10px; border-radius: 12px; font-size: 11px; background: #fff0f2; color: #ff2442; border: 1px solid #ffd6db; cursor: pointer; white-space: nowrap; transition: all 0.15s; }
   .preset-q:hover { background: #ffd6db; }
   .preset-q.active { background: #ff2442; color: #fff; border-color: #ff2442; }
 </style>
@@ -585,68 +405,64 @@
 
 <!-- ============ ① 搜一搜结果页 ============ -->
 <div class="phone-wrap">
-  <div class="phone-label">① 搜一搜 — 复杂 query · AI 问一问 + 横划商品</div>
+  <div class="phone-label">① 搜一搜结果页 — 复杂 query · AI问一问卡片</div>
   <div class="phone">
     <div class="phone-notch"><div class="phone-notch-inner"></div></div>
     <div class="status-bar">
       <span>09:41</span>
-      <div class="status-icons" style="font-size:11px;">▪▪▪ 5G 🔋</div>
+      <div style="font-size:11px;">▪▪▪ 5G 🔋</div>
     </div>
 
     <!-- 搜索栏 -->
-    <div class="search-bar-wrap">
+    <div class="search-header">
+      <div class="back-icon">‹</div>
       <div class="search-bar">
-        <span style="color:#bbb;font-size:15px">🔍</span>
-        <input type="text" id="search-input" placeholder="搜索…" value="">
-        <button class="search-btn" onclick="doSearch()">搜索</button>
+        <span style="color:#bbb;font-size:14px">🔍</span>
+        <input type="text" id="search-input" placeholder="搜索…">
+        <span class="search-clear" onclick="document.getElementById('search-input').value=''">✕</span>
+      </div>
+      <div class="search-btn-text" onclick="doSearch()">搜索</div>
+    </div>
+
+    <!-- Tab栏 -->
+    <div class="tabs-bar">
+      <div class="tab-item active">全部</div>
+      <div class="tab-item">用户</div>
+      <div class="tab-item">商品</div>
+      <div class="tab-item">图片</div>
+      <div class="tab-item">地点</div>
+      <div class="tab-item ai-tab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        问一问
       </div>
     </div>
 
-    <!-- 快捷 query 按钮 -->
+    <!-- 快捷query -->
     <div class="preset-queries" id="preset-queries">
-      <div class="preset-q" onclick="setQuery(this,'油皮敏感肌 氨基酸洗面奶 控油不刺激 50块以内')">油皮敏感洗面奶≤50元</div>
-      <div class="preset-q" onclick="setQuery(this,'类似欧舒丹护手霜 成分相近但便宜 学生平替')">护手霜平替</div>
-      <div class="preset-q" onclick="setQuery(this,'多巴胺穿搭 适合微胖女生 今年流行')">多巴胺穿搭</div>
-      <div class="preset-q" onclick="setQuery(this,'学生党可以吃的保健品 提升免疫力 不含激素 百元内')">学生保健品≤100元</div>
+      <div class="preset-q" onclick="setQuery(this,'油皮敏感肌氨基酸洗面奶控油不刺激50以内')">油皮敏感洗面奶≤50</div>
+      <div class="preset-q" onclick="setQuery(this,'类似欧舒丹护手霜成分相近学生平替')">护手霜平替</div>
+      <div class="preset-q" onclick="setQuery(this,'多巴胺穿搭适合微胖女生今年流行')">多巴胺穿搭</div>
+      <div class="preset-q" onclick="setQuery(this,'学生党保健品提升免疫力不含激素百元内')">学生保健品≤100</div>
     </div>
 
     <div class="screen" id="screen-search">
-      <!-- AI 问一问卡片 -->
-      <div class="ai-card" id="ai-search-card">
-        <div class="ai-card-header">
-          <span class="ai-badge">✦ AI问一问</span>
-          <span id="ai-card-title">为你精选最匹配的好物</span>
+      <!-- AI问一问内嵌卡片 -->
+      <div class="ai-inline-card" id="ai-search-card" style="display:none;">
+        <div class="ai-inline-body">
+          <div class="ai-inline-intro" id="ai-intro-text"></div>
+          <div id="ai-product-rows"></div>
         </div>
-        <div class="ai-intro" id="ai-intro-text"></div>
-
-        <!-- 横划商品卡片组 -->
-        <div class="product-carousel-wrap">
-          <div class="swipe-hint">
-            <span>👆 左滑查看更多</span>
-            <div class="swipe-dots" id="swipe-dots"></div>
+        <div class="ai-inline-footer">
+          <div class="ai-inline-footer-left">
+            <span>🤖</span>
+            <span id="ai-footer-text"></span>
           </div>
-          <div class="product-carousel" id="product-carousel"></div>
-        </div>
-
-        <!-- 查看更多入口 -->
-        <div class="ai-more-btn" onclick="goToDM()">
-          💬 告诉找货薯你的更多需求，帮你精准匹配 →
-        </div>
-
-        <div class="ai-footer">
-          <span>✦</span>
-          <span id="ai-footer-text">AI 综合笔记评价与商品数据生成，结果仅供参考</span>
+          <div class="ai-inline-footer-right" onclick="goToWW()">›</div>
         </div>
       </div>
 
       <!-- 筛选标签 -->
-      <div class="filter-tags" id="filter-tags" style="display:none">
-        <div class="filter-tag active">综合</div>
-        <div class="filter-tag">最新</div>
-        <div class="filter-tag">高口碑</div>
-        <div class="filter-tag">性价比</div>
-        <div class="filter-tag">成分党</div>
-      </div>
+      <div class="filter-tags" id="filter-tags" style="display:none"></div>
 
       <!-- 笔记流 -->
       <div class="note-grid" id="note-grid"></div>
@@ -654,14 +470,152 @@
   </div>
 </div>
 
-<!-- ============ ② 评论区 ============ -->
+<!-- ============ ② 问一问详情页 ============ -->
 <div class="phone-wrap">
-  <div class="phone-label">② 评论区 — @找货薯 触发 · 横划商品回复</div>
-  <div class="phone" style="display:flex; flex-direction:column;">
+  <div class="phone-label">② 问一问详情页 — 分析式回复 + 商品卡片</div>
+  <div class="phone">
     <div class="phone-notch"><div class="phone-notch-inner"></div></div>
     <div class="status-bar">
       <span>09:41</span>
-      <div class="status-icons" style="font-size:11px;">▪▪▪ 5G 🔋</div>
+      <div style="font-size:11px;">▪▪▪ 5G 🔋</div>
+    </div>
+
+    <!-- 顶部导航 -->
+    <div class="ww-header">
+      <div class="ww-header-left">‹</div>
+      <div class="ww-header-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#4a90d9" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        问一问
+      </div>
+      <div class="ww-header-right">
+        <span>↑</span>
+        <span>☰</span>
+      </div>
+    </div>
+
+    <div class="screen">
+      <div class="ww-content">
+        <!-- 标题 -->
+        <div class="ww-title">多巴胺穿搭推荐（微胖友好）</div>
+        <div class="ww-meta">
+          <span class="ww-meta-icon">✦</span>
+          <span>ai 总结 213 篇笔记生成</span>
+          <span>🐱🐻</span>
+        </div>
+
+        <!-- 正文分析 -->
+        <div class="ww-intro">微胖姐妹穿多巴胺风，重点在于用<strong>渐变配色</strong>代替大面积撞色，搭配<strong>A字廓形</strong>视觉拉长身形。今年最流行的是"奶油多巴胺"——饱和度略低的马卡龙色系，既好穿又不显夸张。下面这几款笔记里被反复提及、真人上身效果最好的：</div>
+
+        <!-- 商品一 -->
+        <div class="ww-product-block">
+          <div class="ww-product-header">
+            <span class="ww-product-name">渐变针织开衫 · 柠檬黄<span class="ww-product-sup">Q</span></span>
+            <span class="ww-pct-pill">31% 人推荐</span>
+          </div>
+          <div class="ww-product-desc">V领渐变设计，从柠檬黄过渡到奶白色，A字版型包臀不显腿粗。多位微胖博主实测说穿上去腰线立刻上移3cm，搭白色直筒裤绝了。</div>
+          <div class="ww-img-grid">
+            <div class="ww-img-cell" style="background:linear-gradient(135deg,#fff9e6,#ffeaa0);">🧥</div>
+            <div class="ww-img-cell" style="background:linear-gradient(135deg,#fff5d6,#ffe88c);">👗</div>
+            <div class="ww-img-cell" style="background:linear-gradient(135deg,#fffbe8,#fff3c4);">✨
+              <span class="ww-img-count">共8张</span>
+            </div>
+          </div>
+          <!-- 商品卡 -->
+          <div class="ww-product-card" onclick="alert('跳转商品详情')">
+            <div class="ww-pc-img" style="background:linear-gradient(135deg,#fff9e6,#ffe8a0);">🧥</div>
+            <div class="ww-pc-info">
+              <div class="ww-pc-name">渐变针织开衫 · 柠檬黄</div>
+              <div class="ww-pc-tags">
+                <span class="ww-pc-tag">显瘦</span>
+                <span class="ww-pc-tag">A字型</span>
+                <span class="ww-pc-tag">多巴胺</span>
+              </div>
+              <div class="ww-pc-price"><span>¥</span>189</div>
+              <div class="ww-pc-rating">⭐ 4.9 · 1,241条评价</div>
+            </div>
+            <button class="ww-pc-btn">购买</button>
+          </div>
+        </div>
+
+        <!-- 商品二 -->
+        <div class="ww-product-block">
+          <div class="ww-product-header">
+            <span class="ww-product-name">A字半裙 · 薄荷绿格纹<span class="ww-product-sup">Q</span></span>
+            <span class="ww-pct-pill">24% 人推荐</span>
+          </div>
+          <div class="ww-product-desc">高腰线设计，薄荷绿格纹今年超火，视觉上把腰拉到最高点。面料有垂感不起球，过膝长度遮腿肉效果很好。</div>
+          <div class="ww-img-grid">
+            <div class="ww-img-cell" style="background:linear-gradient(135deg,#e8f5f0,#c8ede3);">👗</div>
+            <div class="ww-img-cell" style="background:linear-gradient(135deg,#dff0eb,#b8e8da);">🌿</div>
+            <div class="ww-img-cell" style="background:linear-gradient(135deg,#eaf6f1,#d0f0e4);">✨
+              <span class="ww-img-count">共6张</span>
+            </div>
+          </div>
+          <div class="ww-product-card" onclick="alert('跳转商品详情')">
+            <div class="ww-pc-img" style="background:linear-gradient(135deg,#e8f5f0,#c8ede3);">👗</div>
+            <div class="ww-pc-info">
+              <div class="ww-pc-name">A字半裙 · 薄荷绿格纹</div>
+              <div class="ww-pc-tags">
+                <span class="ww-pc-tag">显腿长</span>
+                <span class="ww-pc-tag">高腰</span>
+              </div>
+              <div class="ww-pc-price"><span>¥</span>148</div>
+              <div class="ww-pc-rating">⭐ 4.8 · 986条评价</div>
+            </div>
+            <button class="ww-pc-btn">购买</button>
+          </div>
+        </div>
+
+        <!-- 商品三 -->
+        <div class="ww-product-block">
+          <div class="ww-product-header">
+            <span class="ww-product-name">宽松T恤连衣裙 · 撞色拼接<span class="ww-product-sup">Q</span></span>
+            <span class="ww-pct-pill">19% 人推荐</span>
+          </div>
+          <div class="ww-product-desc">上身橘粉下身奶白撞色拼接，宽松版型遮肉效果一流。多位微胖博主说不用刻意收腰，穿上去自然有腰线感。</div>
+          <div class="ww-img-grid">
+            <div class="ww-img-cell" style="background:linear-gradient(135deg,#fff0eb,#ffd8c8);">👚</div>
+            <div class="ww-img-cell" style="background:linear-gradient(135deg,#ffe8dc,#ffc8b0);">🌸</div>
+            <div class="ww-img-cell" style="background:linear-gradient(135deg,#fff3ee,#ffdcc8);">✨
+              <span class="ww-img-count">共5张</span>
+            </div>
+          </div>
+          <div class="ww-product-card" onclick="alert('跳转商品详情')">
+            <div class="ww-pc-img" style="background:linear-gradient(135deg,#fff0eb,#ffd8c8);">👚</div>
+            <div class="ww-pc-info">
+              <div class="ww-pc-name">宽松T恤连衣裙 · 撞色</div>
+              <div class="ww-pc-tags">
+                <span class="ww-pc-tag">遮肉</span>
+                <span class="ww-pc-tag">宽松版</span>
+              </div>
+              <div class="ww-pc-price"><span>¥</span>129</div>
+              <div class="ww-pc-rating">⭐ 4.7 · 2,108条评价</div>
+            </div>
+            <button class="ww-pc-btn">购买</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 底部loading条 -->
+    <div class="ww-loading">
+      <div class="ww-loading-dot"></div>
+      <div class="ww-loading-dot"></div>
+      <div class="ww-loading-dot"></div>
+      <span>正在为你回答，请耐心等待</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ③ 评论区 ============ -->
+<div class="phone-wrap">
+  <div class="phone-label">③ 评论区 — @找货薯 · 文字链回复</div>
+  <div class="phone" style="display:flex;flex-direction:column;">
+    <div class="phone-notch"><div class="phone-notch-inner"></div></div>
+    <div class="status-bar">
+      <span>09:41</span>
+      <div style="font-size:11px;">▪▪▪ 5G 🔋</div>
     </div>
 
     <!-- 笔记封面 -->
@@ -672,8 +626,8 @@
       </div>
     </div>
 
-    <!-- 评论 -->
-    <div class="comment-section" id="comment-section">
+    <!-- 评论列表 -->
+    <div class="comment-section" id="comment-section" style="position:relative;">
       <div class="comment-header">评论 · 1,204条</div>
 
       <div class="comment-item">
@@ -681,7 +635,10 @@
         <div class="comment-body">
           <div class="comment-user">泡泡糖小熊</div>
           <div class="comment-text">博主身材真的好绝！羡慕</div>
-          <div class="comment-time">3小时前</div>
+          <div class="comment-time-row">
+            <span class="comment-time">3小时前 · 上海</span>
+            <span class="comment-like">♡</span>
+          </div>
         </div>
       </div>
 
@@ -690,21 +647,27 @@
         <div class="comment-body">
           <div class="comment-user">爱穿搭的小鱼</div>
           <div class="comment-text">第二套配色太绝了，有没有链接啊</div>
-          <div class="comment-time">2小时前</div>
+          <div class="comment-time-row">
+            <span class="comment-time">2小时前 · 北京</span>
+            <span class="comment-like">♡ 12</span>
+          </div>
         </div>
       </div>
 
       <!-- 触发评论 -->
       <div class="comment-item" id="trigger-comment">
-        <div class="avatar">🧑</div>
+        <div class="avatar" style="background:#ffe0e0;">🧑</div>
         <div class="comment-body">
           <div class="comment-user">微胖也要穿美美的</div>
           <div class="comment-text" id="trigger-text">@找货薯 我是微胖身材，想穿这种多巴胺风格，有没有显瘦又好看的推荐？预算300以内</div>
-          <div class="comment-time">刚刚</div>
-          <!-- AI 回复 -->
-          <div class="ai-reply" id="ai-comment-reply">
-            <div class="ai-reply-tag">✦ 找货薯</div>
-            <div id="ai-comment-text"></div>
+          <div class="comment-time-row">
+            <span class="comment-time">刚刚 · 江苏</span>
+            <span class="comment-like">♡</span>
+          </div>
+          <!-- 找货薯回复（文字链形式）-->
+          <div class="huashu-reply" id="huashu-reply">
+            <div class="huashu-reply-tag">🤖 找货薯</div>
+            <div id="huashu-reply-text"></div>
           </div>
         </div>
       </div>
@@ -714,31 +677,48 @@
         <div class="comment-body">
           <div class="comment-user">元气满满向日葵</div>
           <div class="comment-text">好看好看！博主是几码的呀</div>
-          <div class="comment-time">1分钟前</div>
+          <div class="comment-time-row">
+            <span class="comment-time">1分钟前 · 广东</span>
+            <span class="comment-like">♡ 3</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="comment-item">
+        <div class="avatar">🐰</div>
+        <div class="comment-body">
+          <div class="comment-user">momo</div>
+          <div class="comment-text">哇 宝宝，想要外套和裙子链接</div>
+          <div class="comment-time-row">
+            <span class="comment-time">2分钟前 · 江西</span>
+            <span class="comment-like">♡</span>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- 输入栏 -->
-    <div class="comment-input-bar">
-      <div class="avatar" style="width:28px;height:28px;font-size:12px;background:#f0f0f0;">👤</div>
-      <input class="comment-input" id="comment-input" placeholder="@找货薯 试试让AI帮你找同款…" />
-      <button class="send-btn" onclick="sendComment()">发送</button>
+    <!-- 底部操作栏 -->
+    <div class="comment-action-bar">
+      <div style="flex:1; background:#f5f5f5; border-radius:18px; padding:7px 14px; font-size:13px; color:#bbb;">说点什么…</div>
+      <div style="display:flex;gap:16px;margin-left:14px;">
+        <div class="action-item"><span class="icon">♡</span><span class="action-likes">727</span></div>
+        <div class="action-item"><span class="icon">☆</span><span>152</span></div>
+        <div class="action-item"><span class="icon">💬</span><span>372</span></div>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- ============ ③ 私信页 ============ -->
+<!-- ============ ④ 私信页 ============ -->
 <div class="phone-wrap">
-  <div class="phone-label">③ 私信 — 带上下文进入 · 多轮对话 + 横划商品</div>
-  <div class="phone" style="display:flex; flex-direction:column; position:relative;">
+  <div class="phone-label">④ 私信 — 带上下文 · 多轮对话 + 商品卡</div>
+  <div class="phone" style="display:flex;flex-direction:column;position:relative;">
     <div class="phone-notch"><div class="phone-notch-inner"></div></div>
     <div class="status-bar">
       <span>09:41</span>
-      <div class="status-icons" style="font-size:11px;">▪▪▪ 5G 🔋</div>
+      <div style="font-size:11px;">▪▪▪ 5G 🔋</div>
     </div>
 
-    <!-- 顶部 header -->
     <div class="dm-header">
       <div class="dm-avatar">🤖</div>
       <div>
@@ -749,101 +729,71 @@
 
     <!-- 上下文引用条 -->
     <div class="dm-context-bar">
-      <div class="ctx-icon">🔗</div>
+      <span>🔗</span>
       <div class="dm-context-text">
-        来自搜索：<strong>「多巴胺穿搭 适合微胖女生 今年流行」</strong><br>
-        已为你匹配 4 款，继续告诉我你的偏好～
+        来自评论区：<strong>「微胖多巴胺穿搭 预算300以内」</strong><br>
+        已识别你的需求，继续聊帮你精准匹配～
       </div>
     </div>
 
-    <!-- 消息列表 -->
     <div class="dm-messages" id="dm-messages">
       <div class="time-label">今天 09:38</div>
 
-      <!-- 用户从搜索页跳入，系统带context -->
       <div class="bubble-wrap right">
         <div class="avatar" style="width:30px;height:30px;font-size:13px;">🧑</div>
-        <div class="bubble user">多巴胺穿搭 适合微胖女生 今年流行，想看更多推荐</div>
+        <div class="bubble user">我是微胖，想穿多巴胺风格，预算300以内，帮我推荐几款显瘦的</div>
       </div>
 
-      <!-- 打字动画 -->
       <div class="bubble-wrap" id="dm-typing">
         <div class="dm-avatar" style="width:30px;height:30px;font-size:13px;">🤖</div>
         <div class="typing"><span></span><span></span><span></span></div>
       </div>
 
-      <!-- Agent 第一条回复 -->
       <div class="bubble-wrap hidden" id="dm-reply-1">
         <div class="dm-avatar" style="width:30px;height:30px;font-size:13px;">🤖</div>
-        <div class="bubble agent">多巴胺风不只是撞色！微胖身材更适合用<strong>渐变色＋A字轮廓</strong>来视觉拉长 ✨ 给你精选了4款高口碑的，都显瘦👇</div>
+        <div class="bubble agent">微胖穿多巴胺的关键是<strong>渐变色＋A字廓形</strong>，视觉拉高重心 ✨ 给你挑了3款口碑最好的，都在预算内👇</div>
       </div>
 
-      <!-- 横划商品卡片组 -->
       <div class="hidden" id="dm-carousel-1">
         <div class="dm-product-carousel">
-          <div class="dm-p-card">
-            <div class="dm-p-card-img">🧥</div>
+          <div class="dm-p-card" onclick="alert('跳转商品详情')">
+            <div class="dm-p-card-img" style="background:linear-gradient(135deg,#fff9e6,#ffe8a0);">🧥</div>
             <div class="dm-p-card-body">
-              <div class="dm-p-match">高匹配</div>
               <div class="dm-p-card-name">渐变针织开衫 · 柠檬黄</div>
-              <div class="dm-p-card-tags">
-                <span class="dm-p-card-tag">显瘦</span>
-                <span class="dm-p-card-tag">多巴胺</span>
-              </div>
+              <div class="dm-p-card-tags"><span class="dm-p-card-tag">显瘦</span><span class="dm-p-card-tag">A字型</span></div>
               <div class="dm-p-card-price"><span>¥</span>189</div>
-              <button class="dm-p-card-btn" onclick="alert('跳转商品详情')">立即购买 →</button>
+              <button class="dm-p-card-btn">立即购买</button>
             </div>
           </div>
-          <div class="dm-p-card">
+          <div class="dm-p-card" onclick="alert('跳转商品详情')">
             <div class="dm-p-card-img blue">👗</div>
             <div class="dm-p-card-body">
-              <div class="dm-p-match">高匹配</div>
               <div class="dm-p-card-name">A字半裙 · 薄荷绿格纹</div>
-              <div class="dm-p-card-tags">
-                <span class="dm-p-card-tag">显腿长</span>
-                <span class="dm-p-card-tag">A字型</span>
-              </div>
+              <div class="dm-p-card-tags"><span class="dm-p-card-tag">显腿长</span><span class="dm-p-card-tag">高腰</span></div>
               <div class="dm-p-card-price"><span>¥</span>148</div>
-              <button class="dm-p-card-btn" onclick="alert('跳转商品详情')">立即购买 →</button>
+              <button class="dm-p-card-btn">立即购买</button>
             </div>
           </div>
-          <div class="dm-p-card">
+          <div class="dm-p-card" onclick="alert('跳转商品详情')">
             <div class="dm-p-card-img green">👚</div>
             <div class="dm-p-card-body">
-              <div class="dm-p-card-name">宽松T恤连衣裙 · 拼色</div>
-              <div class="dm-p-card-tags">
-                <span class="dm-p-card-tag">宽松版</span>
-                <span class="dm-p-card-tag">遮肉</span>
-              </div>
+              <div class="dm-p-card-name">宽松T恤连衣裙·撞色</div>
+              <div class="dm-p-card-tags"><span class="dm-p-card-tag">遮肉</span><span class="dm-p-card-tag">宽松版</span></div>
               <div class="dm-p-card-price"><span>¥</span>129</div>
-              <button class="dm-p-card-btn" onclick="alert('跳转商品详情')">立即购买 →</button>
-            </div>
-          </div>
-          <div class="dm-p-card">
-            <div class="dm-p-card-img" style="background:linear-gradient(135deg,#fff8f0,#ffe4d6);">🩱</div>
-            <div class="dm-p-card-body">
-              <div class="dm-p-card-name">撞色吊带背心套装</div>
-              <div class="dm-p-card-tags">
-                <span class="dm-p-card-tag">套装</span>
-                <span class="dm-p-card-tag">撞色</span>
-              </div>
-              <div class="dm-p-card-price"><span>¥</span>218</div>
-              <button class="dm-p-card-btn" onclick="alert('跳转商品详情')">立即购买 →</button>
+              <button class="dm-p-card-btn">立即购买</button>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- 追问引导 -->
       <div class="bubble-wrap hidden" id="dm-reply-2">
         <div class="dm-avatar" style="width:30px;height:30px;font-size:13px;">🤖</div>
-        <div class="bubble agent">告诉我更多，帮你缩小范围 👇<br>① 上衣裙子都想要<br>② 只看裙子<br>③ 只看上衣<br>④ 有没有预算上限？</div>
+        <div class="bubble agent">告诉我更多帮你缩小范围 👇<br>① 上衣裙子都要<br>② 只看裙子<br>③ 只看上衣<br>④ 有别的颜色偏好？</div>
       </div>
     </div>
 
-    <!-- 输入栏 -->
     <div class="dm-input-bar">
-      <input class="dm-input" id="dm-input" placeholder="继续告诉找货薯你的需求…" onkeydown="if(event.key==='Enter')sendDm()" />
+      <input class="dm-input" id="dm-input" placeholder="继续告诉找货薯你的需求…" onkeydown="if(event.key==='Enter')sendDm()">
       <button class="send-btn" onclick="sendDm()">发送</button>
     </div>
   </div>
@@ -852,130 +802,106 @@
 <script>
 // ==================== 搜索页数据 ====================
 const searchData = {
-  '油皮敏感肌 氨基酸洗面奶 控油不刺激 50块以内': {
-    title: '为你分析：油皮敏感肌洗面奶怎么选',
-    intro: '油皮＋敏感肌需要<em>弱酸性氨基酸表活</em>，避开SLS/SLES。50元以内高口碑款集中在这4支——综合成分评级与2,180条真实肤感反馈：',
+  '油皮敏感肌氨基酸洗面奶控油不刺激50以内': {
+    intro: '在探索油皮敏感肌洗面奶时，以下几款备受小红书用户推崇，含氨基酸表活、弱酸性配方，综合 2,180 条评价：',
     products: [
-      { name: 'CeraVe 氨基酸泡沫洁面', sub: '神经酰胺修护·控油不紧绷', price: '¥42', rating: '⭐4.9 · 2.1k好评', emoji: '🧴', match: '高匹配', bg: '' },
-      { name: '理肤泉 舒缓洁面啫喱', sub: '专为敏感肌设计·无香精', price: '¥48', rating: '⭐4.8 · 1.4k好评', emoji: '💧', match: '高匹配', bg: 'blue' },
-      { name: '洁芙柔 氨基酸洗面奶', sub: '成分简洁·学生党性价比', price: '¥29', rating: '⭐4.7 · 3.2k好评', emoji: '🫧', match: '匹配', bg: 'green' },
-      { name: 'Ponds 氨基酸修护洁面', sub: '温和起泡·清洁力适中', price: '¥38', rating: '⭐4.6 · 892好评', emoji: '🌿', match: '匹配', bg: 'yellow' },
+      { name: 'CeraVe 氨基酸泡沫洁面', pct: '38%人推荐', emoji: '🧴', bg: '' },
+      { name: '理肤泉 舒缓洁面啫喱', pct: '27%人推荐', emoji: '💧', bg: 'blue' },
+      { name: '洁芙柔 氨基酸洗面奶', pct: '21%人推荐', emoji: '🫧', bg: 'green' },
+      { name: 'Ponds 氨基酸修护洁面', pct: '14%人推荐', emoji: '🌿', bg: 'yellow' },
     ],
     notes: ['🧴','💧','🫧','🌿','🔬','📋'],
-    noteTitles: ['油皮敏感肌洗面奶避坑指南 | 成分党测评', '用了5款氨基酸洗面奶的真实感受', 'CeraVe vs 理肤泉 全面对比', '敏感肌洗面奶推荐 | 50元以内'],
+    noteTitles: ['油皮敏感肌洗面奶避坑指南 | 成分党测评','用了5款氨基酸洗面奶的真实感受','CeraVe vs 理肤泉 全面对比','敏感肌洗面奶推荐 50元以内'],
     noteAuthors: ['成分党小白','护肤研究生','皮肤学爱好者','美妆测评喵'],
+    noteGrads: ['#f8e8ea,#fce4d6','#e8f0ff,#d4e4ff','#e8f8f0,#d0f0e4','#fff8e8,#ffe8c0'],
     filterTags: ['综合','控油','修护','成分党','学生党'],
-    footer: 'AI 综合 2,180 条评价与成分数据分析生成'
+    footer: 'ai 总结 2,180 条真实评价生成'
   },
-  '类似欧舒丹护手霜 成分相近但便宜 学生平替': {
-    title: '欧舒丹护手霜平替 · 成分对比推荐',
-    intro: '欧舒丹核心成分是<em>乳木果油＋甘油</em>。以下4款含相近成分，保湿力经过20+款实测对比，价格仅为原款1/3～1/4：',
+  '类似欧舒丹护手霜成分相近学生平替': {
+    intro: '在探索欧舒丹护手霜平替时，以下这些乳木果油含量相近、保湿力强的品牌备受推崇，价格仅为正品 1/3：',
     products: [
-      { name: 'Vaseline 玻尿酸护手霜', sub: '凡士林封闭·保湿≈欧舒丹', price: '¥22', rating: '⭐4.8 · 5.6k好评', emoji: '🤲', match: '高匹配', bg: '' },
-      { name: 'Neutrogena 挪威配方', sub: '甘油配方·极干手救星', price: '¥38', rating: '⭐4.9 · 3.1k好评', emoji: '🧴', match: '高匹配', bg: 'blue' },
-      { name: '植观 乳木果护手霜', sub: '乳木果油>3%·香味好闻', price: '¥28', rating: '⭐4.7 · 1.8k好评', emoji: '🌳', match: '匹配', bg: 'green' },
-      { name: '凡士林 深层滋养', sub: '成分极简·最平价修护', price: '¥15', rating: '⭐4.6 · 7.2k好评', emoji: '💛', match: '匹配', bg: 'yellow' },
+      { name: 'Vaseline 玻尿酸护手霜', pct: '41%人推荐', emoji: '🤲', bg: '' },
+      { name: 'Neutrogena 挪威配方', pct: '29%人推荐', emoji: '🧴', bg: 'blue' },
+      { name: '植观 乳木果护手霜', pct: '18%人推荐', emoji: '🌳', bg: 'green' },
+      { name: '凡士林 深层滋养', pct: '12%人推荐', emoji: '💛', bg: 'yellow' },
     ],
     notes: ['🤲','🧴','🌳','💛','📊','💅'],
-    noteTitles: ['欧舒丹平替！这4款真的不输正品', '护手霜成分大解析 | 乳木果油含量对比', '冬天手干别再忍了 | 学生党好物清单', '20元以内护手霜测评 | 超出预期'],
+    noteTitles: ['欧舒丹平替！这4款真的不输正品','护手霜成分大解析 | 乳木果油含量对比','冬天手干别再忍了 | 学生党好物','20元以内护手霜测评 | 超出预期'],
     noteAuthors: ['成分扫描仪','护手霜研究所','干皮自救指南','省钱小能手'],
+    noteGrads: ['#fff0eb,#ffd8c8','#e8f0ff,#d4e4ff','#e8f8f0,#d0f0e4','#fffbe8,#fff3c4'],
     filterTags: ['综合','成分对比','乳木果','保湿','学生价'],
-    footer: 'AI 对比成分表与用户反馈生成，仅供参考'
+    footer: 'ai 对比成分表与用户反馈生成'
   },
-  '多巴胺穿搭 适合微胖女生 今年流行': {
-    title: '多巴胺穿搭 · 微胖友好款精选',
-    intro: '微胖穿多巴胺风重点：选<em>A字廓形＋渐变配色</em>，避开横条纹大撞色。以下4款综合笔记穿搭验证与身材口碑筛选：',
+  '多巴胺穿搭适合微胖女生今年流行': {
+    intro: '在探索微胖女生多巴胺穿搭时，以下款式备受小红书用户推崇，A字廓形＋渐变色系，综合 3,400 篇穿搭笔记：',
     products: [
-      { name: '渐变针织开衫 · 柠檬黄', sub: 'A字轮廓·视觉显高显瘦', price: '¥189', rating: '⭐4.9 · 1.2k好评', emoji: '🧥', match: '高匹配', bg: '' },
-      { name: 'A字半裙 · 薄荷绿格纹', sub: '高腰线·显腿长', price: '¥148', rating: '⭐4.8 · 986好评', emoji: '👗', match: '高匹配', bg: 'blue' },
-      { name: '宽松T恤连衣裙 · 撞色拼接', sub: '宽松版型·遮肉显瘦', price: '¥129', rating: '⭐4.7 · 2.1k好评', emoji: '👚', match: '匹配', bg: 'green' },
-      { name: '撞色吊带套装 · 橘粉拼', sub: '套装搭配省心·高饱和色系', price: '¥218', rating: '⭐4.8 · 768好评', emoji: '🩱', match: '匹配', bg: 'purple' },
+      { name: '渐变针织开衫 · 柠檬黄', pct: '31%人推荐', emoji: '🧥', bg: '' },
+      { name: 'A字半裙 · 薄荷绿格纹', pct: '24%人推荐', emoji: '👗', bg: 'blue' },
+      { name: '宽松T恤连衣裙 · 撞色', pct: '19%人推荐', emoji: '👚', bg: 'green' },
+      { name: '撞色吊带套装 · 橘粉', pct: '15%人推荐', emoji: '🩱', bg: 'yellow' },
     ],
     notes: ['🧥','👗','👚','🩱','🎨','📸'],
-    noteTitles: ['微胖女生必看！多巴胺穿搭不踩雷指南', '今年最火的渐变色穿搭合集', '显瘦A字裙推荐 | 遮肉又好看', '2025多巴胺配色公式 学会就无敌'],
+    noteTitles: ['微胖女生必看！多巴胺穿搭不踩雷指南','今年最火的渐变色穿搭合集','显瘦A字裙推荐 | 遮肉又好看','2025多巴胺配色公式 学会就无敌'],
     noteAuthors: ['穿搭研究所','时尚辣妈Amy','微胖穿搭日记','配色魔法师'],
+    noteGrads: ['#fff9e6,#ffe8a0','#e8f5f0,#c8ede3','#fff0eb,#ffd8c8','#f8f0ff,#e8d8ff'],
     filterTags: ['综合','显瘦','渐变色','A字型','套装'],
-    footer: 'AI 综合 3,400+ 篇穿搭笔记与用户身材反馈分析'
+    footer: 'ai 总结 3,400 篇穿搭笔记生成'
   },
-  '学生党可以吃的保健品 提升免疫力 不含激素 百元内': {
-    title: '学生党保健品 · 安全有效款推荐',
-    intro: '学生党优先选<em>国产蓝帽认证＋成分透明</em>的品牌，避开宣称"快速提升"类产品。以下4款综合医学科普与真实服用反馈：',
+  '学生党保健品提升免疫力不含激素百元内': {
+    intro: '在探索学生党保健品时，以下几款国产蓝帽认证、成分透明的产品备受推崇，综合 4,600 条真实服用反馈：',
     products: [
-      { name: '汤臣倍健 维C+锌', sub: '国产蓝帽·提升免疫基础款', price: '¥69', rating: '⭐4.9 · 6.8k好评', emoji: '💊', match: '高匹配', bg: '' },
-      { name: 'Swisse 综合维生素', sub: '多种微量元素·一粒顶多粒', price: '¥88', rating: '⭐4.7 · 3.2k好评', emoji: '🌿', match: '高匹配', bg: 'green' },
-      { name: '小葵花 益生菌', sub: '调节肠道免疫·温和无副作用', price: '¥59', rating: '⭐4.8 · 4.1k好评', emoji: '🦠', match: '匹配', bg: 'blue' },
-      { name: '北京同仁堂 黄芪颗粒', sub: '中药成分·调理体质', price: '¥45', rating: '⭐4.6 · 2.3k好评', emoji: '🍵', match: '匹配', bg: 'yellow' },
+      { name: '汤臣倍健 维C+锌', pct: '35%人推荐', emoji: '💊', bg: '' },
+      { name: 'Swisse 综合维生素', pct: '28%人推荐', emoji: '🌿', bg: 'green' },
+      { name: '小葵花 益生菌', pct: '22%人推荐', emoji: '🦠', bg: 'blue' },
+      { name: '北京同仁堂 黄芪颗粒', pct: '15%人推荐', emoji: '🍵', bg: 'yellow' },
     ],
     notes: ['💊','🌿','🦠','🍵','🏥','📚'],
-    noteTitles: ['大学生必备保健品清单 | 真实服用3个月反馈', '保健品避坑指南 | 学生党看这一篇就够了', '提升免疫力方法汇总 | 最实用攻略', '维生素C怎么选？成分党分析'],
+    noteTitles: ['大学生必备保健品清单 | 3个月真实反馈','保健品避坑指南 | 学生党看这篇就够','提升免疫力方法汇总 | 最实用攻略','维生素C怎么选？成分党分析'],
     noteAuthors: ['医学生小白','营养学爱好者','健康打卡日记','成分扫描仪'],
+    noteGrads: ['#fff0f2,#ffd6db','#e8f8f0,#d0f0e4','#e8f0ff,#d4e4ff','#fffbe8,#fff3c4'],
     filterTags: ['综合','蓝帽认证','维生素','益生菌','中药调理'],
-    footer: 'AI 综合医学文献与 4,600+ 条真实服用反馈生成'
-  },
+    footer: 'ai 总结 4,600 条真实服用反馈生成'
+  }
 };
 
-let currentQuery = '';
+let currentQueryKey = '';
 
 function setQuery(el, query) {
   document.querySelectorAll('.preset-q').forEach(q => q.classList.remove('active'));
   el.classList.add('active');
   document.getElementById('search-input').value = query;
-  currentQuery = query;
+  currentQueryKey = query;
   doSearch();
 }
 
 function doSearch() {
   const val = document.getElementById('search-input').value.trim();
   if (!val) return;
-
   let data = searchData[val];
   if (!data) {
-    // 模糊匹配
-    const key = Object.keys(searchData).find(k =>
-      k.split(/\s+/).some(w => val.includes(w)) || val.split(/\s+/).some(w => k.includes(w))
-    );
-    data = key ? searchData[key] : searchData['多巴胺穿搭 适合微胖女生 今年流行'];
+    const key = Object.keys(searchData).find(k => k.split(/[\s,]+/).some(w => w.length>1 && val.includes(w)));
+    data = key ? searchData[key] : searchData['多巴胺穿搭适合微胖女生今年流行'];
   }
 
-  const card = document.getElementById('ai-search-card');
-  document.getElementById('ai-card-title').textContent = data.title;
-  document.getElementById('ai-intro-text').innerHTML = data.intro;
+  // AI卡片
+  document.getElementById('ai-intro-text').textContent = data.intro;
   document.getElementById('ai-footer-text').textContent = data.footer;
 
-  // 渲染横划商品卡片
-  const carousel = document.getElementById('product-carousel');
-  carousel.innerHTML = data.products.map((p, i) => `
-    <div class="p-card" onclick="alert('跳转商品详情：${p.name}')">
-      <div class="p-card-img ${p.bg}">
-        ${p.emoji}
-        <span class="p-card-match ${p.match === '高匹配' ? 'high' : 'mid'}">${p.match}</span>
-      </div>
-      <div class="p-card-body">
-        <div class="p-card-name">${p.name}</div>
-        <div class="p-card-sub">${p.sub}</div>
-        <div class="p-card-price"><span>¥</span>${p.price.replace('¥','')}</div>
-        <div class="p-card-rating">${p.rating}</div>
-      </div>
+  const rowsEl = document.getElementById('ai-product-rows');
+  rowsEl.innerHTML = data.products.map((p, i) => `
+    <div class="ai-product-row" onclick="alert('查看更多：${p.name}')">
+      <div class="ai-prod-num ${i===0?'n1':i===1?'n2':i===2?'n3':''}">${i+1}</div>
+      <div class="ai-prod-thumb ${p.bg}">${p.emoji}</div>
+      <div class="ai-prod-name">${p.name}</div>
+      <div class="ai-prod-pct">${p.pct}</div>
     </div>
   `).join('');
 
-  // 滑动指示点
-  const dots = document.getElementById('swipe-dots');
-  dots.innerHTML = data.products.map((_, i) =>
-    `<div class="swipe-dot ${i===0?'active':''}"></div>`
-  ).join('');
-
-  // 监听滑动更新dots
-  carousel.onscroll = function() {
-    const idx = Math.round(carousel.scrollLeft / 150);
-    document.querySelectorAll('.swipe-dot').forEach((d, i) => {
-      d.classList.toggle('active', i === idx);
-    });
-  };
+  document.getElementById('ai-search-card').style.display = 'block';
 
   // 筛选标签
   const filterEl = document.getElementById('filter-tags');
-  filterEl.innerHTML = data.filterTags.map((t, i) =>
+  filterEl.innerHTML = data.filterTags.map((t,i) =>
     `<div class="filter-tag ${i===0?'active':''}" onclick="this.parentNode.querySelectorAll('.filter-tag').forEach(x=>x.classList.remove('active'));this.classList.add('active')">${t}</div>`
   ).join('');
   filterEl.style.display = 'flex';
@@ -984,144 +910,41 @@ function doSearch() {
   const noteGrid = document.getElementById('note-grid');
   noteGrid.innerHTML = data.notes.map((e, i) => `
     <div class="note-card">
-      <div class="note-img">${e}</div>
+      <div class="note-img" style="background:linear-gradient(135deg,${data.noteGrads[i]||'#f8e8ea,#fce4d6'})">${e}</div>
       <div class="note-body">
-        <div class="note-title">${data.noteTitles[i] || '好物分享'}</div>
+        <div class="note-title">${data.noteTitles[i]||'好物分享'}</div>
         <div class="note-meta">
-          <span class="note-author">${data.noteAuthors[i] || '用户'}</span>
-          <span class="note-likes">❤️ ${Math.floor(Math.random()*800+100)}</span>
+          <span class="note-author">
+            <span class="note-author-avatar">👤</span>
+            ${data.noteAuthors[i]||'用户'}
+          </span>
+          <span class="note-likes">♡ ${Math.floor(Math.random()*800+100)}</span>
         </div>
       </div>
     </div>
   `).join('');
-
-  card.classList.add('show');
 }
 
-function goToDM() {
-  alert('💬 进入找货薯私信，已带入当前搜索上下文');
-}
+function goToWW() { alert('进入问一问详情页'); }
 
-// 初始化：默认展示第三个query（多巴胺穿搭）
+// 初始化
 window.addEventListener('DOMContentLoaded', () => {
   const defaultBtn = document.querySelectorAll('.preset-q')[2];
-  setQuery(defaultBtn, '多巴胺穿搭 适合微胖女生 今年流行');
-  document.getElementById('search-input').value = '多巴胺穿搭 适合微胖女生 今年流行';
+  setQuery(defaultBtn, '多巴胺穿搭适合微胖女生今年流行');
 });
 
-// ==================== 评论页逻辑 ====================
-function sendComment() {
-  const input = document.getElementById('comment-input');
-  const val = input.value.trim();
-  if (!val) return;
-
-  document.getElementById('trigger-text').textContent = val;
-  input.value = '';
-
-  const replyEl = document.getElementById('ai-comment-reply');
-  const textEl = document.getElementById('ai-comment-text');
-  replyEl.classList.remove('show');
-  textEl.innerHTML = '';
-
-  setTimeout(() => {
-    let replyText = '';
-    let products = [];
-
-    if (val.includes('油皮') || val.includes('洗面奶') || val.includes('护肤')) {
-      replyText = '油皮推荐氨基酸类洗面奶，弱酸性不破坏皮脂膜 ✨ 50元内这3款口碑最好：';
-      products = [
-        { emoji:'🧴', name:'CeraVe 氨基酸洁面', price:'¥42', tag:'敏感肌友好', bg:'' },
-        { emoji:'💧', name:'理肤泉 舒缓啫喱', price:'¥48', tag:'无香精配方', bg:'blue' },
-        { emoji:'🫧', name:'洁芙柔 氨基酸款', price:'¥29', tag:'学生价', bg:'green' },
-      ];
-    } else if (val.includes('护手霜') || val.includes('平替') || val.includes('欧舒丹')) {
-      replyText = '欧舒丹平替首选乳木果油含量高的！20-40元就有很好的选择 🤲';
-      products = [
-        { emoji:'🤲', name:'Vaseline 玻尿酸款', price:'¥22', tag:'保湿≈正品', bg:'' },
-        { emoji:'🌳', name:'植观 乳木果霜', price:'¥28', tag:'香味好闻', bg:'green' },
-        { emoji:'💛', name:'凡士林 深层滋养', price:'¥15', tag:'极简配方', bg:'yellow' },
-      ];
-    } else if (val.includes('穿搭') || val.includes('多巴胺') || val.includes('微胖') || val.includes('显瘦')) {
-      replyText = '微胖穿多巴胺风选A字廓形＋渐变色，视觉拉长最有效！预算300以内这几款：';
-      products = [
-        { emoji:'🧥', name:'渐变针织开衫', price:'¥189', tag:'显瘦显高', bg:'' },
-        { emoji:'👗', name:'A字半裙·薄荷绿', price:'¥148', tag:'高腰显腿长', bg:'blue' },
-        { emoji:'👚', name:'宽松T恤连衣裙', price:'¥129', tag:'遮肉宽松版', bg:'green' },
-      ];
-    } else {
-      replyText = '看到你的需求了！根据帖子风格帮你找到了几款匹配的 ✨';
-      products = [
-        { emoji:'🛍️', name:'相似风格好物①', price:'¥128', tag:'高口碑', bg:'' },
-        { emoji:'🎁', name:'相似风格好物②', price:'¥168', tag:'用户推荐', bg:'blue' },
-      ];
-    }
-
-    const carouselHtml = `
-      <div class="comment-product-carousel">
-        ${products.map(p => `
-          <div class="cp-card" onclick="alert('跳转商品：${p.name}')">
-            <div class="cp-card-img ${p.bg}">${p.emoji}</div>
-            <div class="cp-card-body">
-              <div class="cp-card-name">${p.name}</div>
-              <div class="cp-card-price">${p.price}</div>
-              <div class="cp-card-tag">${p.tag}</div>
-            </div>
-          </div>
-        `).join('')}
-      </div>
-      <div class="comment-more-link" onclick="alert('进入私信，已带入上下文')">
-        💬 查看更多推荐，进入私信 →
-      </div>
-    `;
-
-    textEl.innerHTML = replyText + carouselHtml;
-    replyEl.classList.add('show');
-
-    // 滚动到底部
-    const section = document.getElementById('comment-section');
-    section.scrollTop = section.scrollHeight;
-  }, 900);
-}
-
-// 初始预触发评论区回复
+// ==================== 评论区：初始预触发 ====================
 setTimeout(() => {
-  const replyEl = document.getElementById('ai-comment-reply');
-  const textEl = document.getElementById('ai-comment-text');
-  const carouselHtml = `
-    <div class="comment-product-carousel">
-      <div class="cp-card" onclick="alert('跳转商品详情')">
-        <div class="cp-card-img">🧥</div>
-        <div class="cp-card-body">
-          <div class="cp-card-name">渐变针织开衫</div>
-          <div class="cp-card-price">¥189</div>
-          <div class="cp-card-tag">显瘦·A字型</div>
-        </div>
-      </div>
-      <div class="cp-card" onclick="alert('跳转商品详情')">
-        <div class="cp-card-img blue">👗</div>
-        <div class="cp-card-body">
-          <div class="cp-card-name">薄荷绿A字裙</div>
-          <div class="cp-card-price">¥148</div>
-          <div class="cp-card-tag">显腿长</div>
-        </div>
-      </div>
-      <div class="cp-card" onclick="alert('跳转商品详情')">
-        <div class="cp-card-img green">👚</div>
-        <div class="cp-card-body">
-          <div class="cp-card-name">宽松连衣裙</div>
-          <div class="cp-card-price">¥129</div>
-          <div class="cp-card-tag">遮肉宽松</div>
-        </div>
-      </div>
-    </div>
-    <div class="comment-more-link" onclick="alert('进入私信，已带入上下文')">
-      💬 查看更多推荐，进入私信 →
-    </div>
-  `;
-  textEl.innerHTML = '微胖穿多巴胺风选A字廓形＋渐变色，视觉最显高显瘦 ✨ 300以内这3款高口碑：' + carouselHtml;
+  const replyEl = document.getElementById('huashu-reply');
+  const textEl = document.getElementById('huashu-reply-text');
+  textEl.innerHTML = `回复<strong>微胖也要穿美美的</strong>：微胖穿多巴胺风首选渐变色＋A字廓形，推荐你看
+    <a class="reply-product-link" onclick="alert('跳转商品')">渐变针织开衫（¥189）</a>，
+    显瘦显高效果最好；还有
+    <a class="reply-product-link" onclick="alert('跳转商品')">薄荷绿A字半裙（¥148）</a>
+    高腰线显腿长。都在300以内，笔记里真人上身评价很好✨
+    <div class="reply-more" onclick="alert('进入私信，已带入上下文')">💬 查看更多推荐 →</div>`;
   replyEl.classList.add('show');
-}, 500);
-
+}, 400);
 
 // ==================== 私信页逻辑 ====================
 setTimeout(() => {
@@ -1132,11 +955,11 @@ setTimeout(() => {
     setTimeout(() => {
       document.getElementById('dm-reply-2').classList.remove('hidden');
       scrollDm();
-    }, 500);
+    }, 400);
     scrollDm();
   }, 400);
   scrollDm();
-}, 1600);
+}, 1500);
 
 function scrollDm() {
   const el = document.getElementById('dm-messages');
@@ -1150,88 +973,76 @@ function sendDm() {
   input.value = '';
 
   const msgs = document.getElementById('dm-messages');
-
   const userBubble = document.createElement('div');
   userBubble.className = 'bubble-wrap right';
-  userBubble.innerHTML = `
-    <div class="avatar" style="width:30px;height:30px;font-size:13px;">🧑</div>
-    <div class="bubble user">${val}</div>
-  `;
+  userBubble.innerHTML = `<div class="avatar" style="width:30px;height:30px;font-size:13px;">🧑</div><div class="bubble user">${val}</div>`;
   msgs.appendChild(userBubble);
 
   const typingEl = document.createElement('div');
   typingEl.className = 'bubble-wrap';
-  typingEl.innerHTML = `
-    <div class="dm-avatar" style="width:30px;height:30px;font-size:13px;">🤖</div>
-    <div class="typing"><span></span><span></span><span></span></div>
-  `;
+  typingEl.innerHTML = `<div class="dm-avatar" style="width:30px;height:30px;font-size:13px;">🤖</div><div class="typing"><span></span><span></span><span></span></div>`;
   msgs.appendChild(typingEl);
   scrollDm();
 
   setTimeout(() => {
     msgs.removeChild(typingEl);
-
+    const v = val;
     let reply = '';
-    let extraCards = '';
+    let cards = '';
 
-    const v = val.toLowerCase();
-    if (v.includes('①') || v.includes('1') || v.includes('都要') || v.includes('上衣') && v.includes('裙')) {
-      reply = '好的！上衣＋裙子都给你找 🎨 再问一下，你更喜欢哪个色系？亮色（橘/黄/绿）还是莫兰迪（蓝紫粉）？';
-    } else if (v.includes('②') || v.includes('2') || v.includes('裙子') || v.includes('裙')) {
-      reply = '专攻裙子！A字裙＋半身裙各精选3款，帮你对比👇';
-      extraCards = buildMiniCarousel([
-        { emoji:'👗', name:'高腰A字裙·薄荷绿', price:'¥148', tag:'显腿长', bg:'' },
-        { emoji:'🩴', name:'碎花半裙·橘粉色', price:'¥118', tag:'减龄', bg:'blue' },
-        { emoji:'💃', name:'渐变百褶裙', price:'¥168', tag:'飘逸感', bg:'green' },
+    if (v.includes('①') || (v.includes('上衣') && v.includes('裙')) || v.includes('都要') || v.includes('1')) {
+      reply = '好！上衣＋裙子各选2款，帮你搭出完整套装感 🎨';
+      cards = buildCards([
+        {emoji:'🧥',name:'渐变针织开衫',price:'¥189',tag:'显瘦',bg:''},
+        {emoji:'👗',name:'薄荷绿A字裙',price:'¥148',tag:'显腿长',bg:'blue'},
       ]);
-    } else if (v.includes('③') || v.includes('3') || v.includes('上衣') || v.includes('t恤')) {
-      reply = '只看上衣！宽松版型显瘦第一，给你挑了这几款：';
-      extraCards = buildMiniCarousel([
-        { emoji:'🧥', name:'渐变针织开衫', price:'¥189', tag:'A字显瘦', bg:'' },
-        { emoji:'👕', name:'撞色拼接T恤', price:'¥89', tag:'休闲日常', bg:'blue' },
-        { emoji:'🎽', name:'宽松卫衣·薄荷色', price:'¥138', tag:'慵懒风', bg:'green' },
+    } else if (v.includes('②') || v.includes('裙') || v.includes('2')) {
+      reply = '专攻裙子！给你精选高口碑3款，都有真人微胖上身图 👗';
+      cards = buildCards([
+        {emoji:'👗',name:'A字半裙·薄荷绿',price:'¥148',tag:'显腿长',bg:'blue'},
+        {emoji:'💃',name:'渐变百褶裙',price:'¥168',tag:'飘逸',bg:'green'},
+        {emoji:'🩴',name:'碎花半裙·橘粉',price:'¥118',tag:'减龄',bg:''},
       ]);
-    } else if (v.includes('④') || v.includes('4') || v.includes('预算') || v.includes('多少')) {
-      reply = '预算你说，我来帮你筛！直接告诉我上限金额，我帮你找最值的款 💰';
+    } else if (v.includes('③') || v.includes('上衣') || v.includes('3')) {
+      reply = '只看上衣！宽松版型显瘦第一，这3款最受微胖博主推荐 👚';
+      cards = buildCards([
+        {emoji:'🧥',name:'渐变针织开衫',price:'¥189',tag:'A字显瘦',bg:''},
+        {emoji:'👕',name:'撞色拼接T恤',price:'¥89',tag:'休闲日常',bg:'blue'},
+        {emoji:'🎽',name:'宽松卫衣·薄荷色',price:'¥138',tag:'慵懒风',bg:'green'},
+      ]);
     } else if (v.match(/\d+/)) {
       const budget = v.match(/\d+/)[0];
-      reply = `好的，${budget}元以内！我来重新筛选，排除超出预算的款，只看性价比最高的 ✨`;
+      reply = `好的，${budget}元以内！帮你重新筛选，只看性价比最高的款 💰`;
     } else {
-      reply = '明白啦～你能告诉我更多吗？比如偏好颜色、上班还是日常穿、或者有没有特别不想要的款式？🎨';
+      reply = '明白啦～能告诉我你更偏好哪种颜色，或者有什么特别不想要的款式吗？🎨';
     }
 
     const agentWrap = document.createElement('div');
     agentWrap.className = 'bubble-wrap';
-    agentWrap.innerHTML = `
-      <div class="dm-avatar" style="width:30px;height:30px;font-size:13px;">🤖</div>
-      <div class="bubble agent">${reply}</div>
-    `;
+    agentWrap.innerHTML = `<div class="dm-avatar" style="width:30px;height:30px;font-size:13px;">🤖</div><div class="bubble agent">${reply}</div>`;
     msgs.appendChild(agentWrap);
 
-    if (extraCards) {
-      const cardWrap = document.createElement('div');
-      cardWrap.innerHTML = extraCards;
-      msgs.appendChild(cardWrap);
+    if (cards) {
+      const cardsWrap = document.createElement('div');
+      cardsWrap.innerHTML = `<div class="dm-product-carousel">${cards}</div>`;
+      msgs.appendChild(cardsWrap);
     }
-
     scrollDm();
-  }, 1100);
+  }, 1000);
 }
 
-function buildMiniCarousel(items) {
-  return `<div class="dm-product-carousel">
-    ${items.map(p => `
-      <div class="dm-p-card" onclick="alert('跳转：${p.name}')">
-        <div class="dm-p-card-img ${p.bg}">${p.emoji}</div>
-        <div class="dm-p-card-body">
-          <div class="dm-p-card-name">${p.name}</div>
-          <div class="dm-p-card-tags"><span class="dm-p-card-tag">${p.tag}</span></div>
-          <div class="dm-p-card-price"><span>¥</span>${p.price.replace('¥','')}</div>
-          <button class="dm-p-card-btn" onclick="event.stopPropagation();alert('立即购买')">立即购买 →</button>
-        </div>
+function buildCards(items) {
+  return items.map(p => `
+    <div class="dm-p-card" onclick="alert('跳转：${p.name}')">
+      <div class="dm-p-card-img ${p.bg}">${p.emoji}</div>
+      <div class="dm-p-card-body">
+        <div class="dm-p-card-name">${p.name}</div>
+        <div class="dm-p-card-tags"><span class="dm-p-card-tag">${p.tag}</span></div>
+        <div class="dm-p-card-price"><span>¥</span>${p.price.replace('¥','')}</div>
+        <button class="dm-p-card-btn" onclick="event.stopPropagation();alert('立即购买')">立即购买</button>
       </div>
-    `).join('')}
-  </div>`;
+    </div>
+  `).join('');
 }
 </script>
 </body>
