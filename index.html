@@ -393,12 +393,7 @@
 
   .hidden { display: none !important; }
 
-  /* 快捷query按钮 */
-  .preset-queries { display: flex; gap: 6px; padding: 6px 14px 0; overflow-x: auto; scrollbar-width: none; }
-  .preset-queries::-webkit-scrollbar { display: none; }
-  .preset-q { flex-shrink: 0; padding: 5px 10px; border-radius: 12px; font-size: 11px; background: #fff0f2; color: #ff2442; border: 1px solid #ffd6db; cursor: pointer; white-space: nowrap; transition: all 0.15s; }
-  .preset-q:hover { background: #ffd6db; }
-  .preset-q.active { background: #ff2442; color: #fff; border-color: #ff2442; }
+
 </style>
 </head>
 <body>
@@ -435,14 +430,6 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
         问一问
       </div>
-    </div>
-
-    <!-- 快捷query -->
-    <div class="preset-queries" id="preset-queries">
-      <div class="preset-q" onclick="setQuery(this,'油皮敏感肌氨基酸洗面奶控油不刺激50以内')">油皮敏感洗面奶≤50</div>
-      <div class="preset-q" onclick="setQuery(this,'类似欧舒丹护手霜成分相近学生平替')">护手霜平替</div>
-      <div class="preset-q" onclick="setQuery(this,'多巴胺穿搭适合微胖女生今年流行')">多巴胺穿搭</div>
-      <div class="preset-q" onclick="setQuery(this,'学生党保健品提升免疫力不含激素百元内')">学生保健品≤100</div>
     </div>
 
     <div class="screen" id="screen-search">
@@ -927,10 +914,10 @@ function doSearch() {
 
 function goToWW() { alert('进入问一问详情页'); }
 
-// 初始化
+// 初始化：直接渲染固定场景
 window.addEventListener('DOMContentLoaded', () => {
-  const defaultBtn = document.querySelectorAll('.preset-q')[2];
-  setQuery(defaultBtn, '多巴胺穿搭适合微胖女生今年流行');
+  document.getElementById('search-input').value = '多巴胺穿搭适合微胖女生今年流行';
+  doSearch();
 });
 
 // ==================== 评论区：初始预触发 ====================
