@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>线索经营工作台 · 产品方案 v1.0</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+* { box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', sans-serif; background: #F7F8FA; color: #1a1a1a; }
+.container { max-width: 860px; margin: 0 auto; padding: 48px 24px 80px; }
+
+/* 头部 */
+.doc-header { background: linear-gradient(135deg, #FF2442 0%, #FF6B7A 100%); border-radius: 20px; padding: 40px 48px; color: #fff; margin-bottom: 40px; position: relative; overflow: hidden; }
+.doc-header::before { content: ''; position: absolute; right: -40px; top: -40px; width: 220px; height: 220px; border-radius: 50%; background: rgba(255,255,255,.08); }
+.doc-header::after { content: ''; position: absolute; right: 60px; bottom: -60px; width: 160px; height: 160px; border-radius: 50%; background: rgba(255,255,255,.06); }
+
+/* 章节 */
+.section { background: #fff; border-radius: 16px; border: 1px solid #EBEBEB; margin-bottom: 20px; overflow: hidden; }
+.section-header { padding: 20px 28px 16px; border-bottom: 1px solid #F5F5F5; display: flex; align-items: center; gap: 12px; }
+.section-num { width: 28px; height: 28px; border-radius: 8px; background: linear-gradient(135deg, #FF2442, #FF6B7A); color: #fff; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.section-body { padding: 20px 28px; }
+
+/* 表格 */
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { background: #F9FAFB; padding: 10px 14px; text-align: left; font-weight: 700; color: #555; border-bottom: 1px solid #EBEBEB; border-right: 1px solid #F0F0F0; font-size: 12px; }
+td { padding: 10px 14px; border-bottom: 1px solid #F5F5F5; border-right: 1px solid #F5F5F5; vertical-align: top; line-height: 1.65; color: #333; font-size: 13px; }
+td:last-child, th:last-child { border-right: none; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: #FAFAFA; }
+
+/* 标签 */
+.tag { display: inline-flex; align-items: center; gap: 3px; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; }
+.tag-hot { background: #FEE2E2; color: #DC2626; }
+.tag-warm { background: #FEF3C7; color: #D97706; }
+.tag-cold { background: #F3F4F6; color: #9CA3AF; }
+.tag-new { background: #EFF6FF; color: #2563EB; }
+
+/* 漏斗 */
+.funnel-step { display: flex; align-items: center; gap: 0; margin-bottom: 0; }
+.funnel-box { flex: 1; }
+.funnel-node { background: #fff; border: 1.5px solid #EBEBEB; border-radius: 10px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; transition: border-color .15s; }
+.funnel-node:hover { border-color: #FF2442; }
+.funnel-arrow { display: flex; flex-direction: column; align-items: center; padding: 4px 0; }
+.funnel-line { width: 2px; height: 18px; background: linear-gradient(to bottom, #FFB0BD, #FF2442); margin: 0 auto; }
+.funnel-tip { font-size: 11px; color: #FF7A8E; font-weight: 500; padding: 2px 8px; background: #FFF0F2; border-radius: 20px; }
+
+/* 流转图 */
+.flow-box { background: #F9FAFB; border: 1px solid #EBEBEB; border-radius: 10px; padding: 10px 16px; font-size: 13px; color: #555; font-family: 'SFMono-Regular', Consolas, monospace; line-height: 2; white-space: pre-wrap; }
+
+/* 代码块 */
+.code-block { background: #1E1E2E; border-radius: 12px; padding: 20px 24px; font-family: 'SFMono-Regular', Consolas, monospace; font-size: 12px; color: #CDD6F4; line-height: 1.8; overflow-x: auto; }
+.code-key { color: #89B4FA; }
+.code-str { color: #A6E3A1; }
+.code-com { color: #6C7086; }
+.code-num { color: #FAB387; }
+
+/* 配置时间轴 */
+.time-grid { display: grid; grid-template-columns: repeat(24, 1fr); gap: 2px; margin: 10px 0; }
+.time-cell { height: 24px; border-radius: 3px; background: #F3F4F6; position: relative; }
+.time-cell.active { background: linear-gradient(135deg, #FF2442, #FF6B7A); }
+.time-cell.partial { background: linear-gradient(135deg, #FCD34D, #FBBF24); }
+
+/* 状态流转 */
+.state-node { display: inline-flex; align-items: center; gap: 5px; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+.state-ai { background: #EFF6FF; color: #2563EB; }
+.state-pending { background: #FFF7ED; color: #EA580C; }
+.state-human { background: #F0FDF4; color: #16A34A; }
+.state-done { background: #F9FAFB; color: #6B7280; }
+.state-silent { background: #FEF3C7; color: #D97706; }
+
+/* highlight box */
+.hbox { border-radius: 10px; padding: 14px 18px; margin: 12px 0; font-size: 13px; line-height: 1.75; }
+.hbox-blue { background: #EFF6FF; border-left: 3px solid #3B82F6; color: #1E40AF; }
+.hbox-red { background: #FFF0F2; border-left: 3px solid #FF2442; color: #CC1033; }
+.hbox-green { background: #F0FDF4; border-left: 3px solid #10B981; color: #065F46; }
+.hbox-yellow { background: #FFFBEB; border-left: 3px solid #F59E0B; color: #92400E; }
+
+/* 目录 */
+.toc-item { display: flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 8px; font-size: 13px; color: #555; cursor: pointer; text-decoration: none; transition: all .15s; }
+.toc-item:hover { background: #FFF0F2; color: #FF2442; }
+.toc-num { font-size: 11px; font-weight: 700; color: #bbb; min-width: 20px; }
+
+/* 滚动条 */
+::-webkit-scrollbar { width: 5px; } ::-webkit-scrollbar-thumb { background: #E5E7EB; border-radius: 5px; }
+
+/* 打印 */
+@media print { body { background: #fff; } .doc-header { background: #FF2442 !important; -webkit-print-color-adjust: exact; } }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- 文档头 -->
+  <div class="doc-header">
+    <div style="position:relative;z-index:1;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+        <div style="background:rgba(255,255,255,.2);border-radius:10px;padding:6px 12px;font-size:12px;font-weight:600;">产品方案</div>
+        <div style="background:rgba(255,255,255,.2);border-radius:10px;padding:6px 12px;font-size:12px;font-weight:600;">v1.0</div>
+        <div style="background:rgba(255,255,255,.2);border-radius:10px;padding:6px 12px;font-size:12px;font-weight:600;">2026-04-02</div>
+      </div>
+      <div style="font-size:28px;font-weight:800;margin-bottom:8px;line-height:1.2;">小红书线索经营工作台</div>
+      <div style="font-size:15px;opacity:.85;margin-bottom:20px;">面向旅游行业商家的 AI 线索运营闭环产品方案</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <span style="background:rgba(255,255,255,.15);border-radius:20px;padding:4px 12px;font-size:12px;">🏝️ 标杆行业：旅游/OTA</span>
+        <span style="background:rgba(255,255,255,.15);border-radius:20px;padding:4px 12px;font-size:12px;">🤖 核心能力：AI 私信承接 + 意向分级 + 销售接管</span>
+        <span style="background:rgba(255,255,255,.15);border-radius:20px;padding:4px 12px;font-size:12px;">♻️ 飞轮：结果回传 → 投放优化</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 目录 -->
+  <div class="section" style="margin-bottom:20px;">
+    <div class="section-body" style="padding:16px 24px;">
+      <div style="font-size:12px;font-weight:700;color:#bbb;margin-bottom:10px;letter-spacing:.05em;">目录</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;">
+        <a href="#s1" class="toc-item"><span class="toc-num">01</span>数据看板</a>
+        <a href="#s2" class="toc-item"><span class="toc-num">02</span>线索运营工作台</a>
+        <a href="#s3" class="toc-item"><span class="toc-num">03</span>意向判断逻辑</a>
+        <a href="#s4" class="toc-item"><span class="toc-num">04</span>沟通摘要 / Highlight</a>
+        <a href="#s5" class="toc-item"><span class="toc-num">05</span>回传填报</a>
+        <a href="#s6" class="toc-item"><span class="toc-num">06</span>人机协作配置</a>
+        <a href="#s7" class="toc-item"><span class="toc-num">07</span>线索状态流转</a>
+        <a href="#s8" class="toc-item"><span class="toc-num">08</span>待讨论问题</a>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ①数据看板 -->
+  <div class="section" id="s1">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div>
+        <div style="font-size:15px;font-weight:700;">数据看板</div>
+        <div style="font-size:12px;color:#999;margin-top:2px;">全局数据概览 · 支持统计周期切换（今天 / 本周 / 本月）</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <!-- 核心指标表 -->
+      <div style="font-size:13px;font-weight:700;margin-bottom:10px;color:#555;">① 核心单指标（顶部卡片）</div>
+      <table>
+        <tr><th style="width:120px;">数据名称</th><th>数据定义</th><th style="width:200px;">计算口径</th><th style="width:140px;">示例（旅游场景）</th></tr>
+        <tr>
+          <td><b>新增线索</b></td>
+          <td>统计周期内首次通过广告私信/留资/评论引导进入线索池的用户数，同一用户去重计 1 次</td>
+          <td>去重 UID；区分「广告线索」vs「自然线索」</td>
+          <td>今日 62 条<br><span style="color:#10B981;font-size:12px;">↑ 18% 较昨日</span></td>
+        </tr>
+        <tr>
+          <td><b>热线索</b></td>
+          <td>意向评分 ≥ 75 分的线索，代表高购买意愿用户</td>
+          <td>见「意向判断逻辑」章节</td>
+          <td>今日 24 条<br><span style="font-size:12px;color:#bbb;">热 9 / 温 15</span></td>
+        </tr>
+        <tr>
+          <td><b>转化率</b></td>
+          <td>成交/到访线索数 ÷ 新增线索数，依赖销售回传</td>
+          <td>回传覆盖率 &lt; 30% 时标注「⚠️ 参考值」，不显示百分比</td>
+          <td>8.3%（回传覆盖 71%）</td>
+        </tr>
+        <tr>
+          <td><b>AI 覆盖率</b></td>
+          <td>AI 自动完整处理的会话 ÷ 总进线会话数<br>「完整」= 用户意图发出后 AI 应答，且未触发转人工</td>
+          <td>按会话计，非按消息轮次</td>
+          <td>79%（49/62 条）</td>
+        </tr>
+        <tr>
+          <td><b>响应速度</b></td>
+          <td>用户首条消息→AI/人工第一次回复的中位时长（秒）<br>分开展示 AI 响应 vs 人工响应</td>
+          <td>AI 响应目标 &lt; 3s；人工响应目标 &lt; 30min</td>
+          <td>AI: 1.8s<br>人工: 11min</td>
+        </tr>
+      </table>
+
+      <div style="margin-top:20px;font-size:13px;font-weight:700;margin-bottom:10px;color:#555;">② 进线趋势（折线图）</div>
+      <div class="hbox hbox-blue" style="margin-bottom:12px;">
+        可选日期范围：7日 / 30日 / 自定义<br>
+        叠加「热线索趋势」辅助线（红色虚线），让商家看到意向质量随时间的变化<br>
+        数据刷新频率：每 5 分钟
+      </div>
+
+      <div style="font-size:13px;font-weight:700;margin-bottom:12px;color:#555;">③ 转化漏斗</div>
+      <div style="display:flex;flex-direction:column;gap:0;">
+        <div class="funnel-node"><div><div style="font-size:13px;font-weight:600;">广告曝光</div><div style="font-size:11px;color:#999;">聚光投放产生曝光</div></div><div style="font-size:13px;font-weight:700;color:#bbb;">—</div></div>
+        <div class="funnel-arrow"><div class="funnel-line"></div><div class="funnel-tip">CTR 约 2~5%</div><div class="funnel-line"></div></div>
+        <div class="funnel-node"><div><div style="font-size:13px;font-weight:600;">点击进线（新增线索）</div><div style="font-size:11px;color:#999;">广告私信 / 留资 / 评论引导</div></div><div style="font-size:13px;font-weight:700;color:#1a1a1a;">62 条</div></div>
+        <div class="funnel-arrow"><div class="funnel-line"></div><div class="funnel-tip">AI 首响率 &gt; 95%</div><div class="funnel-line"></div></div>
+        <div class="funnel-node"><div><div style="font-size:13px;font-weight:600;">AI 承接完成应答</div><div style="font-size:11px;color:#999;">AI query 覆盖</div></div><div style="font-size:13px;font-weight:700;color:#1a1a1a;">49 条 · 79%</div></div>
+        <div class="funnel-arrow"><div class="funnel-line"></div><div class="funnel-tip">意向激活率</div><div class="funnel-line"></div></div>
+        <div class="funnel-node"><div><div style="font-size:13px;font-weight:600;">意向激活（温 + 热）</div><div style="font-size:11px;color:#999;">评分 ≥ 40 分</div></div><div style="font-size:13px;font-weight:700;color:#FF2442;">38 条 · 61%</div></div>
+        <div class="funnel-arrow"><div class="funnel-line"></div><div class="funnel-tip">热线索接管率 ~60%</div><div class="funnel-line"></div></div>
+        <div class="funnel-node"><div><div style="font-size:13px;font-weight:600;">人工接管 / 持续跟进</div><div style="font-size:11px;color:#999;">销售承接热线索</div></div><div style="font-size:13px;font-weight:700;color:#1a1a1a;">15 条</div></div>
+        <div class="funnel-arrow"><div class="funnel-line"></div><div class="funnel-tip">到访率（回传覆盖 71%）</div><div class="funnel-line"></div></div>
+        <div class="funnel-node"><div><div style="font-size:13px;font-weight:600;">到访 / 下单</div><div style="font-size:11px;color:#999;">线下到访或平台成交</div></div><div style="font-size:13px;font-weight:700;color:#1a1a1a;">9 条</div></div>
+        <div class="funnel-arrow"><div class="funnel-line"></div><div class="funnel-tip">转化率</div><div class="funnel-line"></div></div>
+        <div class="funnel-node" style="border-color:#FF2442;"><div><div style="font-size:13px;font-weight:700;color:#FF2442;">成交</div><div style="font-size:11px;color:#999;">依赖回传确认</div></div><div style="font-size:15px;font-weight:800;color:#FF2442;">5 条 · 8.3%</div></div>
+      </div>
+
+      <div class="hbox hbox-yellow" style="margin-top:14px;">
+        <b>漏斗兜底规则：</b>回传覆盖率 &lt; 30% 时，到访/成交层显示「–」并附提示「填写跟进结果可解锁完整漏斗」，形成填写激励；接口异常时顶部展示缓存提示条，不显示空模块。
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ②线索运营 -->
+  <div class="section" id="s2">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div>
+        <div style="font-size:15px;font-weight:700;">线索运营工作台</div>
+        <div style="font-size:12px;color:#999;margin-top:2px;">三列布局 · 对话列表 / 对话详情 / 客户档案+回传</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div style="font-size:13px;font-weight:700;margin-bottom:10px;color:#555;">页面结构</div>
+      <div style="display:grid;grid-template-columns:1fr 2fr 1fr;gap:3px;border:1px solid #EBEBEB;border-radius:12px;overflow:hidden;font-size:12px;">
+        <div style="background:#F9FAFB;padding:14px 16px;border-right:1px solid #EBEBEB;">
+          <div style="font-weight:700;color:#555;margin-bottom:8px;">左列：对话列表</div>
+          <div style="color:#888;line-height:1.8;">Tab 筛选<br>• 跟进中<br>• 待跟进<br>• 已完成<br><br>线索行<br>• 意向标签<br>• 最新消息预览<br>• 时间/沉默时长<br>• 在线状态点</div>
+        </div>
+        <div style="background:#fff;padding:14px 16px;border-right:1px solid #EBEBEB;">
+          <div style="font-weight:700;color:#555;margin-bottom:8px;">中列：对话详情</div>
+          <div style="color:#888;line-height:1.8;">用户信息条（头像/标签/进线来源）<br>Skill 触发记录横条<br>——<br>完整对话历史（气泡）<br>系统节点提示（转人工等）<br>——<br>接管后：真人回复输入框<br>工具栏（话术库/图片/套餐）<br>Ctrl+Enter 发送</div>
+        </div>
+        <div style="background:#F9FAFB;padding:14px 16px;">
+          <div style="font-weight:700;color:#555;margin-bottom:8px;">右列：客户档案+回传</div>
+          <div style="color:#888;line-height:1.8;">意向分析卡（等级+依据）<br>AI 摘要（一句话）<br>关键信息提取<br>• 出行日期<br>• 目的地/产品<br>• 人数/预算<br>• 核心顾虑<br>——<br>结果回传面板<br>（接管后解锁）</div>
+        </div>
+      </div>
+
+      <div style="margin-top:20px;">
+        <table>
+          <tr><th style="width:140px;">功能模块</th><th>详情说明</th><th style="width:120px;">状态</th></tr>
+          <tr><td><b>线索筛选</b></td><td>Tab 栏：跟进中 / 待跟进 / 已完成；支持按意向等级、来源渠道二次筛选；关键词搜索</td><td><span class="tag tag-new">MVP</span></td></tr>
+          <tr><td><b>意向标签</b></td><td>🔴热 / 🟡温 / ⚪冷，实时更新；见「意向判断逻辑」章节</td><td><span class="tag tag-new">MVP</span></td></tr>
+          <tr><td><b>AI 摘要</b></td><td>每轮对话后自动更新，接管时强制刷新置顶；见「沟通摘要」章节</td><td><span class="tag tag-new">MVP</span></td></tr>
+          <tr><td><b>历史对话</b></td><td>完整气泡展示，左用户右客服；系统节点（转人工/Skill触发）插入分隔条</td><td><span class="tag tag-new">MVP</span></td></tr>
+          <tr><td><b>一键接管</b></td><td>接管后上下文完整继承（AI 摘要+历史记录同屏），解锁回复框和回传面板</td><td><span class="tag tag-new">MVP</span></td></tr>
+          <tr><td><b>结果导出</b></td><td>导出 Excel（线索ID/意向/状态/摘要/回传结果）；支持对接外部 CRM（Webhook）</td><td><span style="background:#F3F4F6;color:#9CA3AF;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;">P1</span></td></tr>
+        </table>
+      </div>
+
+      <div class="hbox hbox-yellow" style="margin-top:14px;">
+        <b>待讨论：</b>MVP 是否需要销售登录才能接管？<br>
+        <b>建议方案：</b>MVP 阶段不强制独立账号，商家主账号可直接操作；P1 阶段支持子账号（销售角色），便于绩效统计和权限隔离。导出功能 MVP 做到「导出 Excel」即可，CRM 对接走 P1 Webhook 方案。
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ③意向判断逻辑 -->
+  <div class="section" id="s3">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div>
+        <div style="font-size:15px;font-weight:700;">意向判断逻辑（冷 / 温 / 热）</div>
+        <div style="font-size:12px;color:#999;margin-top:2px;">私信通 AI 策略层 · 每轮对话后实时更新评分</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div style="font-size:13px;font-weight:700;margin-bottom:10px;color:#555;">评分模型（旅游行业）</div>
+      <table>
+        <tr><th>信号类型</th><th>具体行为（旅游场景示例）</th><th style="width:80px;">加分</th></tr>
+        <tr><td rowspan="5" style="font-weight:600;vertical-align:top;padding-top:14px;">明确意图</td><td>主动给出出行日期（「五一想去」「6月下旬两周」）</td><td>+30</td></tr>
+        <tr><td>询问具体产品库存/可用档期（「三亚5天有团吗」）</td><td>+20</td></tr>
+        <tr><td>询问价格/套餐报价（「人均多少」「含机票吗」）</td><td>+20</td></tr>
+        <tr><td>主动比价或要求优惠（「能便宜点吗」「有没有优惠券」）</td><td>+25</td></tr>
+        <tr><td>询问支付/定金/合同方式（「怎么预订」「定金多少」）</td><td>+30</td></tr>
+        <tr><td rowspan="3" style="font-weight:600;vertical-align:top;padding-top:14px;">互动深度</td><td>连续对话 ≥ 5 轮</td><td>+15</td></tr>
+        <tr><td>对 AI 推送内容有实质回复（非「好的」「嗯」）</td><td>+10</td></tr>
+        <tr><td>主动追问细节（「有单人房吗」「导游是本地人吗」）</td><td>+10</td></tr>
+        <tr><td rowspan="3" style="font-weight:600;vertical-align:top;padding-top:14px;">衰减因子</td><td>最后回复 &gt; 24h</td><td>×0.8</td></tr>
+        <tr><td>最后回复 &gt; 72h</td><td>×0.5</td></tr>
+        <tr><td>明确拒绝（「不需要了」「太贵了不去」）且无后续</td><td>×0.3</td></tr>
+      </table>
+
+      <div style="margin-top:20px;font-size:13px;font-weight:700;margin-bottom:12px;color:#555;">意向等级定义</div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="border:1.5px solid #FEE2E2;border-radius:12px;padding:14px 18px;background:#FFFAFA;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+            <span class="tag tag-hot" style="font-size:13px;padding:4px 14px;">🔴 热意向</span>
+            <span style="font-size:13px;font-weight:700;">≥ 75 分</span>
+          </div>
+          <div style="font-size:13px;color:#555;line-height:1.75;">
+            <b>判断逻辑：</b>满足以下至少一项 + 近 24h 内有互动<br>
+            • 主动给出明确出行日期<br>
+            • 询问价格/产品细节（问价即热信号）<br>
+            • 发起价格谈判或询问预订方式<br>
+            <b style="color:#DC2626;">运营动作：</b>立即推送给销售，标红置顶；超 30min 未接管触发 push 提醒
+          </div>
+        </div>
+        <div style="border:1.5px solid #FEF3C7;border-radius:12px;padding:14px 18px;background:#FFFEF5;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+            <span class="tag tag-warm" style="font-size:13px;padding:4px 14px;">🟡 温意向</span>
+            <span style="font-size:13px;font-weight:700;">40 ~ 74 分</span>
+          </div>
+          <div style="font-size:13px;color:#555;line-height:1.75;">
+            <b>判断逻辑：</b>有明确咨询意图（问目的地/行程/攻略）但未触及价格/档期；或高分但沉默 24~72h<br>
+            <b style="color:#D97706;">运营动作：</b>AI 继续跟进；24h 无回复触发唤醒话术；3 次无回复转销售人工判断
+          </div>
+        </div>
+        <div style="border:1.5px solid #F3F4F6;border-radius:12px;padding:14px 18px;background:#FAFAFA;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+            <span class="tag tag-cold" style="font-size:13px;padding:4px 14px;">⚪ 冷意向</span>
+            <span style="font-size:13px;font-weight:700;">&lt; 40 分</span>
+          </div>
+          <div style="font-size:13px;color:#555;line-height:1.75;">
+            <b>判断逻辑：</b>仅随意浏览/泛问，无实质需求信号；或沉默 &gt; 72h 且无历史高分记录<br>
+            <b style="color:#6B7280;">运营动作：</b>进入沉默池；7天自动唤醒一次；30天无互动归档「已关闭」
+          </div>
+        </div>
+      </div>
+
+      <div class="hbox hbox-blue" style="margin-top:14px;">
+        <b>与投放侧对齐：</b>意向标签传递给知然归因模型时使用枚举值（<code>hot / warm / cold</code>），不传原始分值，避免销售对数字产生误解。标签定义一次对齐后，PM-2（工作台侧）与 PM-3（投放侧）独立推进。
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ④沟通摘要 -->
+  <div class="section" id="s4">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div>
+        <div style="font-size:15px;font-weight:700;">沟通摘要 / 客户信息 Highlight</div>
+        <div style="font-size:12px;color:#999;margin-top:2px;">让销售接管时一眼看懂，无需重读对话记录</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div style="font-size:13px;font-weight:700;margin-bottom:10px;color:#555;">生成时机</div>
+      <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">
+        <div style="display:flex;gap:8px;align-items:flex-start;font-size:13px;color:#555;"><span style="color:#FF2442;font-weight:700;flex-shrink:0;">1</span>每轮对话结束后自动更新（用户 5min 未回复视为一轮结束）</div>
+        <div style="display:flex;gap:8px;align-items:flex-start;font-size:13px;color:#555;"><span style="color:#FF2442;font-weight:700;flex-shrink:0;">2</span>销售点击「一键接管」时，强制触发最新摘要生成并置顶展示</div>
+        <div style="display:flex;gap:8px;align-items:flex-start;font-size:13px;color:#555;"><span style="color:#FF2442;font-weight:700;flex-shrink:0;">3</span>回传结果填写后，在摘要区追加「跟进结果」字段</div>
+      </div>
+
+      <div style="font-size:13px;font-weight:700;margin-bottom:10px;color:#555;">模型输出字段规范（旅游场景）</div>
+      <div class="code-block">
+<span class="code-com">// 私信通 AI 摘要输出 JSON 结构</span>
+{
+  <span class="code-key">"summary"</span>: <span class="code-str">"用户计划五一带2人去云南大理，询问了6天5晚自由行套餐价格，对含民宿的产品感兴趣，已问定金方式"</span>,
+  <span class="code-key">"key_info"</span>: {
+    <span class="code-key">"travel_date"</span>: <span class="code-str">"2026-05-01 ~ 2026-05-06（五一假期）"</span>,
+    <span class="code-key">"destination"</span>: <span class="code-str">"云南大理"</span>,
+    <span class="code-key">"headcount"</span>: <span class="code-str">"2人（情侣）"</span>,
+    <span class="code-key">"product_interest"</span>: <span class="code-str">"6天5晚自由行，含精品民宿"</span>,
+    <span class="code-key">"budget_signal"</span>: <span class="code-str">"问过人均价格，问有无优惠"</span>,
+    <span class="code-key">"concern"</span>: <span class="code-str">"民宿品质、是否含接送机"</span>,
+    <span class="code-key">"booking_intent"</span>: <span class="code-str">"已询问定金方式"</span>
+  },
+  <span class="code-key">"intent_score"</span>: <span class="code-num">91</span>,
+  <span class="code-key">"intent_level"</span>: <span class="code-str">"hot"</span>,
+  <span class="code-key">"trigger_skills"</span>: [<span class="code-str">"行程查询"</span>, <span class="code-str">"套餐报价"</span>],
+  <span class="code-key">"handover_reason"</span>: <span class="code-str">"用户询问定金付款方式，置信度 41%，触发转人工"</span>
+}
+      </div>
+
+      <div style="margin-top:14px;font-size:13px;font-weight:700;margin-bottom:10px;color:#555;">展示规则</div>
+      <table>
+        <tr><th>字段</th><th>展示形式</th><th>为空时</th></tr>
+        <tr><td><code>summary</code></td><td>高亮卡片，置顶展示，字体 14px 加粗</td><td>不展示（AI 生成中显示 loading）</td></tr>
+        <tr><td><code>key_info</code> 各字段</td><td>已填写字段以「标签: 值」形式列出</td><td>隐藏该字段，不显示「未知」</td></tr>
+        <tr><td><code>handover_reason</code></td><td>橙色提示条，仅转人工场景展示</td><td>不展示</td></tr>
+        <tr><td><code>intent_score</code></td><td>不对销售展示原始分值，只展示等级标签</td><td>—</td></tr>
+      </table>
+    </div>
+  </div>
+
+
+  <!-- ⑤回传填报 -->
+  <div class="section" id="s5">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <div>
+        <div style="font-size:15px;font-weight:700;">回传填报</div>
+        <div style="font-size:12px;color:#999;margin-top:2px;">闭环飞轮的关键环节 · 结果回传 → 投放归因 → 更精准线索</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div style="font-size:13px;font-weight:700;margin-bottom:12px;color:#555;">① 入口设计（两处，职责分离）</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
+        <div style="border:1.5px solid #FF2442;border-radius:12px;padding:16px;background:#FFF8F9;">
+          <div style="font-size:13px;font-weight:700;color:#FF2442;margin-bottom:6px;">入口 A · 工作台右侧面板（主入口）</div>
+          <div style="font-size:12px;color:#555;line-height:1.75;">
+            触发条件：点击「一键接管」后解锁<br>
+            逻辑：<b>先跟进，后回传</b>，强制顺序<br>
+            适合：正在跟进的线索，即时填写
+          </div>
+        </div>
+        <div style="border:1.5px solid #EBEBEB;border-radius:12px;padding:16px;background:#FAFAFA;">
+          <div style="font-size:13px;font-weight:700;color:#555;margin-bottom:6px;">入口 B · 线索列表行内操作（补录入口）</div>
+          <div style="font-size:12px;color:#555;line-height:1.75;">
+            触发：列表行「···」→「填写结果」<br>
+            展示：底部轻量 Sheet，3 秒内完成<br>
+            适合：线下跟进后回来补录
+          </div>
+        </div>
+      </div>
+
+      <div style="font-size:13px;font-weight:700;margin-bottom:10px;color:#555;">② 填写字段</div>
+      <table>
+        <tr><th>字段</th><th>类型</th><th>展示条件</th><th>说明</th></tr>
+        <tr><td><b>结果状态</b>（必填）</td><td>单选</td><td>始终展示</td><td>✅ 到访 / 🎉 成交 / ⏳ 跟进中 / ❌ 无效</td></tr>
+        <tr><td><b>成交金额</b></td><td>数字输入</td><td>选「成交」时展示</td><td>单位：元；用于 ROI 归因</td></tr>
+        <tr><td><b>下次跟进时间</b></td><td>日期选择</td><td>选「跟进中」时展示</td><td>触发系统提醒（如已配置）</td></tr>
+        <tr><td><b>备注</b></td><td>自由文本</td><td>始终展示，选填</td><td>≤ 100 字；Placeholder：如「本周五来看行程」「太贵了暂时放弃」</td></tr>
+      </table>
+
+      <div style="margin-top:16px;font-size:13px;font-weight:700;margin-bottom:10px;color:#555;">③ 填写激励提示（提交后展示）</div>
+      <div style="border:1.5px solid #FFD6DC;border-radius:12px;padding:16px 18px;background:linear-gradient(135deg,#FFF0F2,#FFF7F8);">
+        <div style="font-size:14px;font-weight:700;color:#CC1033;margin-bottom:6px;">💡 你的回传让 AI 更聪明</div>
+        <div style="font-size:13px;color:#666;line-height:1.75;">
+          本次数据已同步至投放模型，系统将识别「<b style="color:#1a1a1a;">这类用户特征</b>」，在下一批广告中优先触达相似的高意向用户。<br>
+          本月你已回传 <b style="color:#FF2442;">31 条</b>，预估有效线索率提升 <b style="color:#FF2442;">+8%</b>。
+        </div>
+      </div>
+      <div class="hbox hbox-blue" style="margin-top:10px;font-size:12px;">
+        <b>文案策略：</b>数字要具体化（31条、+8%），而非「帮助 AI 优化」这类虚泛表达；归因到「这个线索」让销售感受到个体贡献；每月初重置计数，形成周期正向反馈。
+      </div>
+
+      <div style="margin-top:16px;font-size:13px;font-weight:700;margin-bottom:10px;color:#555;">④ 数据流向（与知然/投放团队对齐的字段格式）</div>
+      <div class="code-block">
+{
+  <span class="code-key">"event"</span>: <span class="code-str">"lead_feedback"</span>,
+  <span class="code-key">"lead_id"</span>: <span class="code-str">"L20260501_YUNNAN_001"</span>,
+  <span class="code-key">"user_id"</span>: <span class="code-str">"xhs_uid_xxxxxx"</span>,
+  <span class="code-key">"intent_level"</span>: <span class="code-str">"hot"</span>,           <span class="code-com">// hot | warm | cold</span>
+  <span class="code-key">"feedback_status"</span>: <span class="code-str">"visited"</span>,      <span class="code-com">// visited | closed | following | invalid</span>
+  <span class="code-key">"deal_amount"</span>: <span class="code-num">null</span>,               <span class="code-com">// 成交时填写，单位：分</span>
+  <span class="code-key">"next_followup_at"</span>: <span class="code-num">null</span>,         <span class="code-com">// ISO8601，跟进中时填写</span>
+  <span class="code-key">"note"</span>: <span class="code-str">"用户五一档期感兴趣，本周五来门店看行程单"</span>,
+  <span class="code-key">"feedback_by"</span>: <span class="code-str">"sales_id_xxxx"</span>,
+  <span class="code-key">"feedback_at"</span>: <span class="code-str">"2026-04-02T20:00:00+08:00"</span>,
+  <span class="code-key">"source_ad_id"</span>: <span class="code-str">"ad_xxxxxx"</span>,       <span class="code-com">// 归因到广告计划</span>
+  <span class="code-key">"source_skill"</span>: <span class="code-str">"套餐报价"</span>          <span class="code-com">// 最后触发的 Skill</span>
+}
+      </div>
+      <div style="margin-top:8px;font-size:12px;color:#bbb;">
+        核心归因字段：<code>lead_id + intent_level + feedback_status + source_ad_id</code> → 知然归因模型 → 投放策略闭环优化
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ⑥人机协作配置 -->
+  <div class="section" id="s6">
+    <div class="section-header">
+      <div class="section-num">6</div>
+      <div>
+        <div style="font-size:15px;font-weight:700;">人机协作配置</div>
+        <div style="font-size:12px;color:#999;margin-top:2px;">数字员工工作时间 · AI 值班策略</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <table style="margin-bottom:16px;">
+        <tr><th style="width:160px;">配置项</th><th>默认值</th><th>说明</th></tr>
+        <tr><td><b>AI 值班时间</b></td><td>全天 00:00 ~ 24:00</td><td>商家可自定义关闭时段（如配置为「仅9:00~22:00」，其余时段自动回复兜底话术）</td></tr>
+        <tr><td><b>非值班兜底</b></td><td>「您好，已收到咨询，稍后联系您～」</td><td>不能真空；话术可配置；保留进线记录</td></tr>
+        <tr><td><b>人工在线优先</b></td><td>开启</td><td>检测到销售在线时，新进线优先路由人工（可关闭）</td></tr>
+        <tr><td><b>节假日模式</b></td><td>手动开启</td><td>开启后 AI 承接全部对话，回传提醒暂停</td></tr>
+        <tr><td><b>转人工阈值</b></td><td>置信度 &lt; 50%</td><td>滑动条可调（30%~70%），越低 = AI 多处理，越高 = 多转人工</td></tr>
+      </table>
+
+      <div style="font-size:13px;font-weight:700;margin-bottom:10px;color:#555;">AI 值班时段配置（UI 示意）</div>
+      <div style="background:#F9FAFB;border:1px solid #EBEBEB;border-radius:12px;padding:16px;">
+        <div style="font-size:12px;color:#bbb;margin-bottom:8px;">周一 ~ 周五</div>
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
+          <span style="font-size:11px;color:#bbb;width:28px;">0h</span>
+          <div style="flex:1;height:20px;border-radius:4px;background:linear-gradient(to right,#F3F4F6 0%,#F3F4F6 37.5%,#FF2442 37.5%,#FF2442 91.7%,#F3F4F6 91.7%);"></div>
+          <span style="font-size:11px;color:#bbb;width:28px;text-align:right;">24h</span>
+        </div>
+        <div style="display:flex;gap:12px;font-size:11px;margin-top:4px;justify-content:flex-end;">
+          <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#FF2442;display:inline-block;"></span>AI 值班 09:00~22:00</span>
+          <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#F3F4F6;border:1px solid #E5E7EB;display:inline-block;"></span>兜底话术</span>
+        </div>
+      </div>
+
+      <div class="hbox hbox-yellow" style="margin-top:12px;">
+        <b>联动提醒：</b>广告在投放时段内若 AI 未值班，展示红色警告「⚠️ 广告投放中但 AI 未值班，进线用户将收到兜底回复，建议开启 AI 或配置值班时间」
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ⑦线索状态流转 -->
+  <div class="section" id="s7">
+    <div class="section-header">
+      <div class="section-num">7</div>
+      <div>
+        <div style="font-size:15px;font-weight:700;">线索状态流转</div>
+        <div style="font-size:12px;color:#999;margin-top:2px;">Tab 栏状态映射 · 自动流转规则</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="flow-box">新进线索
+  └─ <span style="color:#3B82F6;">AI 处理中</span>（默认，进线即进入）
+       ├─ AI 完成应答 → 持续跟进
+       │    ├─ 沉默 48h → <span style="color:#D97706;">沉默池</span>（触发 AI 唤醒话术）
+       │    │    ├─ 用户回复 → 重回「AI 处理中」
+       │    │    └─ 30天无互动 → <span style="color:#9CA3AF;">已关闭</span>（归档）
+       │    └─ 销售接管 → <span style="color:#16A34A;">人工跟进中</span>
+       │         ├─ 填写「到访/成交」→ <span style="color:#9CA3AF;">已完成</span>
+       │         ├─ 填写「无效」→ <span style="color:#9CA3AF;">已关闭</span>
+       │         └─ 填写「跟进中」→ 继续停留（循环）
+       └─ AI 置信度低 → <span style="color:#EA580C;">待接管</span>（橙色提醒销售）
+            └─ 销售接管 → <span style="color:#16A34A;">人工跟进中</span></div>
+
+      <div style="margin-top:16px;">
+        <div style="font-size:13px;font-weight:700;margin-bottom:10px;color:#555;">Tab 栏与状态映射</div>
+        <table>
+          <tr><th>Tab 名称</th><th>包含状态</th><th>排序规则</th></tr>
+          <tr><td><b>跟进中</b></td><td>AI 处理中 + 人工跟进中</td><td>热线索优先，最新互动时间倒序</td></tr>
+          <tr><td><b>待跟进</b></td><td>待接管 + 沉默池</td><td>待接管置顶（橙色高亮），沉默时长倒序</td></tr>
+          <tr><td><b>已完成</b></td><td>已完成 + 已关闭</td><td>完成时间倒序</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ⑧待讨论 -->
+  <div class="section" id="s8">
+    <div class="section-header">
+      <div class="section-num">8</div>
+      <div>
+        <div style="font-size:15px;font-weight:700;">待讨论问题</div>
+        <div style="font-size:12px;color:#999;margin-top:2px;">需与研发、运营、投放团队对齐</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <table>
+        <tr><th style="width:240px;">问题</th><th>当前倾向 / 建议</th><th style="width:100px;">优先级</th></tr>
+        <tr>
+          <td>MVP 是否需要销售独立账号登录？</td>
+          <td>MVP 不做，主账号可直接操作；P1 支持子账号+角色权限，便于绩效统计</td>
+          <td><span class="tag tag-new">P1</span></td>
+        </tr>
+        <tr>
+          <td>留资卡等工具是否保留？</td>
+          <td>不做独立工具，通过 AI 对话过程引导+抓取线索信息</td>
+          <td><span style="background:#F0FDF4;color:#16A34A;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;">已决策</span></td>
+        </tr>
+        <tr>
+          <td>潜客列表/线索挽留能力</td>
+          <td>不做独立页面，封装成 Skill，在数字员工详情查看唤醒率/激活率</td>
+          <td><span style="background:#F0FDF4;color:#16A34A;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;">已决策</span></td>
+        </tr>
+        <tr>
+          <td>数字员工工作时间配置</td>
+          <td>周维度时间轴拖拽配置；与聚光投放排期联动告警</td>
+          <td><span class="tag tag-new">MVP</span></td>
+        </tr>
+        <tr>
+          <td>结果导出 / CRM 对接</td>
+          <td>MVP 做 Excel 导出；P1 做 Webhook 对接外部 CRM</td>
+          <td><span class="tag" style="background:#FEF3C7;color:#D97706;">P1</span></td>
+        </tr>
+        <tr>
+          <td>回传覆盖率过低时（&lt;30%）如何处理漏斗数据？</td>
+          <td>该层级显示绝对值+「⚠️ 参考值」提示，不显示百分比；解锁机制引导填写</td>
+          <td><span class="tag tag-new">MVP</span></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Demo 链接 -->
+  <div style="background:linear-gradient(135deg,#FFF0F2,#FFF7F8);border:1px solid #FFD6DC;border-radius:16px;padding:24px 28px;text-align:center;">
+    <div style="font-size:14px;font-weight:700;color:#CC1033;margin-bottom:8px;">🔗 交互 Demo</div>
+    <a href="https://cooooookie02.github.io/demo-shopping-agent/xhs-leads-demo/" target="_blank" style="font-size:15px;color:#FF2442;font-weight:600;text-decoration:none;background:#fff;padding:10px 24px;border-radius:10px;border:1.5px solid #FFB0BD;display:inline-block;">
+      cooooookie02.github.io/demo-shopping-agent/xhs-leads-demo/
+    </a>
+    <div style="font-size:12px;color:#bbb;margin-top:10px;">包含线索看板 · 线索工作台（旅游行业案例）· 预约管理 · 完整接管+回传交互</div>
+  </div>
+
+</div>
+</body>
+</html>
