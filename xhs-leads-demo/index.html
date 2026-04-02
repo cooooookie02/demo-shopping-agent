@@ -463,7 +463,7 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
         <div style="background:#FFF8F9;border:1px solid #FFE4E8;border-radius:11px;padding:12px 14px;">
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
             <span class="tag tag-hot" style="font-size:13px;padding:4px 12px;">🔴 高意向</span>
-            <span style="font-size:11px;color:#bbb;">置信度 92%</span>
+            <span style="font-size:11px;color:#bbb;">评分 91 · 热意向</span>
           </div>
           <div style="font-size:12px;color:#666;line-height:1.7;">
             <div style="display:flex;align-items:flex-start;gap:5px;margin-bottom:4px;"><span style="color:#FF2442;margin-top:1px;">•</span> 明确给出出行时间（五一4月28日）</div>
@@ -473,7 +473,7 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
         </div>
         <div style="margin-top:10px;font-size:11px;color:#bbb;">
           意向定义来自 · 私信通 AI 策略层<br>
-          <span style="color:#3B82F6;">热：主动问价/给日期/讨价还价</span>
+          <span style="color:#3B82F6;">热（≥60分）：主动问价/给日期/讨价还价 · 温（20~60分）：有咨询但未问价 · 冷（&lt;20分）：泛问/沉默</span>
         </div>
       </div>
 
@@ -494,7 +494,28 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
             <span>会话轮次</span><span style="color:#333;font-weight:500;">8 轮 · 8 分钟</span>
           </div>
           <div style="display:flex;justify-content:space-between;font-size:12px;color:#999;padding:2px 0;">
-            <span>触发 Skill</span><span style="color:#333;font-weight:500;">档期查询 · 报价</span>
+            <span>出行日期</span><span style="color:#333;font-weight:500;">五一 4月28日出发</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:#999;padding:2px 0;">
+            <span>目的地</span><span style="color:#333;font-weight:500;">云南大理 · 6日游</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:#999;padding:2px 0;">
+            <span>人数构成</span><span style="color:#333;font-weight:500;">2大1小（孩子6岁）</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:#999;padding:2px 0;">
+            <span>预算信号</span><span style="color:#333;font-weight:500;">已问价 · 求拼团折扣</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:#999;padding:2px 0;">
+            <span>核心顾虑</span><span style="color:#333;font-weight:500;">含接送机 · 民宿品质</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:#999;padding:2px 0;">
+            <span>预订意向</span><span style="color:#EF4444;font-weight:600;">已询问定金方式 ⚡</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:#999;padding:2px 0;">
+            <span>触发 Skill</span><span style="color:#333;font-weight:500;">行程查询 · 报价</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:#999;padding:2px 0;">
+            <span>来源笔记</span><span style="color:#3B82F6;font-weight:500;font-size:11px;max-width:130px;text-align:right;">大理究竟怎么玩，一条笔记说清楚</span>
           </div>
         </div>
       </div>
@@ -520,7 +541,7 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
           <div id="feedback-success" style="display:none;margin-top:8px;">
             <div class="flywheel">
               <div style="font-size:12px;font-weight:700;color:#CC1033;margin-bottom:3px;">✅ 回传成功</div>
-              <div style="font-size:11px;color:#FF7A8E;line-height:1.6;">数据已同步投放模型<br>预计本周有效线索率 <b>↑ 5%~8%</b></div>
+              <div style="font-size:11px;color:#FF7A8E;line-height:1.6;">数据已同步投放模型<br>本月已回传 <b id="fb-count">31</b> 条，预估有效线索率 <b>↑ 8%</b></div>
             </div>
             <div style="margin-top:8px;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;padding:8px 10px;font-size:11px;color:#15803D;line-height:1.55;">
               <b>数据流向</b>：线索ID · 意向标签 · 回传状态 · 时间戳 → 知然归因模型 → 投放优化
