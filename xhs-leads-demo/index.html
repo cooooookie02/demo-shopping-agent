@@ -641,10 +641,10 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
     </div>
 
     <!-- 进线趋势 + 转化漏斗 -->
-    <div style="display:grid;grid-template-columns:1fr 400px;gap:14px;align-items:start;">
+    <div style="display:grid;grid-template-columns:1fr 400px;gap:14px;align-items:stretch;">
 
       <!-- 进线趋势折线图 -->
-      <div class="card" style="padding:20px 22px;">
+      <div class="card" style="padding:20px 22px;display:flex;flex-direction:column;">
         <div style="font-size:13px;font-weight:700;margin-bottom:10px;">进线趋势</div>
         <!-- 图例 -->
         <div style="display:flex;gap:18px;margin-bottom:10px;">
@@ -658,24 +658,26 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
             <span style="display:inline-block;width:22px;height:2px;background:#10B981;border-radius:2px;vertical-align:middle;"></span>转化数
           </div>
         </div>
-        <!-- 图表区域 -->
-        <div style="display:flex;gap:0;">
+        <!-- 图表区域：flex 撑满剩余高度 -->
+        <div style="display:flex;gap:0;flex:1;min-height:0;">
           <!-- Y轴 -->
-          <div style="display:flex;flex-direction:column;justify-content:space-between;align-items:flex-end;padding-right:8px;height:200px;font-size:10px;color:#C0C0C0;user-select:none;" id="y-axis-labels">
+          <div style="display:flex;flex-direction:column;justify-content:space-between;align-items:flex-end;padding-right:8px;font-size:10px;color:#C0C0C0;user-select:none;padding-bottom:18px;" id="y-axis-labels">
             <span>70</span><span>60</span><span>50</span><span>40</span><span>30</span><span>20</span><span>10</span><span>0</span>
           </div>
-          <div style="flex:1;position:relative;">
-            <canvas id="trend-chart" height="200" style="display:block;width:100%;"></canvas>
+          <div style="flex:1;display:flex;flex-direction:column;min-width:0;">
+            <div style="flex:1;position:relative;min-height:0;">
+              <canvas id="trend-chart" style="position:absolute;inset:0;width:100%;height:100%;display:block;"></canvas>
+            </div>
+            <!-- X轴标签 -->
+            <div style="display:flex;justify-content:space-between;margin-top:5px;font-size:10px;color:#C0C0C0;" id="trend-x-labels"></div>
           </div>
         </div>
-        <!-- X轴标签 -->
-        <div style="display:flex;justify-content:space-between;padding-left:32px;margin-top:5px;font-size:10px;color:#C0C0C0;" id="trend-x-labels"></div>
       </div>
 
       <!-- 转化漏斗 -->
-      <div class="card" style="padding:20px 22px;">
+      <div class="card" style="padding:20px 22px;display:flex;flex-direction:column;">
         <div style="font-size:13px;font-weight:700;margin-bottom:16px;">转化漏斗</div>
-        <div id="funnel-wrap"></div>
+        <div id="funnel-wrap" style="flex:1;display:flex;flex-direction:column;justify-content:space-between;"></div>
       </div>
 
     </div>
@@ -944,7 +946,7 @@ function switchPeriod(radio) {
     const canvas = document.getElementById('trend-chart');
     if (!canvas) return;
     const W = canvas.offsetWidth || 400;
-    const H = 200;
+    const H = canvas.offsetHeight || 200;
     canvas.width = W;
     canvas.height = H;
     const ctx = canvas.getContext('2d');
@@ -997,11 +999,11 @@ function switchPeriod(radio) {
 (function buildFunnel() {
   const steps = [
     { label: '点击进线（新增线索）', sub: '广告私信 / 留资 / 评论引导', val: '62 条', color: '#1a1a1a', barW: '100%' },
-    { label: 'AI 承接完成应答',       sub: 'AI query 覆盖',              val: '49 条 · 79%', color: '#1a1a1a', barW: '79%', tip: 'AI 首响率 > 95%' },
-    { label: '意向激活（温 + 热）',    sub: '评分 ≥ 40 分',              val: '38 条 · 61%', color: '#FF2442', barW: '61%', tip: '意向激活率' },
-    { label: '人工接管 / 持续跟进',    sub: '销售承接热线索',             val: '15 条',       color: '#1a1a1a', barW: '24%', tip: '热线索接管率 ~60%' },
-    { label: '到访 / 下单',            sub: '线下到访或平台成交',         val: '9 条',        color: '#1a1a1a', barW: '15%', tip: '到访率' },
-    { label: '成交',                   sub: '依赖回传确认',               val: '5 条 · 8.3%', color: '#FF2442', barW: '8%',  tip: '转化率', highlight: true },
+    { label: 'AI 承接完成应答',       sub: 'AI query 覆盖',              val: '49 条 · 79%', color: '#1a1a1a', barW: '79%' },
+    { label: '意向激活（温 + 热）',    sub: '评分 ≥ 40 分',              val: '38 条 · 61%', color: '#FF2442', barW: '61%' },
+    { label: '人工接管 / 持续跟进',    sub: '销售承接热线索',             val: '15 条',       color: '#1a1a1a', barW: '24%' },
+    { label: '到访 / 下单',            sub: '线下到访或平台成交',         val: '9 条',        color: '#1a1a1a', barW: '15%' },
+    { label: '成交',                   sub: '依赖回传确认',               val: '5 条 · 8.3%', color: '#FF2442', barW: '8%', highlight: true },
   ];
 
   function render() {
@@ -1013,24 +1015,19 @@ function switchPeriod(radio) {
       const borderStyle = s.highlight ? '2px solid #FF2442' : '1.5px solid #EBEBEB';
       const bg = s.highlight ? '#FFF0F2' : '#fff';
       html += `
-        <div style="border:${borderStyle};border-radius:9px;padding:10px 14px;background:${bg};display:flex;align-items:center;justify-content:space-between;">
+        <div style="border:${borderStyle};border-radius:9px;padding:9px 14px;background:${bg};display:flex;align-items:center;justify-content:space-between;">
           <div style="flex:1;min-width:0;">
             <div style="font-size:12px;font-weight:600;color:#1a1a1a;">${s.label}</div>
             <div style="font-size:10px;color:#bbb;margin-top:2px;">${s.sub}</div>
-            <!-- 进度条 -->
-            <div style="height:4px;background:#F3F4F6;border-radius:3px;margin-top:7px;overflow:hidden;">
-              <div style="height:100%;width:${s.barW};background:${s.highlight ? '#FF2442' : (i===0?'#3B82F6':'#94A3B8')};border-radius:3px;transition:width .6s;"></div>
+            <div style="height:4px;background:#F3F4F6;border-radius:3px;margin-top:6px;overflow:hidden;">
+              <div style="height:100%;width:${s.barW};background:${s.highlight ? '#FF2442' : (i===0?'#3B82F6':'#94A3B8')};border-radius:3px;"></div>
             </div>
           </div>
           <div style="font-size:13px;font-weight:700;color:${s.color};margin-left:14px;white-space:nowrap;">${s.val}</div>
         </div>`;
       if (!isLast) {
-        const tip = s.tip || '';
-        html += `
-        <div style="display:flex;flex-direction:column;align-items:center;padding:2px 0;">
-          <div style="width:1.5px;height:10px;background:linear-gradient(to bottom,#FFB0BD,#FF6B7A);"></div>
-          ${tip ? `<span style="font-size:10px;color:#FF7A8E;font-weight:500;background:#FFF0F2;border-radius:20px;padding:1px 8px;white-space:nowrap;">${tip}</span>` : ''}
-          <div style="width:1.5px;height:10px;background:linear-gradient(to bottom,#FF6B7A,#FFB0BD);"></div>
+        html += `<div style="display:flex;justify-content:center;padding:3px 0;">
+          <div style="width:1.5px;height:14px;background:linear-gradient(to bottom,#E5E7EB,#D1D5DB);"></div>
         </div>`;
       }
     });
