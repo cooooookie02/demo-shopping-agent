@@ -765,6 +765,8 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
             <th style="padding:12px 16px;text-align:left;font-size:12px;font-weight:600;color:#999;white-space:nowrap;">私信时间</th>
             <th style="padding:12px 16px;text-align:left;font-size:12px;font-weight:600;color:#999;white-space:nowrap;">是否消耗私信次数</th>
             <th style="padding:12px 16px;text-align:left;font-size:12px;font-weight:600;color:#999;white-space:nowrap;">标签</th>
+            <th style="padding:12px 16px;text-align:left;font-size:12px;font-weight:600;color:#999;white-space:nowrap;">预约信息</th>
+            <th style="padding:12px 16px;text-align:left;font-size:12px;font-weight:600;color:#999;white-space:nowrap;">成交状态</th>
             <th style="padding:12px 16px;text-align:left;font-size:12px;font-weight:600;color:#999;white-space:nowrap;">授权账号信息</th>
             <th style="padding:12px 20px;text-align:left;font-size:12px;font-weight:600;color:#999;white-space:nowrap;">操作</th>
           </tr>
@@ -892,14 +894,14 @@ function submitFeedback() {
 
 // ══ 用户管理表格 ══
 const umData = [
-  { avatar:'李', name:'李白来到烤...', uid:'61e93eaa...', time:'2026-04-01 17:49:22', itype:'未关注', dm:'未私信', dmTime:'-', cost:'是', tag:'留客资', auth:'--', dmSent:false },
-  { avatar:'二', name:'二十六个黑...', uid:'5b17add9e...', time:'2026-04-01 17:46:05', itype:'未关注', dm:'未私信', dmTime:'-', cost:'是', tag:'留客资', auth:'--', dmSent:false },
-  { avatar:'小', name:'小红薯671B...', uid:'671b4bcb...', time:'2026-04-01 13:00:16', itype:'未关注', dm:'未私信', dmTime:'-', cost:'是', tag:'-', auth:'--', dmSent:false },
-  { avatar:'小', name:'小红薯69C...', uid:'69ca1ff70...', time:'2026-03-30 16:32:53', itype:'关注', dm:'已私信', dmTime:'2026-03-30 16:32:55', cost:'否', tag:'留客资', auth:'--', dmSent:true },
-  { avatar:'三', name:'三七不怎么管', uid:'591a9fb28...', time:'2026-03-30 14:51:47', itype:'评论(1)、未关注', dm:'已私信', dmTime:'2026-03-30 14:47:37', cost:'是', tag:'留客资', auth:'--', dmSent:true },
-  { avatar:'土', name:'土漆生漆《...', uid:'66b64ff20...', time:'2026-03-29 18:28:34', itype:'关注', dm:'未私信', dmTime:'-', cost:'否', tag:'-', auth:'--', dmSent:false },
-  { avatar:'下', name:'下个路口见', uid:'62bc4207...', time:'2026-03-27 10:32:06', itype:'评论(1)', dm:'未私信', dmTime:'-', cost:'是', tag:'-', auth:'--', dmSent:false },
-  { avatar:'小', name:'小红薯66A...', uid:'66ab8272...', time:'2026-03-26 22:59:56', itype:'关注', dm:'未私信', dmTime:'-', cost:'否', tag:'-', auth:'--', dmSent:false },
+  { avatar:'梅', name:'梅子酱', uid:'61e93eaa...', time:'2026-04-01 17:49', itype:'未关注', dm:'已私信', dmTime:'2026-04-01 17:50', cost:'是', tag:'留客资', book:'05-14 10:00', deal:'已成交', auth:'--', dmSent:true },
+  { avatar:'晴', name:'晴天小鹿', uid:'5b17add9e...', time:'2026-04-01 17:46', itype:'关注', dm:'已私信', dmTime:'2026-04-01 17:47', cost:'否', tag:'留客资', book:'05-21 09:00', deal:'未成交', auth:'--', dmSent:true },
+  { avatar:'糖', name:'糖糖爱摄影', uid:'671b4bcb...', time:'2026-04-01 13:00', itype:'未关注', dm:'已私信', dmTime:'2026-04-01 13:01', cost:'是', tag:'留客资', book:'03-28 10:00', deal:'已成交', auth:'--', dmSent:true },
+  { avatar:'云', name:'云淡风轻之旅', uid:'69ca1ff70...', time:'2026-03-30 16:32', itype:'关注', dm:'已私信', dmTime:'2026-03-30 16:33', cost:'否', tag:'留客资', book:'06-07 14:00', deal:'-', auth:'--', dmSent:true },
+  { avatar:'三', name:'三七不怎么管', uid:'591a9fb28...', time:'2026-03-30 14:51', itype:'评论(1)', dm:'已私信', dmTime:'2026-03-30 14:47', cost:'是', tag:'留客资', book:'-', deal:'-', auth:'--', dmSent:true },
+  { avatar:'土', name:'土漆生漆', uid:'66b64ff20...', time:'2026-03-29 18:28', itype:'关注', dm:'未私信', dmTime:'-', cost:'否', tag:'-', book:'-', deal:'-', auth:'--', dmSent:false },
+  { avatar:'李', name:'李白来到烤', uid:'62bc4207...', time:'2026-03-27 10:32', itype:'评论(1)', dm:'未私信', dmTime:'-', cost:'是', tag:'-', book:'-', deal:'-', auth:'--', dmSent:false },
+  { avatar:'小', name:'小红薯66A...', uid:'66ab8272...', time:'2026-03-26 22:59', itype:'关注', dm:'未私信', dmTime:'-', cost:'否', tag:'-', book:'-', deal:'-', auth:'--', dmSent:false },
 ];
 
 const avatarColors = ['linear-gradient(135deg,#FF7A8E,#FF2442)','linear-gradient(135deg,#C084FC,#A855F7)','linear-gradient(135deg,#FCD34D,#F59E0B)','linear-gradient(135deg,#6EE7B7,#059669)','linear-gradient(135deg,#93C5FD,#60A5FA)','linear-gradient(135deg,#818CF8,#6366F1)','linear-gradient(135deg,#FB923C,#F97316)','linear-gradient(135deg,#34D399,#10B981)'];
@@ -914,6 +916,14 @@ function renderUmTable(data) {
   tbody.innerHTML = data.map((u, i) => {
     const dmColor = u.dm === '已私信' ? '#10B981' : '#EF4444';
     const tagHtml = u.tag !== '-' ? `<span style="background:#FEF3C7;color:#D97706;font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;">${u.tag}</span>` : `<span style="color:#bbb;">-</span>`;
+    const bookHtml = u.book !== '-'
+      ? `<span style="display:inline-flex;align-items:center;gap:4px;font-size:12px;color:#16A34A;"><span style="width:6px;height:6px;border-radius:50%;background:#10B981;display:inline-block;"></span>${u.book}</span>`
+      : `<span style="color:#bbb;font-size:12px;">-</span>`;
+    const dealHtml = u.deal === '已成交'
+      ? `<span style="background:#FEF3C7;color:#D97706;font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;">🎉 已成交</span>`
+      : u.deal === '未成交'
+      ? `<span style="background:#F3F4F6;color:#9CA3AF;font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;">未成交</span>`
+      : `<span style="color:#bbb;font-size:12px;">-</span>`;
     const actionHtml = u.dmSent
       ? `<span style="color:#3B82F6;font-size:12px;cursor:pointer;font-weight:500;" onclick="showPage('wb')">查看会话</span>`
       : `<span style="color:#3B82F6;font-size:12px;cursor:pointer;font-weight:500;" onclick="showPage('wb')">私信回复</span>`;
@@ -938,6 +948,8 @@ function renderUmTable(data) {
       <td style="padding:14px 16px;font-size:12px;color:#555;white-space:nowrap;">${u.dmTime}</td>
       <td style="padding:14px 16px;font-size:12px;color:#555;">${u.cost}</td>
       <td style="padding:14px 16px;">${tagHtml}</td>
+      <td style="padding:14px 16px;">${bookHtml}</td>
+      <td style="padding:14px 16px;">${dealHtml}</td>
       <td style="padding:14px 16px;font-size:12px;color:#bbb;">${u.auth}</td>
       <td style="padding:14px 20px;">${actionHtml}</td>
     </tr>`;
