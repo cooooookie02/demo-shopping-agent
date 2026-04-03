@@ -191,8 +191,12 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
       <span style="font-size:15px;font-weight:700;">线索工作台</span>
       <span style="font-size:12px;color:#999;margin-left:10px;">实时对话管理</span>
     </div>
-    <div style="display:flex;align-items:center;gap:8px;">
-      <span style="font-size:12px;color:#999;background:#F5F5F5;padding:4px 10px;border-radius:20px;">🔄 自动刷新 30s</span>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div style="display:flex;align-items:center;gap:7px;border:1.5px solid #E5E7EB;border-radius:8px;padding:5px 14px;font-size:12px;color:#555;background:#fff;">
+        <span style="color:#999;">最后更新:</span>
+        <span id="wb-ts" style="font-weight:600;color:#1a1a1a;">2026-04-03 15:30:00</span>
+        <svg id="wb-refresh-icon" onclick="refreshWb()" style="cursor:pointer;color:#888;flex-shrink:0;transition:transform .6s;" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+      </div>
     </div>
   </div>
 
@@ -209,6 +213,27 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
         <div style="margin-top:8px;position:relative;">
           <input placeholder="搜索线索…" style="width:100%;border:1px solid #EBEBEB;border-radius:7px;padding:6px 10px 6px 28px;font-size:12px;color:#555;outline:none;background:#FAFAFA;">
           <svg style="position:absolute;left:9px;top:50%;transform:translateY(-50%);opacity:.4;" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        </div>
+        <!-- 筛选 + 排序 -->
+        <div style="display:flex;gap:6px;margin-top:8px;">
+          <!-- 意向等级筛选 -->
+          <div style="position:relative;flex:1;">
+            <select id="filter-intent" onchange="applyWbFilter()" style="width:100%;appearance:none;-webkit-appearance:none;border:1px solid #E5E7EB;border-radius:7px;padding:5px 24px 5px 10px;font-size:12px;color:#555;background:#fff;outline:none;cursor:pointer;">
+              <option value="">意向等级</option>
+              <option value="hot">🔴 热意向</option>
+              <option value="warm">🟡 温意向</option>
+              <option value="cold">⚪ 冷意向</option>
+            </select>
+            <svg style="position:absolute;right:7px;top:50%;transform:translateY(-50%);pointer-events:none;color:#bbb;" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <!-- 排序 -->
+          <div style="position:relative;flex:1;">
+            <select id="sort-mode" onchange="applyWbFilter()" style="width:100%;appearance:none;-webkit-appearance:none;border:1px solid #E5E7EB;border-radius:7px;padding:5px 24px 5px 10px;font-size:12px;color:#555;background:#fff;outline:none;cursor:pointer;">
+              <option value="time">按时间</option>
+              <option value="score">按分数</option>
+            </select>
+            <svg style="position:absolute;right:7px;top:50%;transform:translateY(-50%);pointer-events:none;color:#bbb;" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
         </div>
       </div>
 
@@ -471,10 +496,7 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
             <div style="display:flex;align-items:flex-start;gap:5px;"><span style="color:#FF2442;margin-top:1px;">•</span> 主动提出拼团，询问折扣，购买意愿强</div>
           </div>
         </div>
-        <div style="margin-top:10px;font-size:11px;color:#bbb;">
-          意向定义来自 · 私信通 AI 策略层<br>
-          <span style="color:#3B82F6;">热（≥60分）：主动问价/给日期/讨价还价 · 温（20~60分）：有咨询但未问价 · 冷（&lt;20分）：泛问/沉默</span>
-        </div>
+
       </div>
 
       <!-- 客户档案 -->
@@ -558,231 +580,107 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
   页面②：线索看板
 ═══════════════════════════════════ -->
 <div id="page-board" class="page active">
+  <!-- Topbar -->
   <div class="topbar">
     <div>
-      <span style="font-size:15px;font-weight:700;">线索看板</span>
-      <span style="font-size:12px;color:#999;margin-left:10px;">今日数据 · 2026年4月1日</span>
+      <span style="font-size:15px;font-weight:700;">数据看板</span>
     </div>
-    <div style="display:flex;align-items:center;gap:10px;">
-      <span style="font-size:12px;color:#10B981;background:#F0FDF4;border:1px solid #BBF7D0;padding:4px 10px;border-radius:20px;">● 数据最后刷新 10:38</span>
-      <button class="btn-ghost btn-sm" onclick="refreshBoard()">🔄 立即刷新</button>
+    <!-- 右上角：最后更新时间 + 刷新图标 -->
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div style="display:flex;align-items:center;gap:7px;border:1.5px solid #E5E7EB;border-radius:8px;padding:5px 14px;font-size:12px;color:#555;background:#fff;">
+        <span style="color:#999;">最后更新:</span>
+        <span id="board-ts" style="font-weight:600;color:#1a1a1a;">2026-04-03 15:30:00</span>
+        <svg id="board-refresh-icon" onclick="refreshBoard()" style="cursor:pointer;color:#888;flex-shrink:0;transition:transform .6s;" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+      </div>
       <button class="btn-red btn-sm" onclick="showPage('wb')">进工作台跟进 →</button>
     </div>
   </div>
 
   <div class="page-body">
-    <!-- 总览卡片 -->
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;">
+    <!-- 统计周期 -->
+    <div style="display:flex;align-items:center;gap:4px;margin-bottom:18px;font-size:13px;color:#555;flex-wrap:wrap;">
+      <span style="font-weight:500;color:#888;margin-right:6px;">统计周期：</span>
+      <label style="display:flex;align-items:center;gap:5px;cursor:pointer;"><input type="radio" name="period" value="today" checked onchange="switchPeriod(this)" style="accent-color:#FF2442;"> 今天</label>
+      <label style="display:flex;align-items:center;gap:5px;cursor:pointer;margin-left:12px;"><input type="radio" name="period" value="week" onchange="switchPeriod(this)" style="accent-color:#FF2442;"> 本周</label>
+      <label style="display:flex;align-items:center;gap:5px;cursor:pointer;margin-left:12px;"><input type="radio" name="period" value="month" onchange="switchPeriod(this)" style="accent-color:#FF2442;"> 本月</label>
+      <div style="display:flex;align-items:center;gap:6px;margin-left:12px;color:#bbb;border:1px solid #EBEBEB;border-radius:7px;padding:4px 10px;font-size:11px;background:#FAFAFA;">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <span>2026-04-01</span><span>至</span><span>2026-04-03</span>
+      </div>
+      <label style="display:flex;align-items:center;gap:5px;cursor:pointer;margin-left:12px;"><input type="radio" name="period" value="custom" onchange="switchPeriod(this)" style="accent-color:#FF2442;"> 自定义</label>
+    </div>
+
+    <!-- 5个核心指标卡 -->
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px;">
       <div class="stat-card">
-        <div style="font-size:11px;color:#999;margin-bottom:6px;">今日新增线索</div>
-        <div style="font-size:30px;font-weight:800;line-height:1;color:#1a1a1a;">47</div>
-        <div style="margin-top:6px;font-size:11px;color:#10B981;font-weight:600;">↑ 12% 较昨日</div>
-        <div style="position:absolute;top:16px;right:16px;font-size:24px;opacity:.6;">🎯</div>
+        <div style="font-size:11px;color:#999;margin-bottom:8px;">新增线索</div>
+        <div style="font-size:32px;font-weight:800;line-height:1;color:#1a1a1a;">62 <span style="font-size:14px;color:#10B981;font-weight:600;">+18%</span></div>
+        <div style="margin-top:6px;font-size:11px;color:#bbb;">今日</div>
       </div>
       <div class="stat-card">
-        <div style="font-size:11px;color:#999;margin-bottom:6px;">高意向线索</div>
-        <div style="font-size:30px;font-weight:800;line-height:1;color:#1a1a1a;">18</div>
-        <div style="margin-top:6px;display:flex;gap:5px;">
-          <span class="tag tag-hot">热 8</span><span class="tag tag-warm">温 10</span>
-        </div>
-        <div style="position:absolute;top:16px;right:16px;font-size:24px;opacity:.6;">🔥</div>
+        <div style="font-size:11px;color:#999;margin-bottom:8px;">热线索</div>
+        <div style="font-size:32px;font-weight:800;line-height:1;color:#1a1a1a;">24</div>
+        <div style="margin-top:6px;font-size:11px;color:#bbb;">热9/温15</div>
       </div>
       <div class="stat-card">
-        <div style="font-size:11px;color:#999;margin-bottom:6px;">AI 处理率</div>
-        <div style="font-size:30px;font-weight:800;line-height:1;color:#1a1a1a;">76%</div>
-        <div style="margin-top:6px;font-size:11px;color:#999;">36 / 47 条 AI 自动处理</div>
-        <div style="position:absolute;top:16px;right:16px;font-size:24px;opacity:.6;">🤖</div>
+        <div style="font-size:11px;color:#999;margin-bottom:8px;">转化率</div>
+        <div style="font-size:32px;font-weight:800;line-height:1;color:#1a1a1a;">8.3%</div>
+        <div style="margin-top:6px;font-size:11px;color:#bbb;">回传覆盖71%</div>
       </div>
       <div class="stat-card">
-        <div style="font-size:11px;color:#999;margin-bottom:6px;">回传完成率</div>
-        <div style="font-size:30px;font-weight:800;line-height:1;color:#FF2442;">62%</div>
-        <div style="margin-top:6px;font-size:11px;color:#FF2442;font-weight:600;">↑ 5% · 投放持续优化中</div>
-        <div style="position:absolute;top:16px;right:16px;font-size:24px;opacity:.6;">♻️</div>
+        <div style="font-size:11px;color:#999;margin-bottom:8px;">AI覆盖率</div>
+        <div style="font-size:32px;font-weight:800;line-height:1;color:#1a1a1a;">79%</div>
+        <div style="margin-top:6px;font-size:11px;color:#bbb;">49/62条</div>
+      </div>
+      <!-- 响应速度：AI 和人工字号接近 -->
+      <div class="stat-card">
+        <div style="font-size:11px;color:#999;margin-bottom:8px;">响应速度</div>
+        <div style="font-size:22px;font-weight:800;line-height:1.3;color:#1a1a1a;">AI: 1.8s</div>
+        <div style="font-size:20px;font-weight:700;line-height:1.3;color:#555;">人工: 11min</div>
       </div>
     </div>
 
-    <!-- 图表 + 意向分布 -->
-    <div style="display:grid;grid-template-columns:1fr 320px;gap:14px;margin-bottom:20px;">
-      <!-- 柱状图 -->
-      <div class="card" style="padding:18px 22px;">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-          <span style="font-size:13px;font-weight:700;">近7日线索趋势</span>
-          <span style="font-size:11px;color:#bbb;">刷新间隔 5min · 数据来自私信通</span>
-        </div>
-        <div style="display:flex;align-items:flex-end;gap:6px;height:90px;">
-          <div class="chart-col"><div class="chart-val">32</div><div class="chart-bar" style="height:65%;background:linear-gradient(to top,#FFBCC5,#FFD6DC);"></div><div class="chart-lbl">3/26</div></div>
-          <div class="chart-col"><div class="chart-val">28</div><div class="chart-bar" style="height:56%;background:linear-gradient(to top,#FFBCC5,#FFD6DC);"></div><div class="chart-lbl">3/27</div></div>
-          <div class="chart-col"><div class="chart-val">41</div><div class="chart-bar" style="height:82%;background:linear-gradient(to top,#FF8E9E,#FFB0BD);"></div><div class="chart-lbl">3/28</div></div>
-          <div class="chart-col"><div class="chart-val">35</div><div class="chart-bar" style="height:70%;background:linear-gradient(to top,#FFBCC5,#FFD6DC);"></div><div class="chart-lbl">3/29</div></div>
-          <div class="chart-col"><div class="chart-val">38</div><div class="chart-bar" style="height:76%;background:linear-gradient(to top,#FF8E9E,#FFB0BD);"></div><div class="chart-lbl">3/30</div></div>
-          <div class="chart-col"><div class="chart-val">42</div><div class="chart-bar" style="height:84%;background:linear-gradient(to top,#FF7A8E,#FFAAB8);"></div><div class="chart-lbl">3/31</div></div>
-          <div class="chart-col"><div class="chart-val today">47</div><div class="chart-bar" style="height:94%;background:linear-gradient(to top,#FF2442,#FF6B7A);box-shadow:0 3px 10px rgba(255,36,66,.4);"></div><div class="chart-lbl today">今日</div></div>
-        </div>
-      </div>
-      <!-- 意向分布 -->
-      <div class="card" style="padding:18px 22px;">
-        <div style="font-size:13px;font-weight:700;margin-bottom:14px;">今日意向分布</div>
-        <div style="display:flex;flex-direction:column;gap:12px;">
-          <div>
-            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px;">
-              <span style="display:flex;align-items:center;gap:5px;color:#555;"><span style="width:8px;height:8px;border-radius:2px;background:#FF2442;display:inline-block;"></span>热意向</span>
-              <span style="font-weight:700;color:#FF2442;">8 条 · 17%</span>
-            </div>
-            <div style="height:7px;background:#F3F4F6;border-radius:4px;overflow:hidden;"><div style="height:100%;width:17%;background:linear-gradient(to right,#FF2442,#FF6B7A);border-radius:4px;"></div></div>
-          </div>
-          <div>
-            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px;">
-              <span style="display:flex;align-items:center;gap:5px;color:#555;"><span style="width:8px;height:8px;border-radius:2px;background:#FBBF24;display:inline-block;"></span>温意向</span>
-              <span style="font-weight:700;color:#D97706;">21 条 · 45%</span>
-            </div>
-            <div style="height:7px;background:#F3F4F6;border-radius:4px;overflow:hidden;"><div style="height:100%;width:45%;background:linear-gradient(to right,#FBBF24,#FCD34D);border-radius:4px;"></div></div>
-          </div>
-          <div>
-            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px;">
-              <span style="display:flex;align-items:center;gap:5px;color:#555;"><span style="width:8px;height:8px;border-radius:2px;background:#D1D5DB;display:inline-block;"></span>冷意向</span>
-              <span style="font-weight:700;color:#9CA3AF;">18 条 · 38%</span>
-            </div>
-            <div style="height:7px;background:#F3F4F6;border-radius:4px;overflow:hidden;"><div style="height:100%;width:38%;background:#D1D5DB;border-radius:4px;"></div></div>
-          </div>
-        </div>
-        <div style="margin-top:14px;background:linear-gradient(135deg,#FFF0F2,#FFF7F8);border:1px solid #FFD6DC;border-radius:9px;padding:9px 12px;font-size:11px;color:#CC1033;font-weight:500;line-height:1.65;">
-          💡 本周回传 31 条，有效线索率 <b>↑ 8%</b>，继续回传可提升投放精准度
-        </div>
-      </div>
-    </div>
+    <!-- 进线趋势 + 转化漏斗 -->
+    <div style="display:grid;grid-template-columns:1fr 400px;gap:14px;align-items:start;">
 
-    <!-- 两列队列 -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
-      <!-- 高意向队列 -->
-      <div class="card">
-        <div style="padding:14px 18px 10px;border-bottom:1px solid #F5F5F5;display:flex;align-items:center;justify-content:space-between;">
-          <div>
-            <span style="font-size:13px;font-weight:700;">🔥 高意向 · 优先跟进</span>
-            <span style="font-size:11px;color:#bbb;margin-left:8px;">热线索优先排列</span>
+      <!-- 进线趋势折线图 -->
+      <div class="card" style="padding:20px 22px;">
+        <div style="font-size:13px;font-weight:700;margin-bottom:10px;">进线趋势</div>
+        <!-- 图例 -->
+        <div style="display:flex;gap:18px;margin-bottom:10px;">
+          <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#555;">
+            <span style="display:inline-block;width:22px;height:2px;background:#3B82F6;border-radius:2px;vertical-align:middle;"></span>新增线索
           </div>
-          <button class="btn-ghost btn-sm" onclick="showPage('wb')" style="font-size:11px;">全部 →</button>
-        </div>
-        <div>
-          <!-- 热线索 1 -->
-          <div class="lead-row" onclick="showPage('wb')">
-            <div class="av" style="width:34px;height:34px;font-size:12px;background:linear-gradient(135deg,#FF7A8E,#FF2442);">梅</div>
-            <div style="flex:1;min-width:0;">
-              <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
-                <span style="font-size:13px;font-weight:600;">梅子酱</span>
-                <span class="tag tag-hot">🔴 热</span>
-              </div>
-              <div style="font-size:11px;color:#999;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">问了行程+报价+拼团折扣，等待接管</div>
-            </div>
-            <div style="text-align:right;flex-shrink:0;">
-              <button class="btn-red btn-sm" onclick="event.stopPropagation();showPage('wb')">跟进</button>
-            </div>
+          <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#555;">
+            <span style="display:inline-block;width:22px;height:2px;background:#EF4444;border-radius:2px;vertical-align:middle;"></span>热线索
           </div>
-          <!-- 热线索 2 -->
-          <div class="lead-row" onclick="showPage('wb')">
-            <div class="av" style="width:34px;height:34px;font-size:12px;background:linear-gradient(135deg,#C084FC,#A855F7);">晴</div>
-            <div style="flex:1;min-width:0;">
-              <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
-                <span style="font-size:13px;font-weight:600;">晴天小鹿</span>
-                <span class="tag tag-hot">🔴 热</span>
-              </div>
-              <div style="font-size:11px;color:#999;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">对比了2家旅行社，询问含机票方案</div>
-            </div>
-            <div style="text-align:right;flex-shrink:0;">
-              <button class="btn-red btn-sm" onclick="event.stopPropagation();showPage('wb')">跟进</button>
-            </div>
-          </div>
-          <!-- 温线索 -->
-          <div class="lead-row" onclick="showPage('wb')">
-            <div class="av" style="width:34px;height:34px;font-size:12px;background:linear-gradient(135deg,#FCD34D,#F59E0B);">糖</div>
-            <div style="flex:1;min-width:0;">
-              <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
-                <span style="font-size:13px;font-weight:600;">糖糖爱摄影</span>
-                <span class="tag tag-warm">🟡 温</span>
-              </div>
-              <div style="font-size:11px;color:#999;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">咨询三亚亲子游，想看行程详情</div>
-            </div>
-            <div style="text-align:right;flex-shrink:0;">
-              <button class="btn-ghost btn-sm" onclick="event.stopPropagation();showPage('wb')">跟进</button>
-            </div>
-          </div>
-          <!-- 看板内快速回传入口 -->
-          <div style="padding:10px 16px;background:#FAFAFA;border-top:1px solid #F0F0F0;">
-            <div style="display:flex;align-items:center;justify-content:space-between;">
-              <span style="font-size:11px;color:#bbb;">📝 看板快捷回传</span>
-              <button class="btn-ghost btn-sm" style="font-size:11px;" onclick="openFeedbackModal()">标记结果</button>
-            </div>
+          <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#555;">
+            <span style="display:inline-block;width:22px;height:2px;background:#10B981;border-radius:2px;vertical-align:middle;"></span>转化数
           </div>
         </div>
+        <!-- 图表区域 -->
+        <div style="display:flex;gap:0;">
+          <!-- Y轴 -->
+          <div style="display:flex;flex-direction:column;justify-content:space-between;align-items:flex-end;padding-right:8px;height:200px;font-size:10px;color:#C0C0C0;user-select:none;" id="y-axis-labels">
+            <span>70</span><span>60</span><span>50</span><span>40</span><span>30</span><span>20</span><span>10</span><span>0</span>
+          </div>
+          <div style="flex:1;position:relative;">
+            <canvas id="trend-chart" height="200" style="display:block;width:100%;"></canvas>
+          </div>
+        </div>
+        <!-- X轴标签 -->
+        <div style="display:flex;justify-content:space-between;padding-left:32px;margin-top:5px;font-size:10px;color:#C0C0C0;" id="trend-x-labels"></div>
       </div>
 
-      <!-- 沉默唤醒队列 -->
-      <div class="card">
-        <div style="padding:14px 18px 10px;border-bottom:1px solid #F5F5F5;display:flex;align-items:center;justify-content:space-between;">
-          <div>
-            <span style="font-size:13px;font-weight:700;">😴 沉默线索 · 待唤醒</span>
-            <span style="font-size:11px;color:#bbb;margin-left:8px;">≥ 48h 未回复</span>
-          </div>
-          <span style="font-size:11px;color:#EA580C;background:#FFF7ED;padding:2px 8px;border-radius:20px;font-weight:600;">3 条</span>
-        </div>
-        <div>
-          <div class="lead-row">
-            <div class="av" style="width:34px;height:34px;font-size:12px;background:linear-gradient(135deg,#93C5FD,#60A5FA);">安</div>
-            <div style="flex:1;min-width:0;">
-              <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
-                <span style="font-size:13px;font-weight:600;color:#555;">安静的橡皮擦</span>
-                <span style="background:#FEF3C7;color:#D97706;font-size:10px;font-weight:700;padding:1px 7px;border-radius:20px;">沉默 72h</span>
-              </div>
-              <div style="font-size:11px;color:#bbb;">AI 推了行程方案，用户未回复</div>
-            </div>
-            <button class="btn-ghost btn-sm" style="font-size:11px;flex-shrink:0;">唤醒</button>
-          </div>
-          <div class="lead-row">
-            <div class="av" style="width:34px;height:34px;font-size:12px;background:linear-gradient(135deg,#6EE7B7,#059669);">星</div>
-            <div style="flex:1;min-width:0;">
-              <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
-                <span style="font-size:13px;font-weight:600;color:#555;">星语心愿</span>
-                <span style="background:#FEF3C7;color:#D97706;font-size:10px;font-weight:700;padding:1px 7px;border-radius:20px;">沉默 56h</span>
-              </div>
-              <div style="font-size:11px;color:#bbb;">看完报价后未回复</div>
-            </div>
-            <button class="btn-ghost btn-sm" style="font-size:11px;flex-shrink:0;">唤醒</button>
-          </div>
-          <div class="lead-row">
-            <div class="av" style="width:34px;height:34px;font-size:12px;background:linear-gradient(135deg,#E9D5FF,#C084FC);">小</div>
-            <div style="flex:1;min-width:0;">
-              <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
-                <span style="font-size:13px;font-weight:600;color:#555;">小鱼爱旅行</span>
-                <span style="background:#FEF3C7;color:#D97706;font-size:10px;font-weight:700;padding:1px 7px;border-radius:20px;">沉默 48h</span>
-              </div>
-              <div style="font-size:11px;color:#bbb;">询问外景地点后失联</div>
-            </div>
-            <button class="btn-ghost btn-sm" style="font-size:11px;flex-shrink:0;">唤醒</button>
-          </div>
-          <div style="padding:10px 16px;background:#F0FDF4;border-top:1px solid #DCFCE7;">
-            <div style="font-size:11px;color:#16A34A;line-height:1.6;">💡 建议唤醒话术：<br>「五一大理的名额快满了，上次聊的行程还有兴趣吗？」</div>
-          </div>
-        </div>
+      <!-- 转化漏斗 -->
+      <div class="card" style="padding:20px 22px;">
+        <div style="font-size:13px;font-weight:700;margin-bottom:16px;">转化漏斗</div>
+        <div id="funnel-wrap"></div>
       </div>
-    </div>
 
-    <!-- 数据为空兜底示意 -->
-    <div style="margin-top:14px;">
-      <details style="cursor:pointer;">
-        <summary style="font-size:12px;color:#bbb;padding:4px 0;list-style:none;display:flex;align-items:center;gap:5px;">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-          数据为空时的兜底逻辑（设计说明）
-        </summary>
-        <div style="margin-top:8px;padding:14px 16px;background:#F9FAFB;border-radius:10px;font-size:12px;color:#6B7280;line-height:1.8;">
-          <b>刷新频率：</b>看板数据每 5 分钟自动刷新；对话列表每 30 秒增量更新<br>
-          <b>数据为空时：</b>高意向队列为空 → 显示「今日暂无高意向线索，继续保持回传可提升精准度」空态卡片，不折叠模块<br>
-          <b>沉默队列为空：</b>显示「所有线索都在活跃跟进中 🎉」正向激励<br>
-          <b>接口异常时：</b>顶部展示「数据获取失败，显示上次缓存」提示条，不展示空模块
-        </div>
-      </details>
     </div>
   </div>
 </div>
-
 
 <!-- ═══════════════════════════════════
   页面③：预约管理（精简）
@@ -984,18 +882,167 @@ function submitFeedback() {
   document.getElementById('submit-feedback-btn').disabled = true;
 }
 
-// ── 看板刷新
-function refreshBoard() {
-  const btn = event.target;
-  btn.textContent = '刷新中…';
-  btn.disabled = true;
+// ── 工作台刷新
+function refreshWb() {
+  const icon = document.getElementById('wb-refresh-icon');
+  if (icon) { icon.style.transform = 'rotate(360deg)'; setTimeout(() => icon.style.transform = '', 700); }
   setTimeout(() => {
-    btn.textContent = '🔄 立即刷新';
-    btn.disabled = false;
-    const ts = document.querySelector('.topbar .text-green-600, .topbar span[style*="10B981"]');
-    if (ts) ts.textContent = '● 数据最后刷新 ' + new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'});
-  }, 1200);
+    const now = new Date();
+    const pad = n => String(n).padStart(2,'0');
+    const ts = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+    const el = document.getElementById('wb-ts');
+    if (el) el.textContent = ts;
+  }, 700);
 }
+
+// ── 工作台筛选+排序（演示：切换时闪一下选中样式）
+function applyWbFilter() {
+  const intent = document.getElementById('filter-intent').value;
+  const sort = document.getElementById('sort-mode').value;
+  // 演示高亮：选意向后对应筛选框变红色边框
+  const filterSel = document.getElementById('filter-intent');
+  const sortSel = document.getElementById('sort-mode');
+  filterSel.style.borderColor = intent ? '#FF2442' : '#E5E7EB';
+  filterSel.style.color = intent ? '#FF2442' : '#555';
+  sortSel.style.borderColor = sort !== 'time' ? '#3B82F6' : '#E5E7EB';
+  sortSel.style.color = sort !== 'time' ? '#3B82F6' : '#555';
+}
+
+// ── 看板刷新（更新右上角时间戳）
+function refreshBoard() {
+  const icon = document.getElementById('board-refresh-icon');
+  if (icon) { icon.style.transform = 'rotate(360deg)'; setTimeout(() => icon.style.transform = '', 700); }
+  setTimeout(() => {
+    const now = new Date();
+    const pad = n => String(n).padStart(2,'0');
+    const ts = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+    const el = document.getElementById('board-ts');
+    if (el) el.textContent = ts;
+  }, 700);
+}
+
+// ── 统计周期切换（仅 UI 演示）
+function switchPeriod(radio) {
+  // 可在这里切换图表数据，演示版不作实际切换
+}
+
+// ── 绘制三折线图
+(function drawTrendChart() {
+  // 7天数据：[总量, 热线索, 转化数]
+  const labels = ['12-01','12-02','12-03','12-04','12-05','12-06','12-07'];
+  const totalData  = [45, 52, 48, 58, 55, 60, 62];
+  const hotData    = [19, 22, 19, 25, 20, 24, 24];
+  const convData   = [4,  5,  3,  5,  5,  6,  5];
+  const maxY = 70;
+
+  const labelEl = document.getElementById('trend-x-labels');
+  if (labelEl) {
+    labelEl.innerHTML = labels.map(l => `<span>${l}</span>`).join('');
+  }
+
+  function draw() {
+    const canvas = document.getElementById('trend-chart');
+    if (!canvas) return;
+    const W = canvas.offsetWidth || 400;
+    const H = 200;
+    canvas.width = W;
+    canvas.height = H;
+    const ctx = canvas.getContext('2d');
+
+    const padL = 0, padR = 8, padT = 10, padB = 10;
+    const chartW = W - padL - padR;
+    const chartH = H - padT - padB;
+    const n = labels.length;
+
+    function xPos(i) { return padL + (i / (n - 1)) * chartW; }
+    function yPos(v) { return padT + (1 - v / maxY) * chartH; }
+
+    function drawLine(data, color) {
+      ctx.beginPath();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      ctx.lineJoin = 'round';
+      data.forEach((v, i) => {
+        const x = xPos(i), y = yPos(v);
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+      // 画点
+      data.forEach((v, i) => {
+        const x = xPos(i), y = yPos(v);
+        ctx.beginPath();
+        ctx.arc(x, y, 3.5, 0, Math.PI * 2);
+        ctx.fillStyle = '#fff';
+        ctx.fill();
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      });
+    }
+
+    drawLine(totalData, '#3B82F6');
+    drawLine(hotData,   '#EF4444');
+    drawLine(convData,  '#10B981');
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', draw);
+  } else {
+    draw();
+  }
+  window.addEventListener('resize', draw);
+})();
+
+// ── 生成转化漏斗
+(function buildFunnel() {
+  const steps = [
+    { label: '点击进线（新增线索）', sub: '广告私信 / 留资 / 评论引导', val: '62 条', color: '#1a1a1a', barW: '100%' },
+    { label: 'AI 承接完成应答',       sub: 'AI query 覆盖',              val: '49 条 · 79%', color: '#1a1a1a', barW: '79%', tip: 'AI 首响率 > 95%' },
+    { label: '意向激活（温 + 热）',    sub: '评分 ≥ 40 分',              val: '38 条 · 61%', color: '#FF2442', barW: '61%', tip: '意向激活率' },
+    { label: '人工接管 / 持续跟进',    sub: '销售承接热线索',             val: '15 条',       color: '#1a1a1a', barW: '24%', tip: '热线索接管率 ~60%' },
+    { label: '到访 / 下单',            sub: '线下到访或平台成交',         val: '9 条',        color: '#1a1a1a', barW: '15%', tip: '到访率' },
+    { label: '成交',                   sub: '依赖回传确认',               val: '5 条 · 8.3%', color: '#FF2442', barW: '8%',  tip: '转化率', highlight: true },
+  ];
+
+  function render() {
+    const wrap = document.getElementById('funnel-wrap');
+    if (!wrap) return;
+    let html = '';
+    steps.forEach((s, i) => {
+      const isLast = i === steps.length - 1;
+      const borderStyle = s.highlight ? '2px solid #FF2442' : '1.5px solid #EBEBEB';
+      const bg = s.highlight ? '#FFF0F2' : '#fff';
+      html += `
+        <div style="border:${borderStyle};border-radius:9px;padding:10px 14px;background:${bg};display:flex;align-items:center;justify-content:space-between;">
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:12px;font-weight:600;color:#1a1a1a;">${s.label}</div>
+            <div style="font-size:10px;color:#bbb;margin-top:2px;">${s.sub}</div>
+            <!-- 进度条 -->
+            <div style="height:4px;background:#F3F4F6;border-radius:3px;margin-top:7px;overflow:hidden;">
+              <div style="height:100%;width:${s.barW};background:${s.highlight ? '#FF2442' : (i===0?'#3B82F6':'#94A3B8')};border-radius:3px;transition:width .6s;"></div>
+            </div>
+          </div>
+          <div style="font-size:13px;font-weight:700;color:${s.color};margin-left:14px;white-space:nowrap;">${s.val}</div>
+        </div>`;
+      if (!isLast) {
+        const tip = s.tip || '';
+        html += `
+        <div style="display:flex;flex-direction:column;align-items:center;padding:2px 0;">
+          <div style="width:1.5px;height:10px;background:linear-gradient(to bottom,#FFB0BD,#FF6B7A);"></div>
+          ${tip ? `<span style="font-size:10px;color:#FF7A8E;font-weight:500;background:#FFF0F2;border-radius:20px;padding:1px 8px;white-space:nowrap;">${tip}</span>` : ''}
+          <div style="width:1.5px;height:10px;background:linear-gradient(to bottom,#FF6B7A,#FFB0BD);"></div>
+        </div>`;
+      }
+    });
+    wrap.innerHTML = html;
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', render);
+  } else {
+    render();
+  }
+})();
 
 // ── 预约筛选
 function filterBk(btn, status) {
