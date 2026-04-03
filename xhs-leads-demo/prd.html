@@ -405,12 +405,25 @@ tr:hover td { background: #FAFAFA; }
         </div>
       </div>
 
-      <div style="font-size:13px;font-weight:700;margin-bottom:10px;color:#555;">② 填写字段</div>
+      <div style="font-size:13px;font-weight:700;margin-bottom:10px;color:#555;">② 状态流转与填写逻辑</div>
+      <div class="flow-box" style="margin-bottom:12px;">跟进中（平台自动同步）
+  └─ 用户预约 → 「已预约」状态（平台/用户自主）
+       └─ 用户到店 → 「是否到店」回传（未到店/已到店）
+            └─ 已到店 → 「是否成交」回传（未成交/已成交）
+       └─ 未成交/已成交 → 线索完成归档</div>
+      <div class="hbox hbox-blue" style="margin-bottom:12px;font-size:12px;">
+        <b>数据来源分层：</b><br>
+        ● <b>跟进中</b>：平台站内行为自动识别，无需用户填写<br>
+        ● <b>已预约</b>：平台可获取的预约行为（商家系统内预约/用户自主预约）<br>
+        ● <b>是否到店/是否成交</b>：平台无法直接获取的线下行为，必须依赖商家回传
+      </div>
       <table>
-        <tr><th>字段</th><th>类型</th><th>展示条件</th><th>说明</th></tr>
-        <tr><td><b>结果状态</b>（必填）</td><td>单选</td><td>始终展示</td><td>✅ 到访 / 🎉 成交 / ⏳ 跟进中 / ❌ 无效</td></tr>
-        <tr><td><b>成交金额</b></td><td>数字输入</td><td>选「成交」时展示</td><td>单位：元；用于 ROI 归因</td></tr>
-        <tr><td><b>下次跟进时间</b></td><td>日期选择</td><td>选「跟进中」时展示</td><td>触发系统提醒（如已配置）</td></tr>
+        <tr><th>填写项</th><th>类型</th><th>展示条件</th><th>说明</th></tr>
+        <tr><td><b>跟进中</b></td><td>状态标签</td><td>AI/人工正在跟进时自动展示</td><td>平台自动同步，无需手动填写</td></tr>
+        <tr><td><b>已预约</b></td><td>状态标签</td><td>检测到用户预约行为时展示</td><td>平台可获取则自动显示，也可手动标记</td></tr>
+        <tr><td><b>是否到店</b>（必填）</td><td>单选</td><td>始终展示</td><td>❌ 未到店 / ✅ 已到店</td></tr>
+        <tr><td><b>是否成交</b>（必填）</td><td>单选</td><td>始终展示</td><td>❌ 未成交 / 🎉 已成交</td></tr>
+        <tr><td><b>成交金额</b></td><td>数字输入</td><td>选「已成交」时展示</td><td>单位：元；用于 ROI 归因</td></tr>
         <tr><td><b>备注</b></td><td>自由文本</td><td>始终展示，选填</td><td>≤ 100 字；Placeholder：如「本周五来看行程」「太贵了暂时放弃」</td></tr>
       </table>
 
@@ -497,31 +510,59 @@ tr:hover td { background: #FAFAFA; }
       <div class="section-num">7</div>
       <div>
         <div style="font-size:15px;font-weight:700;">线索状态流转</div>
-        <div style="font-size:12px;color:#999;margin-top:2px;">Tab 栏状态映射 · 自动流转规则</div>
+        <div style="font-size:12px;color:#999;margin-top:2px;">Tab 栏状态映射 · 自动流转规则 · 数据来源分层</div>
       </div>
     </div>
     <div class="section-body">
-      <div class="flow-box">新进线索
-  └─ <span style="color:#3B82F6;">AI 处理中</span>（默认，进线即进入）
-       ├─ AI 完成应答 → 持续跟进
-       │    ├─ 沉默 48h → <span style="color:#D97706;">沉默池</span>（触发 AI 唤醒话术）
-       │    │    ├─ 用户回复 → 重回「AI 处理中」
-       │    │    └─ 30天无互动 → <span style="color:#9CA3AF;">已关闭</span>（归档）
-       │    └─ 销售接管 → <span style="color:#16A34A;">人工跟进中</span>
-       │         ├─ 填写「到访/成交」→ <span style="color:#9CA3AF;">已完成</span>
-       │         ├─ 填写「无效」→ <span style="color:#9CA3AF;">已关闭</span>
-       │         └─ 填写「跟进中」→ 继续停留（循环）
-       └─ AI 置信度低 → <span style="color:#EA580C;">待接管</span>（橙色提醒销售）
-            └─ 销售接管 → <span style="color:#16A34A;">人工跟进中</span></div>
 
-      <div style="margin-top:16px;">
-        <div style="font-size:13px;font-weight:700;margin-bottom:10px;color:#555;">Tab 栏与状态映射</div>
-        <table>
-          <tr><th>Tab 名称</th><th>包含状态</th><th>排序规则</th></tr>
-          <tr><td><b>跟进中</b></td><td>AI 处理中 + 人工跟进中</td><td>热线索优先，最新互动时间倒序</td></tr>
-          <tr><td><b>待跟进</b></td><td>待接管 + 沉默池</td><td>待接管置顶（橙色高亮），沉默时长倒序</td></tr>
-          <tr><td><b>已完成</b></td><td>已完成 + 已关闭</td><td>完成时间倒序</td></tr>
-        </table>
+      <div style="font-size:13px;font-weight:700;margin-bottom:10px;color:#555;">① 数据获取分层逻辑</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
+        <div style="border:1.5px solid #10B981;border-radius:12px;padding:14px;background:#F0FDF4;">
+          <div style="font-size:13px;font-weight:700;color:#16A34A;margin-bottom:6px;">🟢 平台自动同步</div>
+          <div style="font-size:12px;color:#555;line-height:1.75;">
+            <b>跟进中</b>：站内互动行为自动识别<br>
+            无需商家手动填写，实时更新状态
+          </div>
+        </div>
+        <div style="border:1.5px solid #F59E0B;border-radius:12px;padding:14px;background:#FFFBEB;">
+          <div style="font-size:13px;font-weight:700;color:#D97706;margin-bottom:6px;">🟡 平台可获取</div>
+          <div style="font-size:12px;color:#555;line-height:1.75;">
+            <b>已预约</b>：系统内预约/用户自助预约<br>
+            有数据则自动展示，也可手动补录
+          </div>
+        </div>
+      </div>
+      <div style="border:1.5px solid #E5E7EB;border-radius:12px;padding:14px;background:#FAFAFA;margin-bottom:16px;">
+        <div style="font-size:13px;font-weight:700;color:#555;margin-bottom:6px;">⚪ 需商家回传（线下行为）</div>
+        <div style="font-size:12px;color:#555;line-height:1.75;">
+          <b>是否到店</b>、<b>是否成交</b>：平台无法感知的线下行为<br>
+          必须通过商家主动回传，是投放归因的核心数据
+        </div>
+      </div>
+
+      <div style="font-size:13px;font-weight:700;margin-bottom:10px;color:#555;">② 完整状态流转</div>
+      <div class="flow-box" style="margin-bottom:16px;">新进线索
+  └─ <span style="color:#3B82F6;">跟进中</span>（平台自动：站内互动中）
+       └─ 用户预约 → <span style="color:#16A34A;">已预约</span>（平台/用户自主）
+            ├─ 用户未到门店 → <span style="color:#9CA3AF;">未到店</span>（商家回传）
+            │    └─ 成交/未成交 → <span style="color:#9CA3AF;">已归档</span>
+            └─ 用户已到门店 → <span style="color:#16A34A;">已到店</span>（商家回传）
+                 ├─ 填写「已成交」→ <span style="color:#FF2442;">已成交</span> → 归档
+                 └─ 填写「未成交」→ <span style="color:#9CA3AF;">未成交</span> → 归档</div>
+
+      <div style="font-size:13px;font-weight:700;margin-bottom:10px;color:#555;">③ Tab 栏与状态映射</div>
+      <table>
+        <tr><th>Tab 名称</th><th>包含状态</th><th>排序规则</th></tr>
+        <tr><td><b>处理中</b></td><td>跟进中（AI/人工）+ 已预约</td><td>热线索优先，最新互动时间倒序</td></tr>
+        <tr><td><b>已接管</b></td><td>销售已接管的线索（待填写结果）</td><td>接管时间倒序</td></tr>
+        <tr><td><b>已完成</b></td><td>已到店/未到店 + 已成交/未成交</td><td>完成时间倒序</td></tr>
+      </table>
+
+      <div class="hbox hbox-yellow" style="margin-top:16px;">
+        <b>关键设计原则：</b><br>
+        1. <b>数据分层透出：</b>平台能拿的自动展示（减轻商家负担），拿不到的明确引导回传<br>
+        2. <b>渐进式填写：</b>「到店」→「成交」两阶段，避免一次填写过多字段<br>
+        3. <b>离线可补录：</b>支持事后回来填写，不强制实时提交
       </div>
     </div>
   </div>
