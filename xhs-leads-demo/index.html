@@ -206,9 +206,9 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
     <div class="wb-list-col">
       <div style="padding:12px 12px 10px;border-bottom:1px solid #F0F0F0;">
         <div class="tab-bar" id="wb-tab-bar">
-          <div class="tab-btn active" onclick="wbTab(this,'wbt-ai')">AI处理中<span style="color:#FF2442;margin-left:2px;">2</span></div>
-          <div class="tab-btn" onclick="wbTab(this,'wbt-pending')">待接管<span style="color:#EA580C;margin-left:2px;">3</span></div>
-          <div class="tab-btn" onclick="wbTab(this,'wbt-done')">已接管</div>
+          <div class="tab-btn active" onclick="wbTab(this,'wbt-ai')">处理中<span style="color:#FF2442;margin-left:2px;">2</span></div>
+          <div class="tab-btn" onclick="wbTab(this,'wbt-pending')">已接管<span style="color:#EA580C;margin-left:2px;">3</span></div>
+          <div class="tab-btn" onclick="wbTab(this,'wbt-done')">已完成</div>
         </div>
         <div style="margin-top:8px;position:relative;">
           <input placeholder="搜索线索…" style="width:100%;border:1px solid #EBEBEB;border-radius:7px;padding:6px 10px 6px 28px;font-size:12px;color:#555;outline:none;background:#FAFAFA;">
@@ -279,7 +279,7 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
             </div>
           </div>
         </div>
-        <!-- 待接管 -->
+        <!-- 已接管 -->
         <div id="wbt-pending" style="display:none;">
           <div class="lead-item" onclick="leadClick(this,'lead-tang')">
             <div style="display:flex;align-items:flex-start;gap:9px;">
@@ -291,7 +291,7 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
                 </div>
                 <div style="margin-bottom:4px;display:flex;gap:4px;">
                   <span class="tag tag-warm">🟡 温意向</span>
-                  <span class="tag tag-pending">待接管</span>
+                  <span class="tag tag-pending">已接管</span>
                 </div>
                 <div style="font-size:11px;color:#bbb;">AI 置信度不足，转人工</div>
               </div>
@@ -307,7 +307,7 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
                 </div>
                 <div style="margin-bottom:4px;display:flex;gap:4px;">
                   <span class="tag tag-warm">🟡 温意向</span>
-                  <span class="tag tag-pending">待接管</span>
+                  <span class="tag tag-pending">已接管</span>
                 </div>
                 <div style="font-size:11px;color:#bbb;">问了档期，AI 未完成应答</div>
               </div>
@@ -323,7 +323,7 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
                 </div>
                 <div style="margin-bottom:4px;display:flex;gap:4px;">
                   <span class="tag tag-cold">⚪ 冷意向</span>
-                  <span class="tag tag-pending">待接管</span>
+                  <span class="tag tag-pending">已接管</span>
                 </div>
                 <div style="font-size:11px;color:#bbb;">仅浏览，未进一步咨询</div>
               </div>
