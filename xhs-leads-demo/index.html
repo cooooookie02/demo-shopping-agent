@@ -38,7 +38,7 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
 .wb-layout { flex: 1; display: flex; overflow: hidden; min-height: 0; }
 .wb-list-col { width: 260px; min-width: 260px; background: #fff; border-right: 1px solid #EBEBEB; display: flex; flex-direction: column; overflow: hidden; }
 .wb-detail-col { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: #F7F8FA; min-width: 0; border-right: 1px solid #EBEBEB; }
-.wb-sidebar-col { width: 260px; min-width: 260px; background: #fff; display: flex; flex-direction: column; overflow: hidden; }
+.wb-sidebar-col { width: 300px; min-width: 300px; background: #fff; display: flex; flex-direction: column; overflow: hidden; }
 
 /* ── 对话列表 ── */
 .lead-item { padding: 13px 14px; border-bottom: 1px solid #F5F5F5; cursor: pointer; position: relative; transition: background .12s; }
@@ -190,7 +190,6 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
   <div class="topbar">
     <div>
       <span style="font-size:15px;font-weight:700;">线索经营</span>
-      <span style="font-size:12px;color:#999;margin-left:10px;">实时对话管理</span>
     </div>
     <div style="display:flex;align-items:center;gap:12px;">
       <div style="display:flex;align-items:center;gap:7px;border:1.5px solid #E5E7EB;border-radius:8px;padding:5px 14px;font-size:12px;color:#555;background:#fff;">
@@ -545,37 +544,40 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
 
       <!-- 结果回传 -->
       <div class="feedback-panel" id="feedback-panel">
-        <div style="font-size:12px;font-weight:700;color:#555;margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em;">结果回传</div>
-        <div style="font-size:11px;color:#bbb;margin-bottom:10px;">跟进中/到访数据平台自动同步，线下成交请手动回传</div>
+        <div style="font-size:12px;font-weight:700;color:#555;margin-bottom:10px;text-transform:uppercase;letter-spacing:.04em;">结果回传</div>
 
-        <!-- 自动同步状态 -->
-        <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:10px;">
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;font-size:12px;">
-            <span style="color:#16A34A;font-weight:500;">⏳ 跟进中</span>
-            <span style="color:#16A34A;font-size:11px;">● 站内自动同步</span>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;font-size:12px;">
-            <span style="color:#16A34A;font-weight:500;">✅ 到访</span>
-            <span style="color:#16A34A;font-size:11px;">● 站内自动同步</span>
+        <!-- 第一行：已预约（固定，站内自动） -->
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;font-size:12px;margin-bottom:8px;">
+          <span style="font-weight:600;color:#16A34A;">📅 已预约</span>
+          <span style="color:#16A34A;font-size:11px;">● 站内自动同步</span>
+        </div>
+
+        <!-- 第二行：是否到店 -->
+        <div style="padding:9px 12px;border:1.5px solid #E5E7EB;border-radius:8px;margin-bottom:8px;" id="fb-visit-row">
+          <div style="font-size:12px;color:#555;font-weight:500;margin-bottom:7px;">是否到店</div>
+          <div style="display:flex;gap:6px;">
+            <button class="feedback-btn" id="fb-visit-yes" onclick="pickVisit(this,'是')" style="flex:1;padding:6px 0;font-size:12px;">✅ 已到店</button>
+            <button class="feedback-btn" id="fb-visit-no"  onclick="pickVisit(this,'否')" style="flex:1;padding:6px 0;font-size:12px;">❌ 未到店</button>
           </div>
         </div>
 
-        <div id="feedback-locked-tip" style="background:#FAFAFA;border:1px dashed #E5E7EB;border-radius:9px;padding:10px 12px;text-align:center;font-size:12px;color:#C0C0C0;margin-bottom:10px;">
-          ⚡ 接管线索后可填写成交回传
-        </div>
-
-        <div id="feedback-form" style="display:none;">
-          <div style="font-size:11px;color:#999;margin-bottom:8px;">线下成交需手动回传：</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;">
-            <button class="feedback-btn" onclick="pickFeedback(this,'成交')">🎉 成交</button>
-            <button class="feedback-btn" onclick="pickFeedback(this,'无效')">❌ 无效</button>
+        <!-- 第三行：是否成交（接管后解锁） -->
+        <div style="padding:9px 12px;border:1.5px solid #E5E7EB;border-radius:8px;" id="fb-deal-row">
+          <div style="font-size:12px;color:#555;font-weight:500;margin-bottom:7px;">是否成交</div>
+          <div id="feedback-locked-tip" style="text-align:center;padding:6px;font-size:12px;color:#C0C0C0;">
+            ⚡ 接管后可填写
           </div>
-          <textarea id="feedback-note" placeholder="备注（可选）：成交金额、下次跟进…" style="width:100%;border:1px solid #E5E7EB;border-radius:8px;padding:8px 10px;font-size:12px;color:#555;resize:none;outline:none;font-family:inherit;line-height:1.5;" rows="2"></textarea>
-          <button class="btn-red" style="width:100%;margin-top:8px;padding:9px;" id="submit-feedback-btn" onclick="submitFeedback()" disabled>提交回传</button>
-          <div id="feedback-success" style="display:none;margin-top:8px;">
-            <div class="flywheel">
-              <div style="font-size:12px;font-weight:700;color:#CC1033;margin-bottom:3px;">✅ 回传成功</div>
-              <div style="font-size:11px;color:#FF7A8E;line-height:1.6;">数据已同步投放模型<br>本月已回传 <b id="fb-count">31</b> 条，预估有效线索率 <b>↑ 8%</b></div>
+          <div id="feedback-form" style="display:none;">
+            <div style="display:flex;gap:6px;">
+              <button class="feedback-btn" onclick="pickFeedback(this,'成交')" style="flex:1;padding:6px 0;font-size:12px;">🎉 已成交</button>
+              <button class="feedback-btn" onclick="pickFeedback(this,'无效')" style="flex:1;padding:6px 0;font-size:12px;">❌ 未成交</button>
+            </div>
+            <button class="btn-red" style="width:100%;margin-top:8px;padding:8px;font-size:12px;" id="submit-feedback-btn" onclick="submitFeedback()" disabled>提交回传</button>
+            <div id="feedback-success" style="display:none;margin-top:8px;">
+              <div class="flywheel">
+                <div style="font-size:12px;font-weight:700;color:#CC1033;margin-bottom:2px;">✅ 回传成功</div>
+                <div style="font-size:11px;color:#FF7A8E;line-height:1.6;">数据已同步投放模型<br>预估有效线索率 <b>↑ 8%</b></div>
+              </div>
             </div>
           </div>
         </div>
@@ -854,13 +856,21 @@ function updateCharCount() {
 
 // ── 工作台回传
 let feedbackChosen = null;
+let visitChosen = null;
+
+function pickVisit(btn, val) {
+  document.querySelectorAll('#fb-visit-row .feedback-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  visitChosen = val;
+}
+
 function pickFeedback(btn, val) {
-  document.querySelectorAll('#feedback-panel .feedback-btn').forEach(b => b.classList.remove('selected'));
+  document.querySelectorAll('#feedback-form .feedback-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
   feedbackChosen = val;
   document.getElementById('submit-feedback-btn').disabled = false;
-  document.getElementById('submit-feedback-btn').style.opacity = '1';
 }
+
 function submitFeedback() {
   document.getElementById('feedback-success').style.display = 'block';
   document.getElementById('submit-feedback-btn').textContent = '✅ 已回传';
