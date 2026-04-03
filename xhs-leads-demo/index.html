@@ -38,7 +38,7 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
 .wb-layout { flex: 1; display: flex; overflow: hidden; min-height: 0; }
 .wb-list-col { width: 260px; min-width: 260px; background: #fff; border-right: 1px solid #EBEBEB; display: flex; flex-direction: column; overflow: hidden; }
 .wb-detail-col { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: #F7F8FA; min-width: 0; border-right: 1px solid #EBEBEB; }
-.wb-sidebar-col { width: 300px; min-width: 300px; background: #fff; display: flex; flex-direction: column; overflow: hidden; }
+.wb-sidebar-col { width: 340px; min-width: 340px; background: #fff; display: flex; flex-direction: column; overflow: hidden; }
 
 /* ── 对话列表 ── */
 .lead-item { padding: 13px 14px; border-bottom: 1px solid #F5F5F5; cursor: pointer; position: relative; transition: background .12s; }
@@ -546,16 +546,7 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
       <div class="feedback-panel" id="feedback-panel">
         <div style="font-size:12px;font-weight:700;color:#555;margin-bottom:10px;text-transform:uppercase;letter-spacing:.04em;">结果回传</div>
 
-        <!-- 第一行：跟进中（平台自动） -->
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:8px;font-size:12px;margin-bottom:8px;">
-          <div style="display:flex;align-items:center;gap:8px;">
-            <span style="font-weight:600;color:#2563EB;">💬 跟进中</span>
-            <span style="font-size:11px;color:#3B82F6;">平台自动同步</span>
-          </div>
-          <span style="width:7px;height:7px;border-radius:50%;background:#3B82F6;"></span>
-        </div>
-
-        <!-- 第二行：已预约 -->
+        <!-- 第一行：已预约 -->
         <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;font-size:12px;margin-bottom:8px;">
           <div style="display:flex;align-items:center;gap:8px;">
             <span style="font-weight:600;color:#16A34A;">📅 已预约</span>
@@ -564,29 +555,43 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
           <span style="width:7px;height:7px;border-radius:50%;background:#10B981;"></span>
         </div>
 
-        <!-- 第三行：是否到店 -->
+        <!-- 第二行：是否到店 -->
         <div style="padding:9px 12px;border:1.5px solid #E5E7EB;border-radius:8px;margin-bottom:8px;" id="fb-visit-row">
-          <div style="font-size:12px;color:#555;font-weight:500;margin-bottom:7px;">是否到店</div>
-          <div style="display:flex;gap:6px;">
-            <button class="feedback-btn" id="fb-visit-yes" onclick="pickVisit(this,'是')" style="flex:1;padding:6px 0;font-size:12px;">✅ 已到店</button>
-            <button class="feedback-btn" id="fb-visit-no"  onclick="pickVisit(this,'否')" style="flex:1;padding:6px 0;font-size:12px;">❌ 未到店</button>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;">
+            <span style="font-size:12px;color:#555;font-weight:500;">是否到店</span>
+            <div style="display:flex;gap:12px;">
+              <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:12px;color:#555;">
+                <input type="radio" name="visit" value="是" onchange="pickVisit(this,'是')" style="width:14px;height:14px;accent-color:#10B981;">
+                <span>是</span>
+              </label>
+              <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:12px;color:#555;">
+                <input type="radio" name="visit" value="否" onchange="pickVisit(this,'否')" style="width:14px;height:14px;accent-color:#EF4444;">
+                <span>否</span>
+              </label>
+            </div>
           </div>
         </div>
 
-        <!-- 第四行：是否成交 -->
+        <!-- 第三行：是否成交 -->
         <div style="padding:9px 12px;border:1.5px solid #E5E7EB;border-radius:8px;" id="fb-deal-row">
-          <div style="font-size:12px;color:#555;font-weight:500;margin-bottom:7px;">是否成交</div>
-          <div id="feedback-form">
-            <div style="display:flex;gap:6px;">
-              <button class="feedback-btn" onclick="pickFeedback(this,'成交')" style="flex:1;padding:6px 0;font-size:12px;">🎉 已成交</button>
-              <button class="feedback-btn" onclick="pickFeedback(this,'未成交')" style="flex:1;padding:6px 0;font-size:12px;">❌ 未成交</button>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;">
+            <span style="font-size:12px;color:#555;font-weight:500;">是否成交</span>
+            <div style="display:flex;gap:12px;" id="feedback-form">
+              <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:12px;color:#555;">
+                <input type="radio" name="deal" value="成交" onchange="pickFeedback(this,'成交')" style="width:14px;height:14px;accent-color:#10B981;">
+                <span>是</span>
+              </label>
+              <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:12px;color:#555;">
+                <input type="radio" name="deal" value="未成交" onchange="pickFeedback(this,'未成交')" style="width:14px;height:14px;accent-color:#EF4444;">
+                <span>否</span>
+              </label>
             </div>
-            <button class="btn-red" style="width:100%;margin-top:8px;padding:8px;font-size:12px;" id="submit-feedback-btn" onclick="submitFeedback()" disabled>提交回传</button>
-            <div id="feedback-success" style="display:none;margin-top:8px;">
-              <div class="flywheel">
-                <div style="font-size:12px;font-weight:700;color:#CC1033;margin-bottom:2px;">✅ 回传成功</div>
-                <div style="font-size:11px;color:#FF7A8E;line-height:1.6;">数据已同步投放模型<br>预估有效线索率 <b>↑ 8%</b></div>
-              </div>
+          </div>
+          <button class="btn-red" style="width:100%;margin-top:8px;padding:8px;font-size:12px;" id="submit-feedback-btn" onclick="submitFeedback()" disabled>提交回传</button>
+          <div id="feedback-success" style="display:none;margin-top:8px;">
+            <div class="flywheel">
+              <div style="font-size:12px;font-weight:700;color:#CC1033;margin-bottom:2px;">✅ 回传成功</div>
+              <div style="font-size:11px;color:#FF7A8E;line-height:1.6;">数据已同步投放模型<br>预估有效线索率 <b>↑ 8%</b></div>
             </div>
           </div>
         </div>
