@@ -915,8 +915,8 @@ function renderUmTable(data) {
     const dmColor = u.dm === '已私信' ? '#10B981' : '#EF4444';
     const tagHtml = u.tag !== '-' ? `<span style="background:#FEF3C7;color:#D97706;font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;">${u.tag}</span>` : `<span style="color:#bbb;">-</span>`;
     const actionHtml = u.dmSent
-      ? `<span style="color:#3B82F6;font-size:12px;cursor:pointer;font-weight:500;">查看会话</span>`
-      : `<span style="color:#3B82F6;font-size:12px;cursor:pointer;font-weight:500;">私信回复</span>`;
+      ? `<span style="color:#3B82F6;font-size:12px;cursor:pointer;font-weight:500;" onclick="showPage('wb')">查看会话</span>`
+      : `<span style="color:#3B82F6;font-size:12px;cursor:pointer;font-weight:500;" onclick="showPage('wb')">私信回复</span>`;
     const bg = avatarColors[i % avatarColors.length];
     return `<tr style="border-bottom:1px solid #F5F5F5;transition:background .12s;" onmouseover="this.style.background='#FFF8F9'" onmouseout="this.style.background=''">
       <td style="padding:14px 20px;">
