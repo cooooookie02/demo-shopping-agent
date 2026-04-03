@@ -546,10 +546,9 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
       <div class="feedback-panel" id="feedback-panel">
         <div style="font-size:12px;font-weight:700;color:#555;margin-bottom:10px;text-transform:uppercase;letter-spacing:.04em;">结果回传</div>
 
-        <!-- 第一行：已预约（固定，站内自动） -->
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;font-size:12px;margin-bottom:8px;">
+        <!-- 第一行：已预约（固定） -->
+        <div style="padding:9px 12px;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;font-size:12px;margin-bottom:8px;">
           <span style="font-weight:600;color:#16A34A;">📅 已预约</span>
-          <span style="color:#16A34A;font-size:11px;">● 站内自动同步</span>
         </div>
 
         <!-- 第二行：是否到店 -->
@@ -561,13 +560,10 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
           </div>
         </div>
 
-        <!-- 第三行：是否成交（接管后解锁） -->
+        <!-- 第三行：是否成交 -->
         <div style="padding:9px 12px;border:1.5px solid #E5E7EB;border-radius:8px;" id="fb-deal-row">
           <div style="font-size:12px;color:#555;font-weight:500;margin-bottom:7px;">是否成交</div>
-          <div id="feedback-locked-tip" style="text-align:center;padding:6px;font-size:12px;color:#C0C0C0;">
-            ⚡ 接管后可填写
-          </div>
-          <div id="feedback-form" style="display:none;">
+          <div id="feedback-form">
             <div style="display:flex;gap:6px;">
               <button class="feedback-btn" onclick="pickFeedback(this,'成交')" style="flex:1;padding:6px 0;font-size:12px;">🎉 已成交</button>
               <button class="feedback-btn" onclick="pickFeedback(this,'无效')" style="flex:1;padding:6px 0;font-size:12px;">❌ 未成交</button>
@@ -808,9 +804,7 @@ function doTakeover() {
   // 解锁回复框
   document.getElementById('reply-locked').style.display = 'none';
   document.getElementById('reply-active').style.display = 'block';
-  // 解锁回传
-  document.getElementById('feedback-locked-tip').style.display = 'none';
-  document.getElementById('feedback-form').style.display = 'block';
+  // 回传面板已常驻，无需解锁
   // 展示接管消息
   document.getElementById('takeover-msg').style.display = 'block';
   // 滚动到底
