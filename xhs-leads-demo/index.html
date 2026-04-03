@@ -61,8 +61,8 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
 .tag-taken { background: #F0FDF4; color: #16A34A; }
 
 /* ── 气泡 ── */
-.bubble-ai { background: #F4F5F7; border-radius: 3px 12px 12px 12px; padding: 9px 13px; font-size: 13px; color: #333; line-height: 1.65; max-width: 320px; }
-.bubble-user { background: #FF2442; color: #fff; border-radius: 12px 3px 12px 12px; padding: 9px 13px; font-size: 13px; line-height: 1.65; max-width: 280px; }
+.bubble-ai { background: #F4F5F7; border-radius: 12px 3px 12px 12px; padding: 9px 13px; font-size: 13px; color: #333; line-height: 1.65; max-width: 320px; }
+.bubble-user { background: #FF2442; color: #fff; border-radius: 3px 12px 12px 12px; padding: 9px 13px; font-size: 13px; line-height: 1.65; max-width: 280px; }
 .bubble-system { background: transparent; text-align: center; color: #bbb; font-size: 11px; padding: 4px 0; }
 
 /* ── Skill 记录 ── */
@@ -378,55 +378,55 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
 
         <div class="bubble-system">2026年4月1日 10:24 · 广告点击进线</div>
 
-        <div style="display:flex;gap:8px;align-items:flex-start;">
+        <div style="display:flex;gap:8px;align-items:flex-start;flex-direction:row-reverse;">
           <div class="av" style="width:28px;height:28px;font-size:10px;font-weight:800;background:linear-gradient(135deg,#FF2442,#FF6B7A);flex-shrink:0;">AI</div>
-          <div>
+          <div style="text-align:right;">
             <div style="font-size:10px;color:#C0C0C0;margin-bottom:4px;">AI 员工 · 10:24</div>
             <div class="bubble-ai">您好！欢迎咨询我们的旅游出行服务 💕<br>请问您想了解哪种风格？我们最受欢迎的有「云南线路、东南亚出境、国内周边自驾」三个系列～</div>
           </div>
         </div>
 
-        <div style="display:flex;gap:8px;align-items:flex-start;flex-direction:row-reverse;">
+        <div style="display:flex;gap:8px;align-items:flex-start;">
           <div class="av" style="width:28px;height:28px;font-size:11px;background:linear-gradient(135deg,#FF7A8E,#FF2442);flex-shrink:0;">梅</div>
-          <div style="text-align:right;">
+          <div>
             <div style="font-size:10px;color:#C0C0C0;margin-bottom:4px;">梅子酱 · 10:25</div>
-            <div class="bubble-user" style="margin-left:auto;">我想了解五一大理的行程，我们2大1小，孩子6岁</div>
+            <div class="bubble-user">我想了解五一大理的行程，我们2大1小，孩子6岁</div>
           </div>
         </div>
 
         <div class="bubble-system">⚡ Skill 触发：档期查询</div>
 
-        <div style="display:flex;gap:8px;align-items:flex-start;">
+        <div style="display:flex;gap:8px;align-items:flex-start;flex-direction:row-reverse;">
           <div class="av" style="width:28px;height:28px;font-size:10px;font-weight:800;background:linear-gradient(135deg,#FF2442,#FF6B7A);flex-shrink:0;">AI</div>
-          <div>
+          <div style="text-align:right;">
             <div style="font-size:10px;color:#C0C0C0;margin-bottom:4px;">AI 员工 · 10:25</div>
             <div class="bubble-ai">好的！五一大理热门路线，以下出发日期还有余位：<br><br>📅 <b>4月28日（周二）</b> 可报名<br>📅 <b>4月29日（周三）</b> <span style="color:#EF4444">仅剩2位</span><br>📅 <b>5月1日（周五）</b> 可报名<br><br>6天5晚含精品民宿，亲子友好路线，请问您倾向哪天出发？</div>
           </div>
         </div>
 
-        <div style="display:flex;gap:8px;align-items:flex-start;flex-direction:row-reverse;">
+        <div style="display:flex;gap:8px;align-items:flex-start;">
           <div class="av" style="width:28px;height:28px;font-size:11px;background:linear-gradient(135deg,#FF7A8E,#FF2442);flex-shrink:0;">梅</div>
-          <div style="text-align:right;">
+          <div>
             <div style="font-size:10px;color:#C0C0C0;margin-bottom:4px;">梅子酱 · 10:27</div>
-            <div class="bubble-user" style="margin-left:auto;">4月28日可以，人均大概多少？含机票吗？</div>
+            <div class="bubble-user">4月28日可以，人均大概多少？含机票吗？</div>
           </div>
         </div>
 
         <div class="bubble-system">⚡ Skill 触发：套餐报价</div>
 
-        <div style="display:flex;gap:8px;align-items:flex-start;">
+        <div style="display:flex;gap:8px;align-items:flex-start;flex-direction:row-reverse;">
           <div class="av" style="width:28px;height:28px;font-size:10px;font-weight:800;background:linear-gradient(135deg,#FF2442,#FF6B7A);flex-shrink:0;">AI</div>
-          <div>
+          <div style="text-align:right;">
             <div style="font-size:10px;color:#C0C0C0;margin-bottom:4px;">AI 员工 · 10:27</div>
             <div class="bubble-ai">大理6日亲子游有两个方案：<br><br>✨ <b>精品民宿版</b> · <span style="color:#FF2442;font-weight:700;">人均 3,980 元</span><br><span style="font-size:12px;color:#888;">不含机票 · 含接送机 · 精品洱海民宿 · 专业导游</span><br><br>👑 <b>全含版</b> · <span style="color:#FF2442;font-weight:700;">人均 5,680 元</span><br><span style="font-size:12px;color:#888;">含往返机票 · 含接送 · 网红民宿 · 私人定制行程</span><br><br>4月28日两款都有名额哦～小朋友6岁全程亲子路线非常合适 🌿</div>
           </div>
         </div>
 
-        <div style="display:flex;gap:8px;align-items:flex-start;flex-direction:row-reverse;">
+        <div style="display:flex;gap:8px;align-items:flex-start;">
           <div class="av" style="width:28px;height:28px;font-size:11px;background:linear-gradient(135deg,#FF7A8E,#FF2442);flex-shrink:0;">梅</div>
-          <div style="text-align:right;">
+          <div>
             <div style="font-size:10px;color:#C0C0C0;margin-bottom:4px;">梅子酱 · 10:32</div>
-            <div class="bubble-user" style="margin-left:auto;">全含版可以便宜点吗？我再拉一家朋友一起去，4个大人2个小孩</div>
+            <div class="bubble-user">全含版可以便宜点吗？我再拉一家朋友一起去，4个大人2个小孩</div>
           </div>
         </div>
 
@@ -435,9 +435,9 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
           <span>触发转人工条件 — 等待销售接管，上下文已保存</span>
         </div>
 
-        <div style="display:flex;gap:8px;align-items:flex-start;">
+        <div style="display:flex;gap:8px;align-items:flex-start;flex-direction:row-reverse;">
           <div class="av" style="width:28px;height:28px;font-size:10px;font-weight:800;background:linear-gradient(135deg,#FF2442,#FF6B7A);flex-shrink:0;">AI</div>
-          <div>
+          <div style="text-align:right;">
             <div style="font-size:10px;color:#C0C0C0;margin-bottom:4px;">AI 员工 · 10:32</div>
             <div class="bubble-ai">拼团报价这块我帮您转给专属顾问来详细计算～顾问会在5分钟内联系您 🌿</div>
           </div>
@@ -450,7 +450,7 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
             <div class="av" style="width:28px;height:28px;font-size:11px;background:linear-gradient(135deg,#10B981,#059669);flex-shrink:0;">我</div>
             <div style="text-align:right;">
               <div style="font-size:10px;color:#C0C0C0;margin-bottom:4px;">销售 小李 · 10:35</div>
-              <div class="bubble-user" style="margin-left:auto;background:#10B981;">您好美女！我是专属顾问小李 😊 看到您对全含版很感兴趣～两家拼团的话可以享受 88 折，6大2小总价我算一下发给您，4月28日名额我先帮您预留！</div>
+              <div class="bubble-user" style="background:#10B981;">您好美女！我是专属顾问小李 😊 看到您对全含版很感兴趣～两家拼团的话可以享受 88 折，6大2小总价我算一下发给您，4月28日名额我先帮您预留！</div>
             </div>
           </div>
         </div>
@@ -847,7 +847,7 @@ function sendMsg() {
     <div class="av" style="width:28px;height:28px;font-size:11px;background:linear-gradient(135deg,#10B981,#059669);flex-shrink:0;">我</div>
     <div style="text-align:right;">
       <div style="font-size:10px;color:#C0C0C0;margin-bottom:4px;">销售 小李 · 刚刚</div>
-      <div class="bubble-user" style="margin-left:auto;background:#10B981;">${text}</div>
+      <div class="bubble-user" style="background:#10B981;">${text}</div>
     </div>`;
   chat.appendChild(div);
   input.value = '';
