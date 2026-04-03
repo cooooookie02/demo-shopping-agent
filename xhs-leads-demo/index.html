@@ -183,12 +183,12 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
 
 
 <!-- ═══════════════════════════════════
-  页面①：线索工作台
+  页面①：线索经营
 ═══════════════════════════════════ -->
 <div id="page-wb" class="page" style="display:none;flex-direction:column;">
   <div class="topbar">
     <div>
-      <span style="font-size:15px;font-weight:700;">线索工作台</span>
+      <span style="font-size:15px;font-weight:700;">线索经营</span>
       <span style="font-size:12px;color:#999;margin-left:10px;">实时对话管理</span>
     </div>
     <div style="display:flex;align-items:center;gap:12px;">
@@ -542,31 +542,39 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
         </div>
       </div>
 
-      <!-- 回传填报 -->
+      <!-- 结果回传 -->
       <div class="feedback-panel" id="feedback-panel">
         <div style="font-size:12px;font-weight:700;color:#555;margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em;">结果回传</div>
-        <div style="font-size:11px;color:#bbb;margin-bottom:10px;">接管跟进后请填写结果，帮助 AI 更准投放</div>
+        <div style="font-size:11px;color:#bbb;margin-bottom:10px;">跟进中/到访数据平台自动同步，线下成交请手动回传</div>
+
+        <!-- 自动同步状态 -->
+        <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:10px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;font-size:12px;">
+            <span style="color:#16A34A;font-weight:500;">⏳ 跟进中</span>
+            <span style="color:#16A34A;font-size:11px;">● 站内自动同步</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;font-size:12px;">
+            <span style="color:#16A34A;font-weight:500;">✅ 到访</span>
+            <span style="color:#16A34A;font-size:11px;">● 站内自动同步</span>
+          </div>
+        </div>
 
         <div id="feedback-locked-tip" style="background:#FAFAFA;border:1px dashed #E5E7EB;border-radius:9px;padding:10px 12px;text-align:center;font-size:12px;color:#C0C0C0;margin-bottom:10px;">
-          ⚡ 接管线索后可填写回传
+          ⚡ 接管线索后可填写成交回传
         </div>
 
         <div id="feedback-form" style="display:none;">
+          <div style="font-size:11px;color:#999;margin-bottom:8px;">线下成交需手动回传：</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;">
-            <button class="feedback-btn" onclick="pickFeedback(this,'到访')">✅ 到访</button>
             <button class="feedback-btn" onclick="pickFeedback(this,'成交')">🎉 成交</button>
-            <button class="feedback-btn" onclick="pickFeedback(this,'跟进中')">⏳ 跟进中</button>
             <button class="feedback-btn" onclick="pickFeedback(this,'无效')">❌ 无效</button>
           </div>
-          <textarea id="feedback-note" placeholder="备注（可选）：例如原因、下次跟进时间…" style="width:100%;border:1px solid #E5E7EB;border-radius:8px;padding:8px 10px;font-size:12px;color:#555;resize:none;outline:none;font-family:inherit;line-height:1.5;" rows="2"></textarea>
-          <button class="btn-red" style="width:100%;margin-top:8px;padding:9px;" id="submit-feedback-btn" onclick="submitFeedback()" disabled style="opacity:.5;">提交回传</button>
+          <textarea id="feedback-note" placeholder="备注（可选）：成交金额、下次跟进…" style="width:100%;border:1px solid #E5E7EB;border-radius:8px;padding:8px 10px;font-size:12px;color:#555;resize:none;outline:none;font-family:inherit;line-height:1.5;" rows="2"></textarea>
+          <button class="btn-red" style="width:100%;margin-top:8px;padding:9px;" id="submit-feedback-btn" onclick="submitFeedback()" disabled>提交回传</button>
           <div id="feedback-success" style="display:none;margin-top:8px;">
             <div class="flywheel">
               <div style="font-size:12px;font-weight:700;color:#CC1033;margin-bottom:3px;">✅ 回传成功</div>
               <div style="font-size:11px;color:#FF7A8E;line-height:1.6;">数据已同步投放模型<br>本月已回传 <b id="fb-count">31</b> 条，预估有效线索率 <b>↑ 8%</b></div>
-            </div>
-            <div style="margin-top:8px;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;padding:8px 10px;font-size:11px;color:#15803D;line-height:1.55;">
-              <b>数据流向</b>：线索ID · 意向标签 · 回传状态 · 时间戳 → 知然归因模型 → 投放优化
             </div>
           </div>
         </div>
@@ -592,7 +600,7 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
         <span id="board-ts" style="font-weight:600;color:#1a1a1a;">2026-04-03 15:30:00</span>
         <svg id="board-refresh-icon" onclick="refreshBoard()" style="cursor:pointer;color:#888;flex-shrink:0;transition:transform .6s;" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
       </div>
-      <button class="btn-red btn-sm" onclick="showPage('wb')">进工作台跟进 →</button>
+      
     </div>
   </div>
 
@@ -685,100 +693,85 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
 </div>
 
 <!-- ═══════════════════════════════════
-  页面③：预约管理（精简）
+  页面③：用户管理
 ═══════════════════════════════════ -->
 <div id="page-book" class="page" style="display:none;flex-direction:column;">
   <div class="topbar">
-    <div><span style="font-size:15px;font-weight:700;">预约管理</span><span style="font-size:12px;color:#999;margin-left:10px;">AI 承接后的预约汇总</span></div>
-    <button class="btn-red btn-sm">+ 手动添加</button>
+    <div><span style="font-size:15px;font-weight:700;">用户管理</span><span style="font-size:12px;color:#999;margin-left:10px;">互动用户列表</span></div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <button class="btn-ghost btn-sm" onclick="resetUmFilter()">重置</button>
+      <button class="btn-ghost btn-sm" onclick="refreshUm()">刷新</button>
+    </div>
   </div>
-  <div class="page-body">
-    <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center;">
-      <input type="date" value="2026-04-01" style="border:1px solid #E5E7EB;border-radius:8px;padding:6px 12px;font-size:12px;color:#333;outline:none;">
-      <button class="feedback-btn selected btn-sm" onclick="filterBk(this,'all')" data-f="all" style="padding:5px 14px;">全部</button>
-      <button class="feedback-btn btn-sm" onclick="filterBk(this,'pending')" data-f="pending" style="padding:5px 14px;">待确认</button>
-      <button class="feedback-btn btn-sm" onclick="filterBk(this,'confirmed')" data-f="confirmed" style="padding:5px 14px;">已确认</button>
-      <button class="feedback-btn btn-sm" onclick="filterBk(this,'done')" data-f="done" style="padding:5px 14px;">已完成</button>
-      <span style="margin-left:auto;font-size:12px;color:#bbb;">共 6 条</span>
+  <div class="page-body" style="padding:0;">
+    <!-- 筛选栏 -->
+    <div style="background:#fff;border-bottom:1px solid #EBEBEB;padding:12px 20px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:6px;">
+        <span style="font-size:12px;color:#999;white-space:nowrap;">用户账号ID</span>
+        <input id="um-uid" placeholder="可输入账号ID" style="border:1px solid #E5E7EB;border-radius:6px;padding:5px 10px;font-size:12px;color:#333;outline:none;width:130px;">
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <span style="font-size:12px;color:#999;white-space:nowrap;">授权账号/ID</span>
+        <div style="position:relative;">
+          <select id="um-auth" style="appearance:none;-webkit-appearance:none;border:1px solid #E5E7EB;border-radius:6px;padding:5px 28px 5px 10px;font-size:12px;color:#333;outline:none;width:130px;background:#fff;">
+            <option>可输入...</option>
+            <option>账号A</option>
+            <option>账号B</option>
+          </select>
+          <svg style="position:absolute;right:7px;top:50%;transform:translateY(-50%);pointer-events:none;" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <span style="font-size:12px;color:#999;white-space:nowrap;">互动类型</span>
+        <div style="position:relative;">
+          <select id="um-itype" onchange="applyUmFilter()" style="appearance:none;-webkit-appearance:none;border:1px solid #E5E7EB;border-radius:6px;padding:5px 28px 5px 10px;font-size:12px;color:#333;outline:none;width:100px;background:#fff;">
+            <option value="">全部</option>
+            <option value="关注">关注</option>
+            <option value="评论">评论</option>
+            <option value="未关注">未关注</option>
+          </select>
+          <svg style="position:absolute;right:7px;top:50%;transform:translateY(-50%);pointer-events:none;" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <span style="font-size:12px;color:#999;white-space:nowrap;">私信状态</span>
+        <div style="position:relative;">
+          <select id="um-dm" onchange="applyUmFilter()" style="appearance:none;-webkit-appearance:none;border:1px solid #E5E7EB;border-radius:6px;padding:5px 28px 5px 10px;font-size:12px;color:#333;outline:none;width:100px;background:#fff;">
+            <option value="">全部</option>
+            <option value="已私信">已私信</option>
+            <option value="未私信">未私信</option>
+          </select>
+          <svg style="position:absolute;right:7px;top:50%;transform:translateY(-50%);pointer-events:none;" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </div>
     </div>
-    <div style="display:flex;flex-direction:column;gap:8px;">
-      <div class="card bk-item" data-status="pending" style="padding:14px 18px;display:flex;align-items:center;gap:14px;">
-        <div class="av" style="width:36px;height:36px;font-size:13px;background:linear-gradient(135deg,#FF7A8E,#FF2442);">梅</div>
-        <div style="flex:1;min-width:0;"><div style="display:flex;gap:6px;margin-bottom:3px;align-items:center;"><b style="font-size:13px;">梅子酱</b><span class="tag tag-hot">🔴 热</span></div><div style="font-size:12px;color:#666;">云南大理 · 6日全含版</div></div>
-        <div style="text-align:center;min-width:100px;"><div style="font-size:13px;font-weight:600;">2026-05-14</div><div style="font-size:11px;color:#bbb;">10:00</div></div>
-        <div style="min-width:80px;text-align:center;"><div style="font-size:10px;color:#bbb;margin-bottom:2px;">来源</div><div style="font-size:11px;font-weight:600;color:#2563EB;">AI自动</div></div>
-        <span class="badge-pending" style="background:#FFF7ED;color:#EA580C;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;white-space:nowrap;">待确认</span>
-        <div style="display:flex;gap:6px;"><button class="btn-red btn-sm" onclick="confirmBk(this)">确认</button><button class="btn-ghost btn-sm">改期</button></div>
-      </div>
-      <div class="card bk-item" data-status="confirmed" style="padding:14px 18px;display:flex;align-items:center;gap:14px;">
-        <div class="av" style="width:36px;height:36px;font-size:13px;background:linear-gradient(135deg,#C084FC,#A855F7);">晴</div>
-        <div style="flex:1;min-width:0;"><div style="display:flex;gap:6px;margin-bottom:3px;align-items:center;"><b style="font-size:13px;">晴天小鹿</b><span class="tag tag-hot">🔴 热</span></div><div style="font-size:12px;color:#666;">三亚5日 · 亲子精品版</div></div>
-        <div style="text-align:center;min-width:100px;"><div style="font-size:13px;font-weight:600;">2026-05-21</div><div style="font-size:11px;color:#bbb;">09:00</div></div>
-        <div style="min-width:80px;text-align:center;"><div style="font-size:10px;color:#bbb;margin-bottom:2px;">来源</div><div style="font-size:11px;font-weight:600;color:#2563EB;">AI自动</div></div>
-        <span style="background:#ECFDF5;color:#059669;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;white-space:nowrap;">已确认</span>
-        <div style="display:flex;gap:6px;"><button class="btn-ghost btn-sm">改期</button></div>
-      </div>
-      <div class="card bk-item" data-status="done" style="padding:14px 18px;display:flex;align-items:center;gap:14px;opacity:.75;">
-        <div class="av" style="width:36px;height:36px;font-size:13px;background:linear-gradient(135deg,#FCD34D,#F59E0B);">糖</div>
-        <div style="flex:1;min-width:0;"><div style="display:flex;gap:6px;margin-bottom:3px;align-items:center;"><b style="font-size:13px;color:#666;">糖糖爱摄影</b><span class="tag tag-warm">🟡 温</span></div><div style="font-size:12px;color:#999;">三亚5日 · 亲子精品版</div></div>
-        <div style="text-align:center;min-width:100px;"><div style="font-size:13px;font-weight:600;color:#666;">2026-03-28</div><div style="font-size:11px;color:#bbb;">10:00</div></div>
-        <div style="min-width:80px;text-align:center;"><div style="font-size:10px;color:#bbb;margin-bottom:2px;">来源</div><div style="font-size:11px;font-weight:600;color:#9CA3AF;">人工</div></div>
-        <span style="background:#EFF6FF;color:#2563EB;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;white-space:nowrap;">已完成</span>
-        <div><button class="btn-ghost btn-sm">详情</button></div>
-      </div>
-      <div class="card bk-item" data-status="pending" style="padding:14px 18px;display:flex;align-items:center;gap:14px;">
-        <div class="av" style="width:36px;height:36px;font-size:13px;background:linear-gradient(135deg,#6EE7B7,#059669);">云</div>
-        <div style="flex:1;min-width:0;"><div style="display:flex;gap:6px;margin-bottom:3px;align-items:center;"><b style="font-size:13px;">云淡风轻之旅</b><span class="tag tag-warm">🟡 温</span></div><div style="font-size:12px;color:#666;">旅游出行 · 轻奢森系</div></div>
-        <div style="text-align:center;min-width:100px;"><div style="font-size:13px;font-weight:600;">2026-06-07</div><div style="font-size:11px;color:#bbb;">14:00</div></div>
-        <div style="min-width:80px;text-align:center;"><div style="font-size:10px;color:#bbb;margin-bottom:2px;">来源</div><div style="font-size:11px;font-weight:600;color:#2563EB;">AI自动</div></div>
-        <span class="badge-pending" style="background:#FFF7ED;color:#EA580C;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;white-space:nowrap;">待确认</span>
-        <div style="display:flex;gap:6px;"><button class="btn-red btn-sm" onclick="confirmBk(this)">确认</button><button class="btn-ghost btn-sm">改期</button></div>
-      </div>
-    </div>
-    <div style="margin-top:14px;padding:14px 20px;background:#fff;border-radius:12px;border:1px solid #EBEBEB;display:flex;gap:24px;align-items:center;">
-      <div style="text-align:center;"><div style="font-size:24px;font-weight:800;">6</div><div style="font-size:11px;color:#999;">近30日预约</div></div>
-      <div style="width:1px;height:36px;background:#EBEBEB;"></div>
-      <div style="text-align:center;"><div style="font-size:24px;font-weight:800;color:#EA580C;">2</div><div style="font-size:11px;color:#999;">待确认</div></div>
-      <div style="width:1px;height:36px;background:#EBEBEB;"></div>
-      <div style="text-align:center;"><div style="font-size:24px;font-weight:800;color:#059669;">2</div><div style="font-size:11px;color:#999;">已确认</div></div>
-      <div style="width:1px;height:36px;background:#EBEBEB;"></div>
-      <div style="text-align:center;"><div style="font-size:24px;font-weight:800;color:#FF2442;">67%</div><div style="font-size:11px;color:#999;">完成率</div></div>
-      <div style="margin-left:auto;background:linear-gradient(135deg,#FFF0F2,#FFF7F8);border:1px solid #FFD6DC;border-radius:10px;padding:10px 16px;font-size:12px;color:#CC1033;font-weight:500;line-height:1.7;">
-        💡 AI 自动预约占比 <b>83%</b><br>本月节省客服工时约 <b>12h</b>
-      </div>
+
+    <!-- 表格 -->
+    <div style="overflow-x:auto;padding:0 0 20px;">
+      <table style="width:100%;border-collapse:collapse;font-size:13px;background:#fff;">
+        <thead>
+          <tr style="border-bottom:1px solid #F0F0F0;background:#FAFAFA;">
+            <th style="padding:12px 20px;text-align:left;font-size:12px;font-weight:600;color:#999;white-space:nowrap;min-width:160px;">用户昵称</th>
+            <th style="padding:12px 16px;text-align:left;font-size:12px;font-weight:600;color:#999;white-space:nowrap;">最新互动时间</th>
+            <th style="padding:12px 16px;text-align:left;font-size:12px;font-weight:600;color:#999;white-space:nowrap;">互动类型</th>
+            <th style="padding:12px 16px;text-align:left;font-size:12px;font-weight:600;color:#999;white-space:nowrap;">私信状态</th>
+            <th style="padding:12px 16px;text-align:left;font-size:12px;font-weight:600;color:#999;white-space:nowrap;">私信时间</th>
+            <th style="padding:12px 16px;text-align:left;font-size:12px;font-weight:600;color:#999;white-space:nowrap;">是否消耗私信次数</th>
+            <th style="padding:12px 16px;text-align:left;font-size:12px;font-weight:600;color:#999;white-space:nowrap;">标签</th>
+            <th style="padding:12px 16px;text-align:left;font-size:12px;font-weight:600;color:#999;white-space:nowrap;">授权账号信息</th>
+            <th style="padding:12px 20px;text-align:left;font-size:12px;font-weight:600;color:#999;white-space:nowrap;">操作</th>
+          </tr>
+        </thead>
+        <tbody id="um-tbody">
+          <!-- JS 生成 -->
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
-
 
 </div><!-- /main -->
 
-<!-- ══ 看板快捷回传模态 ══ -->
-<div id="feedback-modal" style="display:none;" class="modal-overlay" onclick="if(event.target===this)closeFeedbackModal()">
-  <div class="modal">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-      <div style="font-size:15px;font-weight:700;">快捷回传 · 梅子酱</div>
-      <button onclick="closeFeedbackModal()" style="border:none;background:none;font-size:18px;color:#bbb;cursor:pointer;">✕</button>
-    </div>
-    <div style="font-size:12px;color:#999;margin-bottom:14px;padding:10px 14px;background:#F7F8FA;border-radius:9px;line-height:1.65;">
-      <b style="color:#555;">为什么要回传？</b><br>
-      你填写的结果会直接传给投放模型，帮助系统识别高转化线索特征，让下一批广告更精准触达高意向用户。
-      <span style="color:#FF2442;font-weight:600;">回传越多，线索越准。</span>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;" id="modal-feedback-grid">
-      <button class="feedback-btn" onclick="modalPick(this,'到访')" style="padding:12px;">✅ 到访</button>
-      <button class="feedback-btn" onclick="modalPick(this,'成交')" style="padding:12px;">🎉 成交</button>
-      <button class="feedback-btn" onclick="modalPick(this,'跟进中')" style="padding:12px;">⏳ 跟进中</button>
-      <button class="feedback-btn" onclick="modalPick(this,'无效')" style="padding:12px;">❌ 无效</button>
-    </div>
-    <textarea placeholder="备注（可选）" style="width:100%;border:1px solid #E5E7EB;border-radius:9px;padding:10px 12px;font-size:13px;color:#555;resize:none;outline:none;font-family:inherit;" rows="2"></textarea>
-    <div style="margin-top:10px;font-size:11px;color:#bbb;line-height:1.6;">
-      回传字段：线索ID · 意向等级 · 结果状态 · 备注 · 时间戳<br>
-      数据流向：→ 知然归因模型 → 投放策略优化
-    </div>
-    <button class="btn-red" style="width:100%;margin-top:12px;padding:11px;" id="modal-submit" onclick="submitModal()" disabled>提交回传</button>
-  </div>
-</div>
 
 <script>
 // ── 页面切换
@@ -883,6 +876,88 @@ function submitFeedback() {
   document.getElementById('submit-feedback-btn').style.background = '#10B981';
   document.getElementById('submit-feedback-btn').disabled = true;
 }
+
+// ══ 用户管理表格 ══
+const umData = [
+  { avatar:'李', name:'李白来到烤...', uid:'61e93eaa...', time:'2026-04-01 17:49:22', itype:'未关注', dm:'未私信', dmTime:'-', cost:'是', tag:'留客资', auth:'--', dmSent:false },
+  { avatar:'二', name:'二十六个黑...', uid:'5b17add9e...', time:'2026-04-01 17:46:05', itype:'未关注', dm:'未私信', dmTime:'-', cost:'是', tag:'留客资', auth:'--', dmSent:false },
+  { avatar:'小', name:'小红薯671B...', uid:'671b4bcb...', time:'2026-04-01 13:00:16', itype:'未关注', dm:'未私信', dmTime:'-', cost:'是', tag:'-', auth:'--', dmSent:false },
+  { avatar:'小', name:'小红薯69C...', uid:'69ca1ff70...', time:'2026-03-30 16:32:53', itype:'关注', dm:'已私信', dmTime:'2026-03-30 16:32:55', cost:'否', tag:'留客资', auth:'--', dmSent:true },
+  { avatar:'三', name:'三七不怎么管', uid:'591a9fb28...', time:'2026-03-30 14:51:47', itype:'评论(1)、未关注', dm:'已私信', dmTime:'2026-03-30 14:47:37', cost:'是', tag:'留客资', auth:'--', dmSent:true },
+  { avatar:'土', name:'土漆生漆《...', uid:'66b64ff20...', time:'2026-03-29 18:28:34', itype:'关注', dm:'未私信', dmTime:'-', cost:'否', tag:'-', auth:'--', dmSent:false },
+  { avatar:'下', name:'下个路口见', uid:'62bc4207...', time:'2026-03-27 10:32:06', itype:'评论(1)', dm:'未私信', dmTime:'-', cost:'是', tag:'-', auth:'--', dmSent:false },
+  { avatar:'小', name:'小红薯66A...', uid:'66ab8272...', time:'2026-03-26 22:59:56', itype:'关注', dm:'未私信', dmTime:'-', cost:'否', tag:'-', auth:'--', dmSent:false },
+];
+
+const avatarColors = ['linear-gradient(135deg,#FF7A8E,#FF2442)','linear-gradient(135deg,#C084FC,#A855F7)','linear-gradient(135deg,#FCD34D,#F59E0B)','linear-gradient(135deg,#6EE7B7,#059669)','linear-gradient(135deg,#93C5FD,#60A5FA)','linear-gradient(135deg,#818CF8,#6366F1)','linear-gradient(135deg,#FB923C,#F97316)','linear-gradient(135deg,#34D399,#10B981)'];
+
+function renderUmTable(data) {
+  const tbody = document.getElementById('um-tbody');
+  if (!tbody) return;
+  if (data.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:40px;color:#C0C0C0;font-size:13px;">暂无数据</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = data.map((u, i) => {
+    const dmColor = u.dm === '已私信' ? '#10B981' : '#EF4444';
+    const tagHtml = u.tag !== '-' ? `<span style="background:#FEF3C7;color:#D97706;font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;">${u.tag}</span>` : `<span style="color:#bbb;">-</span>`;
+    const actionHtml = u.dmSent
+      ? `<span style="color:#3B82F6;font-size:12px;cursor:pointer;font-weight:500;">查看会话</span>`
+      : `<span style="color:#3B82F6;font-size:12px;cursor:pointer;font-weight:500;">私信回复</span>`;
+    const bg = avatarColors[i % avatarColors.length];
+    return `<tr style="border-bottom:1px solid #F5F5F5;transition:background .12s;" onmouseover="this.style.background='#FFF8F9'" onmouseout="this.style.background=''">
+      <td style="padding:14px 20px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="av" style="width:36px;height:36px;font-size:13px;background:${bg};flex-shrink:0;">${u.avatar}</div>
+          <div>
+            <div style="font-size:13px;font-weight:600;color:#1a1a1a;">${u.name}</div>
+            <div style="font-size:11px;color:#bbb;margin-top:2px;">ID:${u.uid}</div>
+          </div>
+        </div>
+      </td>
+      <td style="padding:14px 16px;font-size:12px;color:#555;white-space:nowrap;">${u.time}</td>
+      <td style="padding:14px 16px;font-size:12px;color:#555;">${u.itype}</td>
+      <td style="padding:14px 16px;white-space:nowrap;">
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:12px;color:${dmColor};">
+          <span style="width:7px;height:7px;border-radius:50%;background:${dmColor};display:inline-block;"></span>${u.dm}
+        </span>
+      </td>
+      <td style="padding:14px 16px;font-size:12px;color:#555;white-space:nowrap;">${u.dmTime}</td>
+      <td style="padding:14px 16px;font-size:12px;color:#555;">${u.cost}</td>
+      <td style="padding:14px 16px;">${tagHtml}</td>
+      <td style="padding:14px 16px;font-size:12px;color:#bbb;">${u.auth}</td>
+      <td style="padding:14px 20px;">${actionHtml}</td>
+    </tr>`;
+  }).join('');
+}
+
+function applyUmFilter() {
+  const itype = document.getElementById('um-itype')?.value || '';
+  const dm = document.getElementById('um-dm')?.value || '';
+  const filtered = umData.filter(u =>
+    (!itype || u.itype.includes(itype)) &&
+    (!dm || u.dm === dm)
+  );
+  renderUmTable(filtered);
+}
+
+function resetUmFilter() {
+  if (document.getElementById('um-itype')) document.getElementById('um-itype').value = '';
+  if (document.getElementById('um-dm')) document.getElementById('um-dm').value = '';
+  if (document.getElementById('um-uid')) document.getElementById('um-uid').value = '';
+  renderUmTable(umData);
+}
+
+function refreshUm() { renderUmTable(umData); }
+
+// 初始渲染（等 DOM 就绪）
+(function initUm() {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => renderUmTable(umData));
+  } else {
+    renderUmTable(umData);
+  }
+})();
 
 // ── 工作台刷新
 function refreshWb() {
@@ -1042,43 +1117,7 @@ function switchPeriod(radio) {
 })();
 
 // ── 预约筛选
-function filterBk(btn, status) {
-  document.querySelectorAll('.feedback-btn[data-f]').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
-  document.querySelectorAll('.bk-item').forEach(item => {
-    item.style.display = (status === 'all' || item.dataset.status === status) ? '' : 'none';
-  });
-}
 
-// ── 确认预约
-function confirmBk(btn) {
-  const card = btn.closest('.bk-item');
-  if (!card) return;
-  card.dataset.status = 'confirmed';
-  const badge = card.querySelector('[class*="badge-pending"], span[style*="EA580C"]');
-  if (badge) { badge.style.background = '#ECFDF5'; badge.style.color = '#059669'; badge.textContent = '已确认'; }
-  btn.textContent = '✅ 已确认';
-  btn.style.background = '#10B981';
-  btn.disabled = true;
-}
-
-// ── 看板快捷回传 modal
-function openFeedbackModal() { document.getElementById('feedback-modal').style.display = 'flex'; }
-function closeFeedbackModal() { document.getElementById('feedback-modal').style.display = 'none'; }
-let modalChosen = null;
-function modalPick(btn, val) {
-  document.querySelectorAll('#modal-feedback-grid .feedback-btn').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
-  modalChosen = val;
-  document.getElementById('modal-submit').disabled = false;
-}
-function submitModal() {
-  const btn = document.getElementById('modal-submit');
-  btn.textContent = '✅ 回传成功';
-  btn.style.background = '#10B981';
-  btn.disabled = true;
-  setTimeout(() => closeFeedbackModal(), 1500);
-}
 </script>
 </body>
 </html>
