@@ -137,6 +137,7 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.4); display: flex; align-items: center; justify-content: center; z-index: 100; backdrop-filter: blur(2px); }
 .modal { background: #fff; border-radius: 18px; padding: 28px; width: 420px; box-shadow: 0 20px 60px rgba(0,0,0,.15); }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 <body>
 
@@ -192,6 +193,7 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
       <span style="font-size:15px;font-weight:700;">线索经营</span>
     </div>
     <div style="display:flex;align-items:center;gap:12px;">
+      <button class="btn-ghost btn-sm" onclick="exportWbExcel()" style="display:flex;align-items:center;gap:5px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>导出</button>
       <div style="display:flex;align-items:center;gap:7px;border:1.5px solid #E5E7EB;border-radius:8px;padding:5px 14px;font-size:12px;color:#555;background:#fff;">
         <span style="color:#999;">最后更新:</span>
         <span id="wb-ts" style="font-weight:600;color:#1a1a1a;">2026-04-03 15:30:00</span>
@@ -612,6 +614,7 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
     </div>
     <!-- 右上角：最后更新时间 + 刷新图标 -->
     <div style="display:flex;align-items:center;gap:12px;">
+      <button class="btn-ghost btn-sm" onclick="exportBoardExcel()" style="display:flex;align-items:center;gap:5px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>导出</button>
       <div style="display:flex;align-items:center;gap:7px;border:1.5px solid #E5E7EB;border-radius:8px;padding:5px 14px;font-size:12px;color:#555;background:#fff;">
         <span style="color:#999;">最后更新:</span>
         <span id="board-ts" style="font-weight:600;color:#1a1a1a;">2026-04-03 15:30:00</span>
@@ -702,6 +705,7 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
   <div class="topbar">
     <div><span style="font-size:15px;font-weight:700;">交易管理</span></div>
     <div style="display:flex;align-items:center;gap:8px;">
+      <button class="btn-ghost btn-sm" onclick="exportUmExcel()" style="display:flex;align-items:center;gap:5px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>导出</button>
       <button class="btn-ghost btn-sm" onclick="resetUmFilter()">重置</button>
       <button class="btn-ghost btn-sm" onclick="refreshUm()">刷新</button>
     </div>
@@ -1088,6 +1092,60 @@ function applyUmFilter() {
     return true;
   });
   renderUmTable(filtered);
+}
+
+// ── 导出 Excel
+function exportUmExcel() {
+  const headers = ['用户昵称','最新互动时间','互动类型','私信状态','私信时间','预约信息','成交状态','操作'];
+  const rows = umData.map(u => [
+    u.name, u.time, u.itype, u.dm, u.dmTime,
+    u.book !== '-' ? u.book : '',
+    u.deal !== '-' ? u.deal : '',
+    u.dmSent ? '查看会话' : '私信回复'
+  ]);
+  const ws = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, '交易管理');
+  XLSX.writeFile(wb, '交易管理_' + new Date().toISOString().slice(0,10) + '.xlsx');
+}
+
+function exportBoardExcel() {
+  const metrics = [
+    ['指标','数值','备注'],
+    ['新增线索','62','+18%'],
+    ['热线索','24',''],
+    ['转化率','8.3%','回传覆盖71%'],
+    ['AI覆盖率','79%','49/62条'],
+    ['AI响应速度','1.8s',''],
+    ['人工响应速度','11min',''],
+  ];
+  const funnel = [
+    ['漏斗层级','数量','占比'],
+    ['点击进线（新增线索）','62条','100%'],
+    ['AI承接完成应答','49条','79%'],
+    ['意向激活（温+热）','38条','61%'],
+    ['人工接管/持续跟进','15条','24%'],
+    ['到访/下单','9条','15%'],
+    ['成交','5条','8.3%'],
+  ];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(metrics), '核心指标');
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(funnel), '转化漏斗');
+  XLSX.writeFile(wb, '数据看板_' + new Date().toISOString().slice(0,10) + '.xlsx');
+}
+
+function exportWbExcel() {
+  const leads = [
+    { name:'梅子酱', intent:'热', status:'处理中', time:'10:24', src:'广告私信', summary:'五一大理6日游，2大1小，问过全含版价格，询问拼团折扣' },
+    { name:'晴天小鹿', intent:'温', status:'处理中', time:'昨天 14:30', src:'评论引导', summary:'询问三亚亲子线路，未给出具体日期' },
+    { name:'糖糖爱摄影', intent:'冷', status:'已接管', time:'2天前', src:'留资', summary:'随意浏览，问了一下云南线路' },
+  ];
+  const headers = ['用户昵称','意向等级','当前状态','最新消息时间','进线来源','AI摘要'];
+  const rows = leads.map(l => [l.name, l.intent, l.status, l.time, l.src, l.summary]);
+  const ws = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, '线索经营');
+  XLSX.writeFile(wb, '线索经营_' + new Date().toISOString().slice(0,10) + '.xlsx');
 }
 
 function resetUmFilter() {
