@@ -775,6 +775,67 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
   </div>
 </div>
 
+<!-- ═══════════════════════════════════
+  回传 Sheet（用户管理维度）
+═══════════════════════════════════ -->
+<div id="um-sheet-mask" onclick="closeFeedbackSheet()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:200;transition:opacity .2s;"></div>
+<div id="um-sheet" style="display:none;position:fixed;left:0;right:0;bottom:0;z-index:201;background:#fff;border-radius:18px 18px 0 0;padding:24px 28px 32px;max-width:520px;margin:0 auto;box-shadow:0 -4px 32px rgba(0,0,0,0.13);transition:transform .25s;">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+    <div>
+      <div style="font-size:15px;font-weight:700;color:#1a1a1a;">填写跟进结果</div>
+      <div id="um-sheet-name" style="font-size:12px;color:#999;margin-top:2px;"></div>
+    </div>
+    <div onclick="closeFeedbackSheet()" style="cursor:pointer;width:28px;height:28px;border-radius:50%;background:#F3F4F6;display:flex;align-items:center;justify-content:center;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </div>
+  </div>
+
+  <!-- 已预约 -->
+  <div style="margin-bottom:18px;">
+    <div style="font-size:12px;font-weight:600;color:#555;margin-bottom:8px;">📅 预约时间</div>
+    <input id="um-book-time" type="text" placeholder="如：05-21 10:00（留空表示未预约）" style="width:100%;box-sizing:border-box;border:1px solid #E5E7EB;border-radius:8px;padding:9px 12px;font-size:13px;color:#333;outline:none;">
+  </div>
+
+  <!-- 是否到店 -->
+  <div style="margin-bottom:18px;">
+    <div style="font-size:12px;font-weight:600;color:#555;margin-bottom:8px;">🏪 是否到店</div>
+    <div style="display:flex;gap:12px;">
+      <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;color:#333;">
+        <input type="radio" name="um-visit" value="yes" style="accent-color:#10B981;width:15px;height:15px;"> 已到店
+      </label>
+      <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;color:#333;">
+        <input type="radio" name="um-visit" value="no" style="accent-color:#EF4444;width:15px;height:15px;"> 未到店
+      </label>
+      <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;color:#999;">
+        <input type="radio" name="um-visit" value="" checked style="accent-color:#bbb;width:15px;height:15px;"> 暂不填
+      </label>
+    </div>
+  </div>
+
+  <!-- 是否成交 -->
+  <div style="margin-bottom:24px;">
+    <div style="font-size:12px;font-weight:600;color:#555;margin-bottom:8px;">💰 是否成交</div>
+    <div style="display:flex;gap:12px;">
+      <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;color:#333;">
+        <input type="radio" name="um-deal" value="yes" style="accent-color:#10B981;width:15px;height:15px;"> 已成交
+      </label>
+      <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;color:#333;">
+        <input type="radio" name="um-deal" value="no" style="accent-color:#EF4444;width:15px;height:15px;"> 未成交
+      </label>
+      <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;color:#999;">
+        <input type="radio" name="um-deal" value="" checked style="accent-color:#bbb;width:15px;height:15px;"> 暂不填
+      </label>
+    </div>
+  </div>
+
+  <!-- 激励提示 -->
+  <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;padding:10px 14px;font-size:12px;color:#15803D;margin-bottom:20px;line-height:1.6;">
+    💡 你的回传让 AI 更聪明 — 数据将同步至投放模型，优先触达相似高意向用户
+  </div>
+
+  <button onclick="submitUmFeedback()" style="width:100%;background:#FF2442;color:#fff;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:0.5px;">提交回传</button>
+</div>
+
 </div><!-- /main -->
 
 
@@ -920,9 +981,10 @@ function renderUmTable(data) {
       : u.deal === '未成交'
       ? `<span style="background:#F3F4F6;color:#9CA3AF;font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;">未成交</span>`
       : `<span style="color:#bbb;font-size:12px;">-</span>`;
-    const actionHtml = u.dmSent
+    const actionHtml = (u.dmSent
       ? `<span style="color:#3B82F6;font-size:12px;cursor:pointer;font-weight:500;" onclick="showPage('wb')">查看会话</span>`
-      : `<span style="color:#3B82F6;font-size:12px;cursor:pointer;font-weight:500;" onclick="showPage('wb')">私信回复</span>`;
+      : `<span style="color:#3B82F6;font-size:12px;cursor:pointer;font-weight:500;" onclick="showPage('wb')">私信回复</span>`)
+      + `<span style="color:#bbb;margin:0 6px;font-size:12px;">|</span><span style="color:#10B981;font-size:12px;cursor:pointer;font-weight:500;" onclick="openFeedbackSheet(${i}, '${u.name}')">填写结果</span>`;
     const bg = avatarColors[i % avatarColors.length];
     return `<tr style="border-bottom:1px solid #F5F5F5;transition:background .12s;" onmouseover="this.style.background='#FFF8F9'" onmouseout="this.style.background=''">
       <td style="padding:14px 20px;">
@@ -950,6 +1012,41 @@ function renderUmTable(data) {
       <td style="padding:14px 20px;">${actionHtml}</td>
     </tr>`;
   }).join('');
+}
+
+// ── 用户管理回传 Sheet
+let umSheetIdx = -1;
+function openFeedbackSheet(idx, name) {
+  umSheetIdx = idx;
+  document.getElementById('um-sheet-name').textContent = name;
+  // 预填已有数据
+  const u = umData[idx];
+  document.getElementById('um-book-time').value = u.book !== '-' ? u.book : '';
+  document.querySelectorAll('input[name="um-visit"]').forEach(r => r.checked = (r.value === ''));
+  document.querySelectorAll('input[name="um-deal"]').forEach(r => r.checked = (r.value === ''));
+  if (u.deal === '已成交') document.querySelector('input[name="um-deal"][value="yes"]').checked = true;
+  else if (u.deal === '未成交') document.querySelector('input[name="um-deal"][value="no"]').checked = true;
+  document.getElementById('um-sheet-mask').style.display = 'block';
+  document.getElementById('um-sheet').style.display = 'block';
+}
+function closeFeedbackSheet() {
+  document.getElementById('um-sheet-mask').style.display = 'none';
+  document.getElementById('um-sheet').style.display = 'none';
+  umSheetIdx = -1;
+}
+function submitUmFeedback() {
+  if (umSheetIdx < 0) return;
+  const u = umData[umSheetIdx];
+  const bookVal = document.getElementById('um-book-time').value.trim();
+  const visitVal = document.querySelector('input[name="um-visit"]:checked')?.value;
+  const dealVal = document.querySelector('input[name="um-deal"]:checked')?.value;
+  if (bookVal) u.book = bookVal;
+  if (visitVal === 'yes') { u.visit = '已到店'; }
+  else if (visitVal === 'no') { u.visit = '未到店'; }
+  if (dealVal === 'yes') u.deal = '已成交';
+  else if (dealVal === 'no') u.deal = '未成交';
+  closeFeedbackSheet();
+  renderUmTable(umData);
 }
 
 function applyUmFilter() {
