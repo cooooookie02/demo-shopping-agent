@@ -164,7 +164,7 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
     </div>
     <div class="nav-item" id="nav-book" onclick="showPage('book')">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-      用户管理
+      交易管理
     </div>
   </nav>
   <div class="nav-user">
@@ -696,11 +696,11 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
 </div>
 
 <!-- ═══════════════════════════════════
-  页面③：用户管理
+  页面③：交易管理
 ═══════════════════════════════════ -->
 <div id="page-book" class="page" style="display:none;flex-direction:column;">
   <div class="topbar">
-    <div><span style="font-size:15px;font-weight:700;">用户管理</span></div>
+    <div><span style="font-size:15px;font-weight:700;">交易管理</span></div>
     <div style="display:flex;align-items:center;gap:8px;">
       <button class="btn-ghost btn-sm" onclick="resetUmFilter()">重置</button>
       <button class="btn-ghost btn-sm" onclick="refreshUm()">刷新</button>
@@ -776,7 +776,7 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
 </div>
 
 <!-- ═══════════════════════════════════
-  回传 Sheet（用户管理维度）
+  回传 Sheet（交易管理维度）
 ═══════════════════════════════════ -->
 <div id="um-sheet-mask" onclick="closeFeedbackSheet()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:200;"></div>
 <div id="um-sheet" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:201;background:#fff;border-radius:14px;padding:28px 32px;width:480px;max-width:90vw;box-shadow:0 8px 40px rgba(0,0,0,0.18);">
@@ -949,7 +949,7 @@ function submitFeedback() {
   document.getElementById('submit-feedback-btn').disabled = true;
 }
 
-// ══ 用户管理表格 ══
+// ══ 交易管理表格 ══
 const umData = [
   { avatar:'梅', name:'梅子酱', uid:'61e93eaa...', time:'2026-04-01 17:49', itype:'未关注', dm:'已私信', dmTime:'2026-04-01 17:50', cost:'是', tag:'留客资', book:'05-14 10:00', deal:'已成交', auth:'--', dmSent:true },
   { avatar:'晴', name:'晴天小鹿', uid:'5b17add9e...', time:'2026-04-01 17:46', itype:'关注', dm:'已私信', dmTime:'2026-04-01 17:47', cost:'否', tag:'留客资', book:'05-21 09:00', deal:'未成交', auth:'--', dmSent:true },
@@ -1014,7 +1014,7 @@ function renderUmTable(data) {
   }).join('');
 }
 
-// ── 用户管理回传 Sheet
+// ── 交易管理回传 Sheet
 let umSheetIdx = -1;
 function openFeedbackSheet(idx, name) {
   umSheetIdx = idx;
