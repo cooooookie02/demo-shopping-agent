@@ -709,12 +709,19 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
   <div class="page-body" style="padding:0;">
     <!-- 筛选栏 -->
     <div style="background:#fff;border-bottom:1px solid #EBEBEB;padding:12px 20px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-      <div style="display:flex;align-items:center;gap:6px;">
+      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
         <span style="font-size:12px;color:#999;white-space:nowrap;">互动时间</span>
-        <input id="um-date-start" type="text" value="2026-03-31" placeholder="开始日期" style="border:1px solid #E5E7EB;border-radius:6px;padding:5px 8px;font-size:12px;color:#333;outline:none;width:96px;">
-        <span style="font-size:12px;color:#bbb;">—</span>
-        <input id="um-date-end" type="text" value="2026-04-07" placeholder="结束日期" style="border:1px solid #E5E7EB;border-radius:6px;padding:5px 8px;font-size:12px;color:#333;outline:none;width:96px;">
-        <button onclick="applyUmFilter()" style="background:#FF2442;color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:12px;cursor:pointer;font-weight:500;">查询</button>
+        <div style="display:flex;gap:4px;">
+          <button id="um-preset-7" onclick="setUmDatePreset(7)" style="border:1px solid #FF2442;background:#FF2442;color:#fff;border-radius:6px;padding:4px 10px;font-size:12px;cursor:pointer;font-weight:500;">近7天</button>
+          <button id="um-preset-30" onclick="setUmDatePreset(30)" style="border:1px solid #E5E7EB;background:#fff;color:#555;border-radius:6px;padding:4px 10px;font-size:12px;cursor:pointer;">近30天</button>
+          <button id="um-preset-custom" onclick="setUmDatePreset('custom')" style="border:1px solid #E5E7EB;background:#fff;color:#555;border-radius:6px;padding:4px 10px;font-size:12px;cursor:pointer;">自定义</button>
+        </div>
+        <div id="um-custom-range" style="display:none;align-items:center;gap:4px;">
+          <input id="um-date-start" type="text" placeholder="开始日期" style="border:1px solid #E5E7EB;border-radius:6px;padding:4px 8px;font-size:12px;color:#333;outline:none;width:96px;">
+          <span style="font-size:12px;color:#bbb;">—</span>
+          <input id="um-date-end" type="text" placeholder="结束日期" style="border:1px solid #E5E7EB;border-radius:6px;padding:4px 8px;font-size:12px;color:#333;outline:none;width:96px;">
+          <button onclick="applyUmFilter()" style="background:#FF2442;color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:12px;cursor:pointer;font-weight:500;">查询</button>
+        </div>
       </div>
       <div style="display:flex;align-items:center;gap:6px;">
         <span style="font-size:12px;color:#999;white-space:nowrap;">用户账号ID</span>
@@ -1020,6 +1027,30 @@ function renderUmTable(data) {
   }).join('');
 }
 
+// ── 交易管理时间快捷选项
+function setUmDatePreset(val) {
+  const activeStyle = 'border:1px solid #FF2442;background:#FF2442;color:#fff;border-radius:6px;padding:4px 10px;font-size:12px;cursor:pointer;font-weight:500;';
+  const idleStyle = 'border:1px solid #E5E7EB;background:#fff;color:#555;border-radius:6px;padding:4px 10px;font-size:12px;cursor:pointer;';
+  ['um-preset-7','um-preset-30','um-preset-custom'].forEach(id => document.getElementById(id).style.cssText = idleStyle);
+  const customRange = document.getElementById('um-custom-range');
+  if (val === 'custom') {
+    document.getElementById('um-preset-custom').style.cssText = activeStyle;
+    customRange.style.display = 'flex';
+    return;
+  }
+  customRange.style.display = 'none';
+  document.getElementById(val === 7 ? 'um-preset-7' : 'um-preset-30').style.cssText = activeStyle;
+  const today = new Date();
+  const fmt = d => d.toISOString().slice(0,10);
+  const start = new Date(today); start.setDate(today.getDate() - val + 1);
+  window._umDateStart = fmt(start);
+  window._umDateEnd = fmt(today);
+  applyUmFilter();
+}
+// 初始默认近7天
+window._umDateStart = (() => { const d = new Date(); d.setDate(d.getDate()-6); return d.toISOString().slice(0,10); })();
+window._umDateEnd = new Date().toISOString().slice(0,10);
+
 // ── 交易管理回传 Sheet
 let umSheetIdx = -1;
 function openFeedbackSheet(idx, name) {
@@ -1058,14 +1089,15 @@ function submitUmFeedback() {
 function applyUmFilter() {
   const itype = document.getElementById('um-itype')?.value || '';
   const dm = document.getElementById('um-dm')?.value || '';
-  const dateStart = document.getElementById('um-date-start')?.value || '';
-  const dateEnd = document.getElementById('um-date-end')?.value || '';
+  // 自定义模式读输入框，否则读全局变量
+  const isCustom = document.getElementById('um-custom-range')?.style.display !== 'none';
+  const dateStart = isCustom ? (document.getElementById('um-date-start')?.value || '') : (window._umDateStart || '');
+  const dateEnd   = isCustom ? (document.getElementById('um-date-end')?.value   || '') : (window._umDateEnd   || '');
   const filtered = umData.filter(u => {
     if (itype && !u.itype.includes(itype)) return false;
     if (dm && u.dm !== dm) return false;
-    // 时间筛选：最新互动时间落在区间内
     if (dateStart || dateEnd) {
-      const t = u.time.slice(0, 10); // "YYYY-MM-DD"
+      const t = u.time.slice(0, 10);
       if (dateStart && t < dateStart) return false;
       if (dateEnd && t > dateEnd) return false;
     }
