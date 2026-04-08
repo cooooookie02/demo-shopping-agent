@@ -731,13 +731,13 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
       </div>
     </div>
 
-    <!-- ③ 员工效果对比表 + Skill触发分布 -->
+    <!-- ③ 员工工作情况表 + Skill触发分布 -->
     <div style="display:grid;grid-template-columns:1fr 320px;gap:14px;margin-bottom:20px;align-items:start;">
 
-      <!-- 员工效果对比表 -->
+      <!-- 员工工作情况表 -->
       <div class="card" style="overflow:hidden;">
         <div style="padding:16px 20px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #F5F5F5;">
-          <span style="font-size:13px;font-weight:700;">员工效果对比</span>
+          <span style="font-size:13px;font-weight:700;">员工工作情况</span>
           <div style="display:flex;align-items:center;gap:8px;font-size:11px;color:#bbb;">
             <span style="display:inline-flex;align-items:center;gap:4px;">🤖 数字员工</span>
             <span style="display:inline-flex;align-items:center;gap:4px;">👤 人工</span>
@@ -1449,7 +1449,7 @@ function switchPeriod(radio) {
   }
 })();
 
-// ── 员工效果对比表
+// ── 员工工作情况表
 (function buildStaffTable() {
   const staffData = [
     { type:'ai', name:'小薯·旅行顾问', account:'同程旅行旗舰店', talks:62, convRate:'14.5%', convVal:14.5, avgRound:6.2, transferRate:'18%', status:'运行中', skills:['欢迎','行程查询','套餐报价'] },
