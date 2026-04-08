@@ -156,7 +156,7 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
     <div class="nav-section">WORKSPACE</div>
     <div class="nav-item active" id="nav-board" onclick="showPage('board')">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
-      线索看板
+      数据看板
     </div>
     <div class="nav-item" id="nav-wb" onclick="showPage('wb')">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
@@ -209,6 +209,7 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
       <div style="padding:12px 12px 10px;border-bottom:1px solid #F0F0F0;">
         <div class="tab-bar" id="wb-tab-bar">
           <div class="tab-btn active" onclick="wbTab(this,'wbt-ai')">处理中<span style="color:#FF2442;margin-left:2px;">2</span></div>
+          <div class="tab-btn" onclick="wbTab(this,'wbt-takeover')">待接管<span style="color:#F59E0B;margin-left:2px;">1</span></div>
           <div class="tab-btn" onclick="wbTab(this,'wbt-pending')">已接管<span style="color:#EA580C;margin-left:2px;">3</span></div>
           <div class="tab-btn" onclick="wbTab(this,'wbt-done')">已结束</div>
         </div>
@@ -277,6 +278,28 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
                   <span class="tag tag-ai">AI 中</span>
                 </div>
                 <div style="font-size:11px;color:#999;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">用户: 含民宿的套餐能发下详情吗？</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 待接管 -->
+        <div id="wbt-takeover" style="display:none;">
+          <div class="lead-item" onclick="leadClick(this,'lead-mei')">
+            <div style="display:flex;align-items:flex-start;gap:9px;">
+              <div style="position:relative;flex-shrink:0;">
+                <div class="av" style="width:36px;height:36px;font-size:13px;background:linear-gradient(135deg,#FCD34D,#F59E0B);">夏</div>
+                <div style="position:absolute;bottom:0;right:0;width:10px;height:10px;border-radius:50%;background:#F59E0B;border:2px solid #fff;"></div>
+              </div>
+              <div style="flex:1;min-width:0;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+                  <span style="font-size:13px;font-weight:600;">夏日里的柠檬</span>
+                  <span style="font-size:10px;color:#bbb;">10:51</span>
+                </div>
+                <div style="margin-bottom:4px;display:flex;gap:4px;">
+                  <span class="tag tag-hot">🔴 热意向</span>
+                  <span style="display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;background:#FEF9C3;color:#CA8A04;">待接管</span>
+                </div>
+                <div style="font-size:11px;color:#999;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">触发转人工 — 等待销售接管</div>
               </div>
             </div>
           </div>
@@ -604,7 +627,7 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
 
 
 <!-- ═══════════════════════════════════
-  页面②：线索看板
+  页面②：数据看板
 ═══════════════════════════════════ -->
 <div id="page-board" class="page active">
   <!-- Topbar -->
@@ -612,15 +635,13 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
     <div>
       <span style="font-size:15px;font-weight:700;">数据看板</span>
     </div>
-    <!-- 右上角：最后更新时间 + 刷新图标 -->
     <div style="display:flex;align-items:center;gap:12px;">
       <button class="btn-ghost btn-sm" onclick="exportBoardExcel()" style="display:flex;align-items:center;gap:5px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>导出</button>
       <div style="display:flex;align-items:center;gap:7px;border:1.5px solid #E5E7EB;border-radius:8px;padding:5px 14px;font-size:12px;color:#555;background:#fff;">
         <span style="color:#999;">最后更新:</span>
-        <span id="board-ts" style="font-weight:600;color:#1a1a1a;">2026-04-03 15:30:00</span>
+        <span id="board-ts" style="font-weight:600;color:#1a1a1a;">2026-04-08 11:30:00</span>
         <svg id="board-refresh-icon" onclick="refreshBoard()" style="cursor:pointer;color:#888;flex-shrink:0;transition:transform .6s;" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
       </div>
-      
     </div>
   </div>
 
@@ -633,57 +654,135 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
       <label style="display:flex;align-items:center;gap:5px;cursor:pointer;margin-left:12px;"><input type="radio" name="period" value="month" onchange="switchPeriod(this)" style="accent-color:#FF2442;"> 本月</label>
       <div style="display:flex;align-items:center;gap:6px;margin-left:12px;color:#bbb;border:1px solid #EBEBEB;border-radius:7px;padding:4px 10px;font-size:11px;background:#FAFAFA;">
         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-        <span>2026-04-01</span><span>至</span><span>2026-04-03</span>
+        <span>2026-04-01</span><span>至</span><span>2026-04-08</span>
       </div>
       <label style="display:flex;align-items:center;gap:5px;cursor:pointer;margin-left:12px;"><input type="radio" name="period" value="custom" onchange="switchPeriod(this)" style="accent-color:#FF2442;"> 自定义</label>
     </div>
 
-    <!-- 5个核心指标卡 -->
-    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px;">
+    <!-- ① 线索全局指标卡（5个） -->
+    <div style="font-size:12px;font-weight:700;color:#999;letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px;">线索概览</div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:24px;">
       <div class="stat-card">
         <div style="font-size:11px;color:#999;margin-bottom:8px;">新增线索</div>
-        <div style="font-size:32px;font-weight:800;line-height:1;color:#1a1a1a;">62 <span style="font-size:14px;color:#10B981;font-weight:600;">+18%</span></div>
+        <div style="font-size:30px;font-weight:800;line-height:1;color:#1a1a1a;">62 <span style="font-size:13px;color:#10B981;font-weight:600;">+18%</span></div>
       </div>
       <div class="stat-card">
         <div style="font-size:11px;color:#999;margin-bottom:8px;">热线索</div>
-        <div style="font-size:32px;font-weight:800;line-height:1;color:#1a1a1a;">24</div>
+        <div style="font-size:30px;font-weight:800;line-height:1;color:#1a1a1a;">24</div>
       </div>
       <div class="stat-card">
         <div style="font-size:11px;color:#999;margin-bottom:8px;">转化率</div>
-        <div style="font-size:32px;font-weight:800;line-height:1;color:#1a1a1a;">8.3% <span style="font-size:12px;color:#999;font-weight:500;">回传覆盖71%</span></div>
+        <div style="font-size:30px;font-weight:800;line-height:1;color:#1a1a1a;">8.3%</div>
+        <div style="font-size:11px;color:#bbb;margin-top:5px;">回传覆盖 71%</div>
       </div>
       <div class="stat-card">
-        <div style="font-size:11px;color:#999;margin-bottom:8px;">AI覆盖率</div>
-        <div style="font-size:32px;font-weight:800;line-height:1;color:#1a1a1a;">79% <span style="font-size:12px;color:#999;font-weight:500;">49/62条</span></div>
+        <div style="font-size:11px;color:#999;margin-bottom:8px;">AI 覆盖率</div>
+        <div style="font-size:30px;font-weight:800;line-height:1;color:#1a1a1a;">79%</div>
       </div>
-      <!-- 响应速度：AI 和人工字号接近 -->
       <div class="stat-card">
         <div style="font-size:11px;color:#999;margin-bottom:8px;">响应速度</div>
-        <div style="font-size:22px;font-weight:800;line-height:1.3;color:#1a1a1a;">AI: 1.8s</div>
-        <div style="font-size:20px;font-weight:700;line-height:1.3;color:#555;">人工: 11min</div>
+        <div style="font-size:20px;font-weight:800;line-height:1.4;color:#1a1a1a;">AI <span style="color:#3B82F6;">1.8s</span></div>
+        <div style="font-size:18px;font-weight:700;line-height:1.4;color:#555;">人工 <span style="color:#F59E0B;">11min</span></div>
       </div>
     </div>
 
-    <!-- 进线趋势 + 转化漏斗 -->
-    <div style="display:grid;grid-template-columns:1fr 400px;gap:14px;align-items:stretch;">
+    <!-- ② 员工 Overview 横向概览条 -->
+    <div style="font-size:12px;font-weight:700;color:#999;letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px;">员工概览</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;">
+      <div class="stat-card" style="display:flex;align-items:center;gap:14px;">
+        <div style="width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,#EFF6FF,#DBEAFE);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        </div>
+        <div>
+          <div style="font-size:11px;color:#999;margin-bottom:4px;">在线员工</div>
+          <div style="font-size:26px;font-weight:800;color:#1a1a1a;line-height:1;">4 <span style="font-size:12px;color:#bbb;font-weight:400;">人</span></div>
+          <div style="font-size:11px;color:#3B82F6;margin-top:2px;">🤖×2 &nbsp;👤×2</div>
+        </div>
+      </div>
+      <div class="stat-card" style="display:flex;align-items:center;gap:14px;">
+        <div style="width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,#F0FDF4,#DCFCE7);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <div>
+          <div style="font-size:11px;color:#999;margin-bottom:4px;">今日总对话</div>
+          <div style="font-size:26px;font-weight:800;color:#1a1a1a;line-height:1;">149 <span style="font-size:12px;color:#bbb;font-weight:400;">轮</span></div>
+          <div style="font-size:11px;color:#10B981;margin-top:2px;">平均 37.3轮/人</div>
+        </div>
+      </div>
+      <div class="stat-card" style="display:flex;align-items:center;gap:14px;">
+        <div style="width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,#FFF7ED,#FFEDD5);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        </div>
+        <div>
+          <div style="font-size:11px;color:#999;margin-bottom:4px;">平均意向转化率</div>
+          <div style="font-size:26px;font-weight:800;color:#1a1a1a;line-height:1;">11.2%</div>
+          <div style="font-size:11px;color:#F59E0B;margin-top:2px;">↑ 较上周 +1.4%</div>
+        </div>
+      </div>
+      <div class="stat-card" style="display:flex;align-items:center;gap:14px;">
+        <div style="width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,#FDF4FF,#FAE8FF);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#A855F7" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        </div>
+        <div>
+          <div style="font-size:11px;color:#999;margin-bottom:4px;">Skill 触发次数</div>
+          <div style="font-size:26px;font-weight:800;color:#1a1a1a;line-height:1;">86 <span style="font-size:12px;color:#bbb;font-weight:400;">次</span></div>
+          <div style="font-size:11px;color:#A855F7;margin-top:2px;">触发率 58%</div>
+        </div>
+      </div>
+    </div>
 
+    <!-- ③ 员工效果对比表 + Skill触发分布 -->
+    <div style="display:grid;grid-template-columns:1fr 320px;gap:14px;margin-bottom:20px;align-items:start;">
+
+      <!-- 员工效果对比表 -->
+      <div class="card" style="overflow:hidden;">
+        <div style="padding:16px 20px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #F5F5F5;">
+          <span style="font-size:13px;font-weight:700;">员工效果对比</span>
+          <div style="display:flex;align-items:center;gap:8px;font-size:11px;color:#bbb;">
+            <span style="display:inline-flex;align-items:center;gap:4px;">🤖 数字员工</span>
+            <span style="display:inline-flex;align-items:center;gap:4px;">👤 人工</span>
+          </div>
+        </div>
+        <table style="width:100%;border-collapse:collapse;font-size:12px;">
+          <thead>
+            <tr style="background:#FAFAFA;">
+              <th style="padding:10px 16px;text-align:left;font-weight:600;color:#999;white-space:nowrap;">员工</th>
+              <th style="padding:10px 12px;text-align:left;font-weight:600;color:#999;white-space:nowrap;">挂载账号</th>
+              <th style="padding:10px 12px;text-align:center;font-weight:600;color:#999;white-space:nowrap;">今日对话</th>
+              <th style="padding:10px 12px;text-align:center;font-weight:600;color:#999;white-space:nowrap;">意向转化率</th>
+              <th style="padding:10px 12px;text-align:center;font-weight:600;color:#999;white-space:nowrap;">平均轮数</th>
+              <th style="padding:10px 12px;text-align:center;font-weight:600;color:#999;white-space:nowrap;">转人工率</th>
+              <th style="padding:10px 16px;text-align:center;font-weight:600;color:#999;white-space:nowrap;">状态</th>
+            </tr>
+          </thead>
+          <tbody id="staff-tbody"></tbody>
+        </table>
+      </div>
+
+      <!-- Skill 触发分布 -->
+      <div class="card" style="padding:16px 20px;">
+        <div style="font-size:13px;font-weight:700;margin-bottom:14px;">Skill 触发分布</div>
+        <div id="skill-dist"></div>
+      </div>
+    </div>
+
+    <!-- ④ 进线趋势 + 转化漏斗 -->
+    <div style="display:grid;grid-template-columns:1fr 360px;gap:14px;align-items:stretch;">
       <!-- 进线趋势折线图 -->
       <div class="card" style="padding:20px 22px;display:flex;flex-direction:column;">
         <div style="font-size:13px;font-weight:700;margin-bottom:10px;">进线趋势</div>
-        <!-- 图例 -->
         <div style="display:flex;gap:18px;margin-bottom:12px;">
           <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#555;">
-            <span style="display:inline-block;width:22px;height:2.5px;background:#3B82F6;border-radius:2px;vertical-align:middle;"></span>新增线索
+            <span style="display:inline-block;width:22px;height:2.5px;background:#3B82F6;border-radius:2px;"></span>新增线索
           </div>
           <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#555;">
-            <span style="display:inline-block;width:22px;height:2.5px;background:#EF4444;border-radius:2px;vertical-align:middle;"></span>热线索
+            <span style="display:inline-block;width:22px;height:2.5px;background:#EF4444;border-radius:2px;"></span>热线索
           </div>
           <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#555;">
-            <span style="display:inline-block;width:22px;height:2.5px;background:#10B981;border-radius:2px;vertical-align:middle;"></span>转化数
+            <span style="display:inline-block;width:22px;height:2.5px;background:#10B981;border-radius:2px;"></span>转化数
           </div>
         </div>
-        <!-- 图表区域 -->
-        <div style="flex:1;min-height:0;position:relative;">
+        <div style="flex:1;min-height:160px;position:relative;">
           <canvas id="trend-chart"></canvas>
         </div>
       </div>
@@ -693,8 +792,8 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
         <div style="font-size:13px;font-weight:700;margin-bottom:16px;">转化漏斗</div>
         <div id="funnel-wrap" style="flex:1;display:flex;flex-direction:column;justify-content:space-between;"></div>
       </div>
-
     </div>
+
   </div>
 </div>
 
@@ -706,8 +805,6 @@ nav { padding: 10px 8px; flex: 1; display: flex; flex-direction: column; gap: 2p
     <div><span style="font-size:15px;font-weight:700;">交易管理</span></div>
     <div style="display:flex;align-items:center;gap:8px;">
       <button class="btn-ghost btn-sm" onclick="exportUmExcel()" style="display:flex;align-items:center;gap:5px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>导出</button>
-      <button class="btn-ghost btn-sm" onclick="resetUmFilter()">重置</button>
-      <button class="btn-ghost btn-sm" onclick="refreshUm()">刷新</button>
     </div>
   </div>
   <div class="page-body" style="padding:0;">
@@ -857,7 +954,7 @@ function showPage(id) {
 // ── 工作台 Tab
 function wbTab(btn, tabId) {
   document.querySelectorAll('#wb-tab-bar .tab-btn').forEach(b => b.classList.remove('active'));
-  ['wbt-ai', 'wbt-pending', 'wbt-done'].forEach(id => { const el = document.getElementById(id); if(el) el.style.display = 'none'; });
+  ['wbt-ai', 'wbt-takeover', 'wbt-pending', 'wbt-done'].forEach(id => { const el = document.getElementById(id); if(el) el.style.display = 'none'; });
   btn.classList.add('active');
   const target = document.getElementById(tabId);
   if (target) target.style.display = 'block';
@@ -1343,6 +1440,100 @@ function switchPeriod(radio) {
       }
     });
     wrap.innerHTML = html;
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', render);
+  } else {
+    render();
+  }
+})();
+
+// ── 员工效果对比表
+(function buildStaffTable() {
+  const staffData = [
+    { type:'ai', name:'小薯·旅行顾问', account:'同程旅行旗舰店', talks:62, convRate:'14.5%', convVal:14.5, avgRound:6.2, transferRate:'18%', status:'运行中', skills:['欢迎','行程查询','套餐报价'] },
+    { type:'ai', name:'小薯·婚旅专线', account:'同程婚旅号', talks:31, convRate:'9.8%', convVal:9.8, avgRound:4.7, transferRate:'22%', status:'运行中', skills:['欢迎','转化'] },
+    { type:'human', name:'李梦琪', account:'–', talks:38, convRate:'10.5%', convVal:10.5, avgRound:9.1, transferRate:'–', status:'在线' },
+    { type:'human', name:'王小明', account:'–', talks:18, convRate:'7.2%', convVal:7.2, avgRound:11.4, transferRate:'–', status:'离线' },
+  ];
+
+  const avatarBg = {
+    ai: ['linear-gradient(135deg,#3B82F6,#6366F1)', 'linear-gradient(135deg,#8B5CF6,#A855F7)'],
+    human: ['linear-gradient(135deg,#FF7A8E,#FF2442)', 'linear-gradient(135deg,#FCD34D,#F59E0B)'],
+  };
+
+  function render() {
+    const tbody = document.getElementById('staff-tbody');
+    if (!tbody) return;
+    let aiIdx = 0, humanIdx = 0;
+    tbody.innerHTML = staffData.map((s, i) => {
+      const bg = s.type === 'ai' ? avatarBg.ai[aiIdx++ % 2] : avatarBg.human[humanIdx++ % 2];
+      const typeTag = s.type === 'ai'
+        ? `<span style="font-size:10px;background:#EFF6FF;color:#3B82F6;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:5px;">🤖 数字员工</span>`
+        : `<span style="font-size:10px;background:#F3F4F6;color:#6B7280;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:5px;">👤 人工</span>`;
+      const statusDot = s.status === '运行中' || s.status === '在线'
+        ? `<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#10B981;"><span style="width:6px;height:6px;border-radius:50%;background:#10B981;display:inline-block;"></span>${s.status}</span>`
+        : `<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#9CA3AF;"><span style="width:6px;height:6px;border-radius:50%;background:#D1D5DB;display:inline-block;"></span>${s.status}</span>`;
+      // 转化率 bar
+      const barColor = s.convVal >= 12 ? '#10B981' : s.convVal >= 9 ? '#F59E0B' : '#EF4444';
+      const convCell = `<div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+        <span style="font-size:13px;font-weight:700;color:${barColor};">${s.convRate}</span>
+        <div style="width:52px;height:4px;background:#F3F4F6;border-radius:3px;overflow:hidden;">
+          <div style="height:100%;width:${Math.min(s.convVal*4,100)}%;background:${barColor};border-radius:3px;"></div>
+        </div>
+      </div>`;
+      return `<tr style="border-bottom:1px solid #F5F5F5;" onmouseover="this.style.background='#FFF8F9'" onmouseout="this.style.background=''">
+        <td style="padding:13px 16px;white-space:nowrap;">
+          <div style="display:flex;align-items:center;gap:9px;">
+            <div class="av" style="width:34px;height:34px;font-size:12px;background:${bg};flex-shrink:0;">${s.name[0]}</div>
+            <div>
+              <div style="display:flex;align-items:center;font-size:13px;font-weight:600;">${s.name}${typeTag}</div>
+              ${s.type==='ai' ? `<div style="font-size:10px;color:#bbb;margin-top:3px;">${s.skills.map(sk=>`<span style="background:#F0F7FF;color:#3B82F6;padding:1px 5px;border-radius:3px;margin-right:3px;">${sk}</span>`).join('')}</div>` : ''}
+            </div>
+          </div>
+        </td>
+        <td style="padding:13px 12px;font-size:12px;color:#888;">${s.account}</td>
+        <td style="padding:13px 12px;text-align:center;font-size:14px;font-weight:700;color:#1a1a1a;">${s.talks}</td>
+        <td style="padding:13px 12px;text-align:center;">${convCell}</td>
+        <td style="padding:13px 12px;text-align:center;font-size:13px;color:#555;">${s.avgRound}</td>
+        <td style="padding:13px 12px;text-align:center;font-size:13px;color:#555;">${s.transferRate}</td>
+        <td style="padding:13px 16px;text-align:center;">${statusDot}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', render);
+  } else {
+    render();
+  }
+})();
+
+// ── Skill 触发分布
+(function buildSkillDist() {
+  const skills = [
+    { name:'行程查询', count:32, color:'#3B82F6' },
+    { name:'套餐报价', count:24, color:'#8B5CF6' },
+    { name:'欢迎引导', count:18, color:'#10B981' },
+    { name:'唤醒沉默', count: 7, color:'#F59E0B' },
+    { name:'转人工',   count: 5, color:'#EF4444' },
+  ];
+  const max = skills[0].count;
+
+  function render() {
+    const wrap = document.getElementById('skill-dist');
+    if (!wrap) return;
+    wrap.innerHTML = skills.map(s => `
+      <div style="margin-bottom:13px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
+          <span style="font-size:12px;color:#555;font-weight:500;">${s.name}</span>
+          <span style="font-size:12px;font-weight:700;color:${s.color};">${s.count} 次</span>
+        </div>
+        <div style="height:6px;background:#F3F4F6;border-radius:4px;overflow:hidden;">
+          <div style="height:100%;width:${Math.round(s.count/max*100)}%;background:${s.color};border-radius:4px;transition:width .4s;"></div>
+        </div>
+      </div>`).join('');
   }
 
   if (document.readyState === 'loading') {
